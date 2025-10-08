@@ -27,10 +27,9 @@ public class PantallaJuego implements Screen {
 	private int cantAsteroides;
 	
 	private Nave4 nave;
-	private  ArrayList<Ball2> balls1 = new ArrayList<>();
-	private  ArrayList<Ball2> balls2 = new ArrayList<>();
-	private  ArrayList<Bullet> balas = new ArrayList<>();
-
+	private ArrayList<Ball2> balls1 = new ArrayList<>();
+	private ArrayList<Ball2> balls2 = new ArrayList<>();
+	private ArrayList<Bullet> balas = new ArrayList<>();
 
 	public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score,  
 			int velXAsteroides, int velYAsteroides, int cantAsteroides) {
@@ -61,6 +60,7 @@ public class PantallaJuego implements Screen {
         nave.setVidas(vidas);
         //crear asteroides
         Random r = new Random();
+        /*
 	    for (int i = 0; i < cantAsteroides; i++) {
 	        Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
 	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
@@ -68,7 +68,7 @@ public class PantallaJuego implements Screen {
 	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));	   
 	  	    balls1.add(bb);
 	  	    balls2.add(bb);
-	  	}
+	  	}*/
 	}
     
 	public void dibujaEncabezado() {
@@ -148,13 +148,14 @@ public class PantallaJuego implements Screen {
   		  }
 	      batch.end();
 	      //nivel completado
+	      /*
 	      if (balls1.size()==0) {
 			Screen ss = new PantallaJuego(game,ronda+1, nave.getVidas(), score, 
 					velXAsteroides+3, velYAsteroides+3, cantAsteroides+10);
 			ss.resize(1200, 800);
 			game.setScreen(ss);
 			dispose();
-		  }
+		  }*/
 	    	 
 	}
     
