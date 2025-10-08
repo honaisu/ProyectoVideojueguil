@@ -1,4 +1,4 @@
-package puppy.code;
+package pantallas;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,6 +11,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+import armas.proyectiles.Bullet;
+import enemigos.Ball2;
+import personajes.Nave4;
+import personajes.SpaceNavigation;
 
 
 public class PantallaJuego implements Screen {
@@ -50,7 +55,7 @@ public class PantallaJuego implements Screen {
 		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav")); //
 		
 		gameMusic.setLooping(true);
-		gameMusic.setVolume(0.5f);
+		gameMusic.setVolume(0.03f);
 		gameMusic.play();
 		
 	    // cargar imagen de la nave, 64x64   
@@ -90,7 +95,7 @@ public class PantallaJuego implements Screen {
 		            b.update();
 		            for (int j = 0; j < balls1.size(); j++) {    
 		              if (b.checkCollision(balls1.get(j))) {          
-		            	 explosionSound.play();
+		            	 explosionSound.play(0.03f);
 		            	 balls1.remove(j);
 		            	 balls2.remove(j);
 		            	 j--;

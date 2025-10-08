@@ -1,4 +1,4 @@
-package puppy.code;
+package personajes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,6 +7,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+
+import armas.proyectiles.Bullet;
+import enemigos.Ball2;
+import pantallas.PantallaJuego;
 
 
 
@@ -78,7 +82,7 @@ public class Nave4 {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {         
           Bullet  bala = new Bullet(spr.getX()+spr.getWidth()/2-5,spr.getY()+ spr.getHeight()-5,0,3,txBala);
 	      juego.agregarBala(bala);
-	      soundBala.play();
+	      soundBala.play(0.1f);
         }
        
     }
