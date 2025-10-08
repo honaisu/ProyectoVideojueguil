@@ -38,6 +38,17 @@ public class Nave4 {
     	spr.setBounds(x, y, 45, 45);
 
     }
+    
+ // NUEVO: cambiar la textura manteniendo posición/tamaño
+    public void setTexture(Texture nueva) {
+        float x = spr.getX(), y = spr.getY();
+        float w = spr.getWidth(), h = spr.getHeight();
+        spr.setTexture(nueva);
+        spr.setBounds(x, y, w, h);
+        spr.setOriginCenter();
+    }
+    
+    
     public void draw(SpriteBatch batch, PantallaJuego juego){
         float x =  spr.getX();
         float y =  spr.getY();
@@ -128,4 +139,6 @@ public class Nave4 {
     public int getX() {return (int) spr.getX();}
     public int getY() {return (int) spr.getY();}
 	public void setVidas(int vidas2) {vidas = vidas2;}
+	
+	
 }

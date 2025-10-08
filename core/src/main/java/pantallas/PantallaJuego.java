@@ -51,16 +51,23 @@ public class PantallaJuego implements Screen {
 		camera.setToOrtho(false, 800, 640);
 		//inicializar assets; musica de fondo y efectos de sonido
 		explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-		explosionSound.setVolume(1,0.5f);
-		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav")); //
+		explosionSound.setVolume(1,0.2f);
 		
+		//antiguo
+		//gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav")); //
+		
+		/*gameMusic.setLooping(true);
+		gameMusic.setVolume(0.5f);//se baja el volumen aqui
+		gameMusic.play();*/
+		gameMusic = Gdx.audio.newMusic(Gdx.files.internal("musicaDoom.mp3"));
 		gameMusic.setLooping(true);
 		gameMusic.setVolume(0.03f);
 		gameMusic.play();
 		
+		
 	    // cargar imagen de la nave, 64x64   
 	    nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
-	    				Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")), 
+	    				Gdx.audio.newSound(Gdx.files.internal("hurt.mp3")), 
 	    				new Texture(Gdx.files.internal("Rocket2.png")), 
 	    				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 
         nave.setVidas(vidas);
@@ -172,6 +179,8 @@ public class PantallaJuego implements Screen {
 		// TODO Auto-generated method stub
 		gameMusic.play();
 	}
+    
+    
 
 	@Override
 	public void resize(int width, int height) {
@@ -196,6 +205,7 @@ public class PantallaJuego implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
+	
 
 	@Override
 	public void dispose() {
@@ -203,5 +213,7 @@ public class PantallaJuego implements Screen {
 		this.explosionSound.dispose();
 		this.gameMusic.dispose();
 	}
+	
+
    
 }
