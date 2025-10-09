@@ -6,20 +6,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-
 import personajes.SpaceNavigation;
-
 
 public class PantallaMenu implements Screen {
 
     private SpaceNavigation game;
     private OrthographicCamera camera;
 
-    // Nombres solicitados
     private final String[] opcion = { "Iniciar juego", "Customizar", "Opciones", "Tutorial", "Salir" };
     private int selec = 0;
 
-    // Anti-rebote para teclas mantenidas
     private float keyCooldown = 0f;
     private final float repeatDelay = 0.15f;
 
@@ -36,7 +32,7 @@ public class PantallaMenu implements Screen {
         camera.update();
         game.getBatch().setProjectionMatrix(camera.combined);
 
-        // Input: navegación con flechas y confirmación con Enter
+        // Navegación con flechas + Enter
         keyCooldown -= delta;
         if (keyCooldown <= 0f) {
             if (Gdx.input.isKeyPressed(Input.Keys.UP))   { selec = (selec - 1 + opcion.length) % opcion.length; keyCooldown = repeatDelay; }
@@ -45,21 +41,18 @@ public class PantallaMenu implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             activarSeleccion();
         }
-        // Tocar pantalla sigue iniciando juego rápido
-        if (Gdx.input.isTouched()) {
-            abrirJuego();
-        }
+
+        // Opcional: tap para iniciar rápido (comentar si no se desea)
+        // if (Gdx.input.isTouched()) abrirJuego();
 
         // Dibujo
         game.getBatch().begin();
-
         game.getFont().getData().setScale(2.2f);
         game.getFont().setColor(0.95f, 0.9f, 0.85f, 1f);
         game.getFont().draw(game.getBatch(), "SPACE NAVIGATION", 330, 650);
 
         game.getFont().getData().setScale(1.6f);
-        float cx = 600f;
-        float y = 480f;
+        float cx = 600f, y = 480f;
         for (int i = 0; i < opcion.length; i++) {
             boolean sel = (i == selec);
             float a = sel ? 1f : 0.65f;
@@ -67,44 +60,32 @@ public class PantallaMenu implements Screen {
             String text = (sel ? "> " : "  ") + opcion[i] + (sel ? " <" : "");
             game.getFont().draw(game.getBatch(), text, cx - 140, y - i * 60);
         }
-
         game.getBatch().end();
     }
 
     private void activarSeleccion() {
         switch (selec) {
-            case 0: // Iniciar juego
-                abrirJuego();
-                break;
-            case 1: // Customizar
-                // game.setScreen(new PantallaCustomizar(game));
-                break;
-            case 2: // Opciones
-                // game.setScreen(new PantallaOpciones(game));
-                break;
-            case 3: // Tutorial
-                // game.setScreen(new PantallaTutorial(game));
-                break;
-            case 4: // Salir
-                Gdx.app.exit();
-                break;
+            case 0: abrirJuego(); break;
+            case 1: abrirCustomizar(); break;
+            case 2: /* abrirOpciones(); */ break;
+            case 3: /* abrirTutorial(); */ break;
+            case 4: Gdx.app.exit(); break;
         }
     }
 
     private void abrirJuego() {
-        Screen sg = new PantallaJuego(game, 1, 3, 0, 1, 1, 10); //sg -> Screan Game
+        Screen sg = new PantallaJuego(game, 1, 3, 0, 1, 1, 10);
         sg.resize(1200, 800);
         game.setScreen(sg);
         dispose();
     }
-    
-    /*private void customizarJuego() {
-        Screen sC = new PantallaJuego(game, 1, 3, 0, 1, 1, 10); //sg -> Screan Custome
-        sC.resize(1200, 800);
-        game.setScreen(sC);
-        dispose();
-    }*/
 
+    private void abrirCustomizar() {
+        Screen sc = new PantallaCustomizar(game);
+        sc.resize(1200, 800);
+        game.setScreen(sc);
+        dispose();
+    }
 
     @Override public void show() {}
     @Override public void resize(int width, int height) {}

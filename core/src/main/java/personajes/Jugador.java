@@ -14,7 +14,7 @@ import pantallas.PantallaJuego;
 
 
 
-public class Nave4 {
+public class Jugador {
 	
 	private boolean destruida = false;
     private int vidas = 3;
@@ -28,7 +28,7 @@ public class Nave4 {
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
     
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+    public Jugador(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
     	sonidoHerido = soundChoque;
     	this.soundBala = soundBala;
     	this.txBala = txBala;
