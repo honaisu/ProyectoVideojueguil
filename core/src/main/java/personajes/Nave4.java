@@ -25,16 +25,18 @@ public class Nave4 {
     private boolean herido = false;
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
-	private float rotacion = 0f;
+	private float rotacion;
     
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+    public Nave4(int x, int y, float rotacion, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
     	sonidoHerido = soundChoque;
     	this.soundBala = soundBala;
     	this.txBala = txBala;
+    	this.rotacion = rotacion;
+    	
     	spr = new Sprite(tx);
     	spr.setPosition(x, y);
-    	spr.setOriginCenter();
     	spr.setBounds(x, y, 45, 45);
+    	spr.setOriginCenter();
 
     }
     public void draw(SpriteBatch batch, PantallaJuego juego){
@@ -50,13 +52,19 @@ public class Nave4 {
         	return;
         }
         
-    	if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) spr.setRotation(++rotacion );
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) spr.setRotation(--rotacion);
+    	if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) rotacion += 5f;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
+        spr.setRotation(rotacion);
         
+        float friccion = 0.97f;
+        		
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
         	xVel -= Math.sin(Math.toRadians(rotacion)) * 0.2f;
         	yVel += Math.cos(Math.toRadians(rotacion)) * 0.2f;
         	//System.out.println(rotacion+" - "+Math.sin(Math.toRadians(rotacion))+" - "+Math.cos(Math.toRadians(rotacion))) ;    
+        }else {
+        	xVel *= friccion;
+        	yVel *= friccion;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
         	xVel += Math.sin(Math.toRadians(rotacion)) * 0.2f;
@@ -81,14 +89,14 @@ public class Nave4 {
 	    spr.draw(batch);
     
         
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        /*if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
         	
         if (!herido) {
 	        // que se mueva con teclado
-	        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) xVel--;
-	        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) xVel++;
-        	if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) yVel--;     
-	        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) yVel++;
+	        //if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) xVel--;
+	        //if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) xVel++;
+        	//if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) yVel--;     
+	        //if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) yVel++;
         	
 	     /*   if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) spr.setRotation(++rotacion);
 	        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) spr.setRotation(--rotacion);
@@ -102,7 +110,7 @@ public class Nave4 {
 	        	xVel +=Math.sin(Math.toRadians(rotacion));
 	        	yVel -=Math.cos(Math.toRadians(rotacion));
 	        	     
-	        }*/
+	        }
 	        
 	        // que se mantenga dentro de los bordes de la ventana
 	        if (x+xVel < 0 || x+xVel+spr.getWidth() > Gdx.graphics.getWidth())
@@ -119,14 +127,22 @@ public class Nave4 {
  		  spr.setX(x);
  		   tiempoHerido--;
  		   if (tiempoHerido<=0) herido = false;
- 		}}
+ 		}}*/
         // disparo
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {         
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+        	float radians = (float) Math.toRadians(rotacion+90);
 
-          Bullet bala = new Bullet(spr.getX()+spr.getWidth()/2-5, spr.getY()+ spr.getHeight()-5, rotacion, 10f, txBala);
-          
-	      juego.agregarBala(bala);
-	      soundBala.play(0.1f);
+            float centerX = spr.getX() + spr.getWidth() / 2;
+            float centerY = spr.getY() + spr.getHeight() / 2;
+            float length = spr.getHeight() / 2;
+
+            float bulletX = centerX + (float) Math.cos(radians) * length;
+            float bulletY = centerY + (float) Math.sin(radians) * length;
+
+            Bullet bala = new Bullet(bulletX, bulletY, rotacion, 10f, txBala);
+		  
+			juego.agregarBala(bala);
+			soundBala.play(0.1f);
         }
     }
       

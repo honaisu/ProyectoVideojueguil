@@ -15,12 +15,13 @@ public class Bullet {
 	private boolean destroyed = false;
 	private Sprite spr;
 	    
-	    public Bullet(float x, float y, float rotation, float speed, Texture tx) {
+	    public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
 	    	spr = new Sprite(tx);
 	    	spr.setPosition(x, y);
+	    	spr.setRotation(rotacion);
 	    	
 	    	// Convertir rotación a radianes
-	        float radians = (float) Math.toRadians(rotation);
+	        float radians = (float) Math.toRadians(rotacion+90);
 
 	        // Calcular velocidad en X e Y según el ángulo
 	        this.xSpeed = (float) Math.cos(radians) * speed;

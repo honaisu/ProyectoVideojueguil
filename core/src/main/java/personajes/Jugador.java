@@ -1,4 +1,4 @@
-package pantallas;
+package personajes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-import enemigos.Ball2;
+import hitboxes.Ball2;
+import pantallas.PantallaJuego;
 
 public class Jugador {
 	private boolean destruida = false;
