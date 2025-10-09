@@ -13,10 +13,7 @@ import armas.proyectiles.Bullet;
 import hitboxes.Ball2;
 import pantallas.PantallaJuego;
 
-
-
 public class Nave4 {
-	
 	private boolean destruida = false;
     private int vidas = 3;
     private float xVel = 0;
@@ -28,6 +25,7 @@ public class Nave4 {
     private boolean herido = false;
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
+	private float rotacion = 0f;
     
     public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
     	sonidoHerido = soundChoque;
@@ -35,13 +33,56 @@ public class Nave4 {
     	this.txBala = txBala;
     	spr = new Sprite(tx);
     	spr.setPosition(x, y);
-    	//spr.setOriginCenter();
+    	spr.setOriginCenter();
     	spr.setBounds(x, y, 45, 45);
 
     }
     public void draw(SpriteBatch batch, PantallaJuego juego){
         float x =  spr.getX();
         float y =  spr.getY();
+        
+        if (herido) {
+        	spr.setX(spr.getX()+MathUtils.random(-2,2));
+        	spr.draw(batch); 
+        	spr.setX(x);
+        	tiempoHerido--;
+        	if (tiempoHerido<=0) herido = false;
+        	return;
+        }
+        
+    	if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) spr.setRotation(++rotacion );
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) spr.setRotation(--rotacion);
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        	xVel -= Math.sin(Math.toRadians(rotacion)) * 0.2f;
+        	yVel += Math.cos(Math.toRadians(rotacion)) * 0.2f;
+        	//System.out.println(rotacion+" - "+Math.sin(Math.toRadians(rotacion))+" - "+Math.cos(Math.toRadians(rotacion))) ;    
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+        	xVel += Math.sin(Math.toRadians(rotacion)) * 0.2f;
+        	yVel -= Math.cos(Math.toRadians(rotacion)) * 0.2f;
+        }
+        
+        if (xVel >= 10.0f) {
+        	xVel = 10.0f;
+        }
+        
+        if (yVel >= 10.0f) {
+        	yVel = 10.0f;
+        }
+        
+        // que se mantenga dentro de los bordes de la ventana
+        if (x+xVel < 0 || x+xVel+spr.getWidth() > Gdx.graphics.getWidth())
+        	xVel*=-1;
+        if (y+yVel < 0 || y+yVel+spr.getHeight() > Gdx.graphics.getHeight())
+        	yVel*=-1;
+        
+        spr.setPosition(x+xVel, y+yVel);   
+	    spr.draw(batch);
+    
+        
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        	
         if (!herido) {
 	        // que se mueva con teclado
 	        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) xVel--;
@@ -78,15 +119,15 @@ public class Nave4 {
  		  spr.setX(x);
  		   tiempoHerido--;
  		   if (tiempoHerido<=0) herido = false;
- 		 }
+ 		}}
         // disparo
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {         
-          Bullet  bala = new Bullet(spr.getX()+spr.getWidth()/2-5,spr.getY()+ spr.getHeight()-5,0,3,txBala);
+
+          Bullet bala = new Bullet(spr.getX()+spr.getWidth()/2-5, spr.getY()+ spr.getHeight()-5, rotacion, 10f, txBala);
           
 	      juego.agregarBala(bala);
 	      soundBala.play(0.1f);
         }
-       
     }
       
     public boolean checkCollision(Ball2 b) {
@@ -102,10 +143,10 @@ public class Nave4 {
             yVel = - yVel;
             b.setySpeed(- b.getySpeed());
             // despegar sprites
-      /*      int cont = 0;
+            int cont = 0;
             while (b.getArea().overlaps(spr.getBoundingRectangle()) && cont<xVel) {
                spr.setX(spr.getX()+Math.signum(xVel));
-            }   */
+            }
         	//actualizar vidas y herir
             vidas--;
             herido = true;
@@ -119,15 +160,28 @@ public class Nave4 {
     }
     
     public boolean estaDestruido() {
-       return !herido && destruida;
+       return (!herido && destruida);
     }
+    
     public boolean estaHerido() {
  	   return herido;
     }
     
-    public int getVidas() {return vidas;}
-    //public boolean isDestruida() {return destruida;}
-    public int getX() {return (int) spr.getX();}
-    public int getY() {return (int) spr.getY();}
-	public void setVidas(int vidas2) {vidas = vidas2;}
+    public int getVidas() {
+    	return vidas;
+    }
+    //public boolean isDestruida() { return destruida;}
+    public int getX() {
+    	return (int) spr.getX();
+    }
+    public int getY() {
+    	return (int) spr.getY();
+    }
+	public void setVidas(int vidas2) {
+		vidas = vidas2;
+	}
+	protected float getRotacion() {
+		return rotacion;
+	}
+	
 }
