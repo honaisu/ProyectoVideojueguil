@@ -19,7 +19,6 @@ import personajes.SpaceNavigation;
 
 
 public class PantallaJuego implements Screen {
-
 	private SpaceNavigation game;
 	private OrthographicCamera camera;	
 	private SpriteBatch batch;
@@ -31,7 +30,7 @@ public class PantallaJuego implements Screen {
 	private int velYAsteroides; 
 	private int cantAsteroides;
 	
-	private Nave4 nave;
+	private Jugador nave;
 	private ArrayList<Ball2> balls1 = new ArrayList<>();
 	private ArrayList<Ball2> balls2 = new ArrayList<>();
 	private ArrayList<Bullet> balas = new ArrayList<>();
@@ -58,7 +57,7 @@ public class PantallaJuego implements Screen {
 		gameMusic.play();
 		
 	    // cargar imagen de la nave, 64x64   
-	    nave = new Nave4(Gdx.graphics.getWidth()/2-50,30,new Texture(Gdx.files.internal("MainShip3.png")),
+	    nave = new Jugador(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2,new Texture(Gdx.files.internal("MainShip3.png")),
 	    				Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")), 
 	    				new Texture(Gdx.files.internal("Rocket2.png")), 
 	    				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 
@@ -88,6 +87,11 @@ public class PantallaJuego implements Screen {
 		  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
           batch.begin();
 		  dibujaEncabezado();
+		  
+		  if (nave.estaHerido()) {
+			  
+		  }
+		  
 	      if (!nave.estaHerido()) {
 		      // colisiones entre balas y asteroides y su destruccion  
 	    	  for (int i = 0; i < balas.size(); i++) {
@@ -129,9 +133,10 @@ public class PantallaJuego implements Screen {
 	     for (Bullet b : balas) {       
 	          b.draw(batch);
 	      }
-	      nave.draw(batch, this);
-	      //dibujar asteroides y manejar colision con nave
-	      for (int i = 0; i < balls1.size(); i++) {
+	     nave.update(delta);
+	     nave.draw(batch, this);
+	     //dibujar asteroides y manejar colision con nave
+	     for (int i = 0; i < balls1.size(); i++) {
 	    	    Ball2 b=balls1.get(i);
 	    	    b.draw(batch);
 		          //perdió vida o game over

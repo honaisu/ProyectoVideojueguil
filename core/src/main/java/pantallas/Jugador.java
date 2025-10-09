@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import armas.proyectiles.Bullet;
 import enemigos.Ball2;
 
 public class Jugador {
@@ -21,6 +22,10 @@ public class Jugador {
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
 	private float rotacion = 0.0f;
+    private Sound soundBala;
+    private Texture txBala;
+    
+    private static float VELOCIDAD = 200f;
     
     public Jugador(int x, int y, Texture tx, Sound soundChoque) {
     	sonidoHerido = soundChoque;
@@ -30,8 +35,35 @@ public class Jugador {
     	spr.setBounds(x, y, 45, 45);
     }
     
-    public void update(float delta) {
-    	
+    public Jugador(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+    	sonidoHerido = soundChoque;
+    	this.soundBala = soundBala;
+    	this.txBala = txBala;
+    	spr = new Sprite(tx);
+    	spr.setPosition(x, y);
+    	spr.setOriginCenter();
+    	spr.setBounds(x, y, 45, 45);
+	}
+
+	public void update(float delta) {
+		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) 
+    		spr.setRotation(++rotacion);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 
+        	spr.setRotation(--rotacion);
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {        	
+        	xVel = (float) Math.sin(Math.toRadians(rotacion)) * VELOCIDAD;
+        	yVel = (float) Math.cos(Math.toRadians(rotacion)) * VELOCIDAD;
+        } else {
+        		
+        }
+        
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+        	xVel = (float) Math.sin(Math.toRadians(rotacion)) * VELOCIDAD;
+        	yVel = (float) Math.cos(Math.toRadians(rotacion)) * VELOCIDAD;
+        	
+        xVel *= delta;
+        yVel *= delta;
     }
     
     public void draw(SpriteBatch batch, PantallaJuego juego){
@@ -46,31 +78,20 @@ public class Jugador {
         	if (tiempoHerido<=0) herido = false;
         	return;
         }
-        
-    	if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) 
-    		spr.setRotation(++rotacion);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 
-        	spr.setRotation(--rotacion);
-        
-        if (Gdx.input.isKeyPressed(Input.Keys.UP))
-        	xVel = (float) Math.sin(Math.toRadians(rotacion));
-        	yVel = (float) Math.cos(Math.toRadians(rotacion));
-        
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-        	xVel = (float) Math.sin(Math.toRadians(rotacion));
-        	yVel = (float) Math.cos(Math.toRadians(rotacion));
-        
+    	
         // que se mantenga dentro de los bordes de la ventana
         if (x + xVel < 0 || x + xVel + spr.getWidth() > Gdx.graphics.getWidth())
         	xVel *= -1;
         if (y + yVel < 0 || y + yVel + spr.getHeight() > Gdx.graphics.getHeight())
         	yVel *= -1;
         
-        spr.setPosition(x + xVel, y + yVel);   
+        spr.setPosition(x + xVel, y + yVel);  
 	    spr.draw(batch);
 	    
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-        	
+        	Bullet bala = new Bullet(spr.getX()+spr.getWidth()/2-5,spr.getY()+ spr.getHeight()-5,0,3,txBala);
+  	      	juego.agregarBala(bala);
+  	      	soundBala.play(0.1f);
         }
     }
     
