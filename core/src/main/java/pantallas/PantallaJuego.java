@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.proyectiles.Bullet;
-import enemigos.Ball2;
+import hitboxes.Ball2;
 import personajes.Nave4;
 import personajes.SpaceNavigation;
 
@@ -113,6 +113,7 @@ public class PantallaJuego implements Screen {
 		      for (Ball2 ball : balls1) {
 		          ball.update();
 		      }
+
 		      //colisiones entre asteroides y sus rebotes  
 		      for (int i=0;i<balls1.size();i++) {
 		    	Ball2 ball1 = balls1.get(i);   

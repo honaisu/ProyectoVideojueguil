@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import enemigos.Ball2;
+import hitboxes.Ball2;
 
 
 public class Bullet {
@@ -37,6 +37,7 @@ public class Bullet {
 	    }
 	    
 	    public boolean checkCollision(Ball2 b2) {
+	    	System.out.println(b2.getArea());
 	        if(spr.getBoundingRectangle().overlaps(b2.getArea())){
 	        	// Se destruyen ambos
 	            this.destroyed = true;

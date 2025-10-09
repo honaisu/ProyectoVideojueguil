@@ -8,8 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+import armas.Melee;
 import armas.proyectiles.Bullet;
-import enemigos.Ball2;
+import hitboxes.Ball2;
 import pantallas.PantallaJuego;
 
 
@@ -81,6 +82,7 @@ public class Nave4 {
         // disparo
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {         
           Bullet  bala = new Bullet(spr.getX()+spr.getWidth()/2-5,spr.getY()+ spr.getHeight()-5,0,3,txBala);
+          
 	      juego.agregarBala(bala);
 	      soundBala.play(0.1f);
         }
