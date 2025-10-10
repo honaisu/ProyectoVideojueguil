@@ -19,6 +19,11 @@ public class SpaceNavigation extends Game {
     private Texture selectedShipTexture;     // (opcional) no usado ya para flujo principal
     private String selectedShipPath;         // path elegido en Customizar
 
+    // Volúmenes globales (0.0f a 1.0f)
+    private float masterVolume = 1.0f;
+    private float musicVolume  = 0.30f;
+    private float sfxVolume    = 0.60f;
+
     @Override
     public void create() {
         highScore = 0;
@@ -57,4 +62,18 @@ public class SpaceNavigation extends Game {
     // Mantener por compatibilidad si lo usabas en otros sitios
     public Texture getSelectedShipTexture() { return selectedShipTexture; }
     public void setSelectedShipTexture(Texture t) { this.selectedShipTexture = t; }
+
+    // Volúmenes globales
+    public float getMasterVolume() { return masterVolume; }
+    public void setMasterVolume(float v) { masterVolume = clamp01(v); }
+
+    public float getMusicVolume() { return musicVolume; }
+    public void setMusicVolume(float v) { musicVolume = clamp01(v); }
+
+    public float getSfxVolume() { return sfxVolume; }
+    public void setSfxVolume(float v) { sfxVolume = clamp01(v); }
+
+    // Utilidad local para limitar 0..1
+    private float clamp01(float v) { return Math.max(0f, Math.min(1f, v)); }
+
 }
