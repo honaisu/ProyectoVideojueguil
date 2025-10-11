@@ -1,33 +1,55 @@
 package armas;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+
+import pantallas.PantallaJuego;
+import personajes.Jugador;
 
 public abstract class Arma {
 	
-	protected int daño;
-	protected float cadencia;
-	protected int municion;
-	protected Sprite spr;
-	
-	public Arma(int daño, float cadencia, int municion, Sprite spr) {
-		this.daño = daño;
-		this.cadencia = cadencia;
-		this.municion = municion;
-		this.spr = spr;
-	}
-	
-	protected int getDaño() {
-		return daño;
-	}
-	protected float getCadencia() {
-		return cadencia;
-	}
-	protected int getMunicion() {
-		return municion;
-	}
-	protected Sprite getSpr() {
-		return spr;
-	}
-	
+    protected float tiempoDesdeUltimoDisparo;
+    protected float cadencia;
+    
+    protected int municion;
+    protected int municionMax;
+    
+    protected Texture txBala;
+    protected Sound soundBala;
+    
+    public Arma(float cadencia, int municionMax, Texture txBala, Sound soundBala) {
+    	this.cadencia = cadencia;
+        this.municionMax = municionMax;
+        this.municion = municionMax;
+        
+        this.txBala = txBala;
+        this.soundBala = soundBala;
+        
+        this.tiempoDesdeUltimoDisparo = cadencia;
+    }
+
+    public abstract void disparar(Jugador nave, PantallaJuego juego, float delta);
+
+    public void actualizar(float delta) {
+    	if (tiempoDesdeUltimoDisparo < cadencia) {
+            tiempoDesdeUltimoDisparo += delta;
+        }
+    }
+
+    protected boolean puedeDisparar() {
+        return tiempoDesdeUltimoDisparo >= cadencia;
+    }
+
+    protected void reiniciarCooldown() {
+        tiempoDesdeUltimoDisparo = 0;
+    }
+    
+    public int getMunicion() {
+        return municion;
+    }
+
+    public int getMunicionMax() {
+        return municionMax;
+    }
 	
 }

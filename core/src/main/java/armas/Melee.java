@@ -1,45 +1,51 @@
 package armas;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
 
-import hitboxes.ArcHitbox;
+import armas.proyectiles.Swing;
+import pantallas.PantallaJuego;
+import personajes.Jugador;
 
 public class Melee extends Arma {
 
-    private float radioAtaque = 80f;
-    private float anguloInicio = -60f; // ejemplo: semicírculo frontal
-    private float anguloFin = 60f;
-    private ArcHitbox hitbox;
+    private Swing swingActual;
 
-    public Melee(int daño, float cadencia, int municion, Sprite spr) {
-        super(daño, cadencia, municion, spr);
-        // no necesitas "area" como atributo si usas radio + ángulos
+    public Melee() {
+        super(0.8f, 9999, new Texture(Gdx.files.internal("semicirculo.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));  // cadencia de medio segundo, sin munición real
     }
 
-    /** Llama a esto cuando el jugador realiza un ataque. */
-    public void atacar(Vector2 posicionJugador, float direccionJugador, Texture efectoTextura) {
-        // Calculamos el arco frente al jugador, rotado según la dirección
-        float inicioRotado = direccionJugador + anguloInicio;
-        float finRotado = direccionJugador + anguloFin;
-        hitbox = new ArcHitbox(posicionJugador, radioAtaque, inicioRotado, finRotado, efectoTextura);
+    @Override
+    public void disparar(Jugador nave, PantallaJuego juego, float delta) {
+        actualizar(delta);
+
+        // No hay munición que contar en ataques melee
+        if (!puedeDisparar()) return;
+
+        // Crear golpe (Swing)
+        crearSwing(nave, juego);
+        reiniciarCooldown();
     }
 
-    /** Verifica si golpea a un enemigo. */
-    public boolean golpea(Vector2 posicionEnemigo) {
-        if (hitbox == null) return false;
-        return hitbox.contiene(posicionEnemigo);
+    private void crearSwing(Jugador nave, PantallaJuego juego) {
+    	float radians = (float) Math.toRadians(nave.getRotacion() + 90);
+
+        float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
+        float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;
+        float length = nave.spr.getHeight() / 2;
+        
+        float radio = 100f;  // Alcance del golpe
+        
+        float swingX = centerX + (float) Math.cos(radians) * length;
+        float swingY = centerY + (float) Math.sin(radians) * length;
+
+        swingActual = new Swing(swingX, swingY, radio , nave);
+        juego.agregarSwing(swingActual);
+
     }
 
-    /** Dibuja el arco (solo visualización opcional). */
-    public void draw(SpriteBatch batch) {
-        if (hitbox != null) {
-            hitbox.draw(batch);
-        }
+    public Swing getSwingActual() {
+        return swingActual;
     }
 }
 
