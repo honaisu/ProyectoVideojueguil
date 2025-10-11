@@ -76,10 +76,7 @@ public class PantallaJuego implements Screen {
 	    gameMusic = Gdx.audio.newMusic(Gdx.files.internal("musicaDoom.mp3"));
 	    gameMusic.setLooping(true);
 
-	    // Aplicar volúmenes globales a la música
-	    float mv = game.getMasterVolume();
-	    float mus = game.getMusicVolume();
-	    gameMusic.setVolume(mv * mus);
+	    aplicarVolumenMusica();
 	    gameMusic.play();
 
 	    // Skin elegida por path (fallback a default)
@@ -122,6 +119,13 @@ public class PantallaJuego implements Screen {
 	    pm.dispose();
 	}
 
+	// Helper para aplicar master*music a la música actual
+	private void aplicarVolumenMusica() {
+	    float mv = game.getMasterVolume();
+	    float mus = game.getMusicVolume();
+	    gameMusic.setVolume(mv * mus);
+	}
+
 	public void dibujaEncabezado() {
 	    CharSequence str = "Vidas: " + nave.getVidas() + " Ronda: " + ronda;
 	    game.getFont().getData().setScale(2f);
@@ -132,17 +136,12 @@ public class PantallaJuego implements Screen {
 
 	@Override
 	public void render(float delta) {
-	    // Toggle de pausa con ESC (anti-rebote simple)
+	    // ESC solo decide si llamar a pause() o resume(), no modifica flags directamente
 	    pauseToggleCooldown -= delta;
 	    if (pauseToggleCooldown <= 0f && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-	        paused = !paused;
 	        pauseToggleCooldown = pauseToggleDelay;
-
-	        // ajuste de música sutil mientras está en pausa con volúmenes globales
-	        float mv = game.getMasterVolume();
-	        float mus = game.getMusicVolume();
-	        if (paused) gameMusic.setVolume(mv * mus * 0.33f);
-	        else        gameMusic.setVolume(mv * mus);
+	        if (!paused) pause();
+	        else resume();
 	    }
 
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -218,10 +217,7 @@ public class PantallaJuego implements Screen {
 	        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 	            if (pauseSelec == 0) {
 	                // Continuar
-	                paused = false;
-	                float mv = game.getMasterVolume();
-	                float mus = game.getMusicVolume();
-	                gameMusic.setVolume(mv * mus);
+	                resume();
 	            } else {
 	                // Menu principal
 	                Screen ss = new PantallaMenu(game);
@@ -274,8 +270,24 @@ public class PantallaJuego implements Screen {
 
 	@Override public void show() { gameMusic.play(); }
 	@Override public void resize(int width, int height) {}
-	@Override public void pause() {}
-	@Override public void resume() {}
+
+	@Override
+	public void pause() {
+	    // Activar pausa y bajar música respetando volúmenes globales
+	    paused = true;
+	    float mv = game.getMasterVolume();
+	    float mus = game.getMusicVolume();
+	    gameMusic.setVolume(mv * mus * 0.33f);
+	}
+
+	@Override
+	public void resume() {
+	    // Desactivar pausa y restaurar volumen
+	    paused = false;
+	    aplicarVolumenMusica();
+	    keyCooldown = repeatDelay; // anti doble enter al continuar
+	}
+
 	@Override public void hide() {}
 
 	@Override
@@ -286,6 +298,7 @@ public class PantallaJuego implements Screen {
 	    // Las Textures creadas aquí deberían disponerse al cerrar nivel
 	    // si no se reutilizan (añade dispose según tu gestión de assets).
 	}
+
 
 
 
