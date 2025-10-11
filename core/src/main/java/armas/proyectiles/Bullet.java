@@ -5,21 +5,27 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import enemigos.Ball2;
+import hitboxes.Ball2;
 
 
 public class Bullet {
 
-	private int xSpeed;
-	private int ySpeed;
+	private float xSpeed;
+	private float ySpeed;
 	private boolean destroyed = false;
 	private Sprite spr;
 	    
-	    public Bullet(float x, float y, int xSpeed, int ySpeed, Texture tx) {
+	    public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
 	    	spr = new Sprite(tx);
 	    	spr.setPosition(x, y);
-	        this.xSpeed = xSpeed;
-	        this.ySpeed = ySpeed;
+	    	spr.setRotation(rotacion);
+	    	
+	    	// Convertir rotación a radianes
+	        float radians = (float) Math.toRadians(rotacion+90);
+
+	        // Calcular velocidad en X e Y según el ángulo
+	        this.xSpeed = (float) Math.cos(radians) * speed;
+	        this.ySpeed = (float) Math.sin(radians) * speed;
 	    }
 	    public void update() {
 	        spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);

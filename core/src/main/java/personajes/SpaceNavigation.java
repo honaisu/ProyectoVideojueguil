@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import pantallas.PantallaMenu;
 
 public class SpaceNavigation extends Game {
-    private String nombreJuego = "Space Navigation";
+
+    //private String nombreJuego = "Space Navigation"; // ver si lo ocupo
     private SpriteBatch batch;
     private BitmapFont font;
     private int highScore;
