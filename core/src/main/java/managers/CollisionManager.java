@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.audio.Sound;
 
 import armas.proyectiles.Bullet;
+import armas.proyectiles.Swing;
 import hitboxes.Ball2;
 import personajes.Nave4;
 
@@ -25,11 +26,12 @@ public class CollisionManager {
     /**
      * Resuelve colisiones y devuelve la cantidad total de puntos ganados en esta invocación.
      */
-    public int handleCollisions(Nave4 nave, BulletManager bm, AsteroidManager am) {
+    public int handleCollisions(Nave4 nave, BulletManager bm, MeleeManager mm,AsteroidManager am) {
         int totalScore = 0;
 
         ArrayList<Bullet> bullets = bm.getBullets();
         ArrayList<Ball2> asteroids = am.getAsteroids();
+        ArrayList<Swing> swings = mm.getSwings();
 
         // 1) Balas vs Asteroides
         // Iteramos hacia atrás para permitir remociones seguras
@@ -66,6 +68,18 @@ public class CollisionManager {
                 // En la versión original removías el asteroide en PantallaJuego
                 am.removeAsteroid(ai);
                 // No sumamos score por colisión con la nave (puedes cambiar esto si quieres)
+            }
+        }
+        
+     // 3) Melee (Swings) vs Asteroides
+        for (Swing s : mm.getSwings()) {
+            for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
+                Ball2 a = asteroids.get(ai);
+                if (s.checkCollision(a)) {
+                    am.removeAsteroid(ai);
+                    if (explosionSound != null) explosionSound.play(0.03f);
+                    totalScore += scorePerAsteroid;
+                }
             }
         }
 

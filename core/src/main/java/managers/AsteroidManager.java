@@ -27,10 +27,15 @@ public class AsteroidManager {
 	private void spawnAsteroids(int cant, int velX, int velY) {
 		Random r = new Random();
 		for (int i = 0; i < cant; i++) {
-	        Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
+	        /*Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
 	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
 	  	            20+r.nextInt(10), velX+r.nextInt(4), velY+r.nextInt(4), 
-	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));	   
+	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));*/   
+	        
+			Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
+	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
+	  	            20+r.nextInt(10), 0, 0, 
+	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));	
 	        asteroids.add(bb);
 	        auxColliders.add(bb);
 	  	}

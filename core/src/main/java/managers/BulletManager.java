@@ -16,7 +16,7 @@ public class BulletManager {
         if (b != null) bullets.add(b);
     }
 
-    public void update(float delta) {
+    public void update() {
         // Actualiza cada bala y elimina las destruidas
         for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
