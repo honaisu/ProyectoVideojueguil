@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hitboxes.ArcHitbox;
 import hitboxes.Ball2;
-import personajes.Nave4;
+import personajes.Jugador;
 
 public class Swing {
 
@@ -15,11 +15,11 @@ public class Swing {
     private float tiempoActivo = 0f;  // Contador
     private boolean destroyed = false;
     
-    private Nave4 nave;
+    private Jugador nave;
     private float xVel;
     private float yVel;
 
-    public Swing(float x, float y, float radio, Nave4 nave){//,float angulo , float xVel, float yVel) {
+    public Swing(float x, float y, float radio, Jugador nave){//,float angulo , float xVel, float yVel) {
         this.hitbox = new ArcHitbox(x, y, radio, nave.getRotacion(), new Texture(Gdx.files.internal("semicirculo2.png"))); // Puedes pasar textura si quieres ver debug
         
         this.nave = nave;

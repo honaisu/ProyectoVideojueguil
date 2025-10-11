@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Swing;
 import pantallas.PantallaJuego;
-import personajes.Nave4;
+import personajes.Jugador;
 
 public class Melee extends Arma {
 
@@ -16,7 +16,7 @@ public class Melee extends Arma {
     }
 
     @Override
-    public void disparar(Nave4 nave, PantallaJuego juego, float delta) {
+    public void disparar(Jugador nave, PantallaJuego juego, float delta) {
         actualizar(delta);
 
         // No hay munición que contar en ataques melee
@@ -27,7 +27,7 @@ public class Melee extends Arma {
         reiniciarCooldown();
     }
 
-    private void crearSwing(Nave4 nave, PantallaJuego juego) {
+    private void crearSwing(Jugador nave, PantallaJuego juego) {
     	float radians = (float) Math.toRadians(nave.getRotacion() + 90);
 
         float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;

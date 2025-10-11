@@ -1,9 +1,7 @@
 package pantallas;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -19,24 +17,25 @@ import managers.AsteroidManager;
 import managers.BulletManager;
 import managers.CollisionManager;
 import managers.MeleeManager;
-import personajes.Nave4;
+import personajes.Jugador;
 import personajes.SpaceNavigation;
-
 
 public class PantallaJuego implements Screen {
 
-	private SpaceNavigation game;
+    private SpaceNavigation game;
     private OrthographicCamera camera;
     private SpriteBatch batch;
+
     private Sound explosionSound;
     private Music gameMusic;
+
     private int score;
     private int ronda;
     private int velXAsteroides;
     private int velYAsteroides;
     private int cantAsteroides;
 
-    private Nave4 nave;
+    private Jugador nave;
 
     // Managers
     private AsteroidManager asteroidManager;
@@ -44,186 +43,236 @@ public class PantallaJuego implements Screen {
     private CollisionManager collisionManager;
     private MeleeManager meleeManager;
 
+    // Pausa
+    private boolean paused = false;
+    private float pauseToggleCooldown = 0f;
+    private final float pauseToggleDelay = 0.2f;
+
+    private final String[] pauseOptions = { "Continuar", "Menu principal" };
+    private int pauseSelec = 0;
+    private float keyCooldown = 0f;
+    private final float repeatDelay = 0.15f;
+
+    // Overlay de pausa
+    private Texture texturaPausa;
+
     public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score,
-                        int velXAsteroides, int velYAsteroides, int cantAsteroides) {
+                         int velXAsteroides, int velYAsteroides, int cantAsteroides) {
         this.game = game;
         this.ronda = ronda;
         this.score = score;
         this.velXAsteroides = velXAsteroides;
         this.velYAsteroides = velYAsteroides;
         this.cantAsteroides = cantAsteroides;
-        
 
         batch = game.getBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 640);
 
-        // inicializar assets; musica de fondo y efectos de sonido
+        // Audio
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-        explosionSound.setVolume(1, 0.5f);
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav"));
-
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("musicaDoom.mp3"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(0.03f);
+        aplicarVolumenMusica();
         gameMusic.play();
 
-        // cargar imagen de la nave, 64x64
-        nave = new Nave4(Gdx.graphics.getWidth() / 2 - 50, 30, 0f,
-                new Texture(Gdx.files.internal("MainShip3.png")),
-                Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
-                new Melee());
-        nave.setVidas(vidas);
-        
-        //PROBAR ARMAS
-        nave.setArma(new Metralleta());
-        //nave.setArma(new Escopeta());
-        //nave.setArma(new Melee());
-        
-        
 
-        // Inicializar managers
+        // Managers
         asteroidManager = new AsteroidManager(cantAsteroides, velXAsteroides, velYAsteroides);
         bulletManager = new BulletManager();
-        collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide (como tenías)
         meleeManager = new MeleeManager();
+        collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
 
-        // (Opcional) Si antes creabas asteroides manualmente, lo mantiene spawnAsteroids
-        // Random r = new Random();
+        // Jugador (lógica Nave4 + Arma)
+        String path = (game.getSelectedShipPath() != null) ? game.getSelectedShipPath() : "MainShip3.png";
+        Texture naveTex = new Texture(Gdx.files.internal(path));
+        
+        
+        
+        nave = new Jugador(
+            Gdx.graphics.getWidth() / 2 - 50, 30,
+            0f, // rotación inicial
+            naveTex,
+            cargarSoundSeguro("hurt.mp3", "hurt.ogg"),
+            new Melee(),
+            game
+        );
+        game.setJugador(nave);
+        nave.setVidas(vidas);
+        
+        //probar armas
+        nave.setArma(new Metralleta());
+        //nave.setArma(new Escopeta());
+
+        // Crear textura overlay 1x1 para la pausa
+        com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(
+            1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888
+        );
+        pm.setColor(1, 1, 1, 1);
+        pm.fill();
+        texturaPausa = new Texture(pm);
+        pm.dispose();
     }
 
-    public void dibujaEncabezado() {
-        CharSequence str = "Vidas: " + nave.getVidas() + " Ronda: " + ronda;
-        
+    private Sound cargarSoundSeguro(String primario, String alterno) {
+        if (Gdx.files.internal(primario).exists()) return Gdx.audio.newSound(Gdx.files.internal(primario));
+        if (Gdx.files.internal(alterno).exists()) return Gdx.audio.newSound(Gdx.files.internal(alterno));
+        return null;
+    }
+
+    private void aplicarVolumenMusica() {
+        float mv = game.getMasterVolume();
+        float mus = game.getMusicVolume();
+        gameMusic.setVolume(mv * mus);
+    }
+
+    private void dibujaEncabezado() {
         game.getFont().getData().setScale(2f);
-        game.getFont().draw(batch, str, 10, 30);
+        game.getFont().draw(batch, "Vidas: " + nave.getVidas() + " Ronda: " + ronda, 10, 30);
         game.getFont().draw(batch, "Score:" + this.score, Gdx.graphics.getWidth() - 150, 30);
         game.getFont().draw(batch, "HighScore:" + game.getHighScore(), Gdx.graphics.getWidth() / 2 - 100, 30);
-        
-     // ✅ Mostrar munición (arriba derecha)
+
+        // Munición arma (si aplica)
         if (nave.getArma() != null) {
-            int municion = nave.getArma().getMunicion();
-            int municionMax = nave.getArma().getMunicionMax();
-            game.getFont().draw(batch,
-                    "Munición: " + municion + " / " + municionMax,
-                    Gdx.graphics.getWidth() - 300,   // X (a la derecha)
-                    Gdx.graphics.getHeight() - 20);  // Y (arriba)
+            int mun = nave.getArma().getMunicion();
+            int max = nave.getArma().getMunicionMax();
+            game.getFont().draw(batch, "Municion: " + mun + " / " + max,
+                    Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
         }
     }
 
     @Override
     public void render(float delta) {
-        // lógica + render por separada
-        update(delta);
+        // Toggle pausa con ESC
+        pauseToggleCooldown -= delta;
+        if (pauseToggleCooldown <= 0f && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            pauseToggleCooldown = pauseToggleDelay;
+            if (!paused) pause();
+            else resume();
+        }
 
+        // Update si no está en pausa ni herido
+        if (!paused && !nave.estaHerido()) {
+            bulletManager.update();
+            meleeManager.update(delta);
+            asteroidManager.update();
+
+            int gained = collisionManager.handleCollisions(nave, bulletManager, meleeManager, asteroidManager);
+            if (gained > 0) score += gained;
+
+            if (nave.estaDestruido()) {
+                if (score > game.getHighScore()) game.setHighScore(score);
+                Screen ss = new PantallaGameOver(game);
+                ss.resize(1200, 800);
+                game.setScreen(ss);
+                dispose();
+                return;
+            }
+
+            if (asteroidManager.isEmpty()) {
+                Screen ss = new PantallaJuego(game, ronda + 1, nave.getVidas(), score,
+                        velXAsteroides + 3, velYAsteroides + 3, cantAsteroides + 10);
+                ss.resize(1200, 800);
+                game.setScreen(ss);
+                dispose();
+                return;
+            }
+        }
+
+        // Render
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        dibujaEncabezado();
 
-        // Dibujar balas
         bulletManager.render(batch);
-        
-        //Dibujar Melee
         meleeManager.render(batch);
-
-        // Dibujar nave
-        nave.draw(batch, this);
-
-        // Dibujar asteroides
+        nave.draw(batch, this, paused);
         asteroidManager.render(batch);
 
-        dibujaEncabezado();
+        if (paused) dibujarMenuPausa(delta);
+
         batch.end();
     }
 
-    private void update(float delta) {
-        // actualizar nave (input y lógica interna)
-        // suponiendo que Nave4 implementa su propio update() o maneja input cuando draw se llama.
-        // Si Nave4 no tiene update(), entonces debes invocar su lógica de movimiento aquí si corresponde.
-        // Ejemplo: nave.update(); // si existe
+    private void dibujarMenuPausa(float delta) {
+        // Overlay
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        batch.setColor(0f, 0f, 0f, 0.45f);
+        batch.draw(texturaPausa, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.setColor(1f, 1f, 1f, 1f);
 
-        // Actualizar balas y asteroides
-        bulletManager.update();
-        meleeManager.update(delta);
-        asteroidManager.update();
-
-        // Resolver colisiones: devuelve los puntos ganados por las balas
-        int gained = collisionManager.handleCollisions(nave, bulletManager, meleeManager, asteroidManager);
-        if (gained > 0) score += gained;
-
-        // Comprueba si la nave quedó destruida (nave.estaDestruido() en tu diseño)
-        if (nave.estaDestruido()) {
-            if (score > game.getHighScore()) game.setHighScore(score);
-            Screen ss = new PantallaGameOver(game);
-            ss.resize(1200, 800);
-            game.setScreen(ss);
-            dispose();
-            return;
+        // Navegación
+        keyCooldown -= delta;
+        if (keyCooldown <= 0f) {
+            if (Gdx.input.isKeyPressed(Input.Keys.UP))   { pauseSelec = (pauseSelec - 1 + pauseOptions.length) % pauseOptions.length; keyCooldown = repeatDelay; }
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) { pauseSelec = (pauseSelec + 1) % pauseOptions.length; keyCooldown = repeatDelay; }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (pauseSelec == 0) {
+                resume();
+            } else {
+                Screen ss = new PantallaMenu(game);
+                ss.resize(1200, 800);
+                game.setScreen(ss);
+                dispose();
+                return;
+            }
         }
 
-        // Nivel completado (si no quedan asteroides)
-        if (asteroidManager.isEmpty()) {
-            Screen ss = new PantallaJuego(game, ronda + 1, nave.getVidas(), score,
-                    velXAsteroides + 3, velYAsteroides + 3, cantAsteroides + 10);
-            ss.resize(1200, 800);
-            game.setScreen(ss);
-            dispose();
+        // Texto
+        float panelW = 520f, panelH = 260f;
+        float px = (Gdx.graphics.getWidth() - panelW) / 2f;
+        float py = (Gdx.graphics.getHeight() - panelH) / 2f;
+
+        game.getFont().getData().setScale(2.0f);
+        game.getFont().draw(batch, "PAUSA", px + 190, py + 200);
+
+        game.getFont().getData().setScale(1.6f);
+        for (int i = 0; i < pauseOptions.length; i++) {
+            boolean sel = (i == pauseSelec);
+            String text = (sel ? "> " : "  ") + pauseOptions[i] + (sel ? " <" : "");
+            game.getFont().draw(batch, text, px + 120, py + 130 - i * 60);
         }
     }
 
-    /**
-     * La nave llama a este método para añadir una bala.
-     * Antes almacenabas en una lista local; ahora delegamos al BulletManager.
-     */
-    public boolean agregarBala(Bullet bb) {
-        bulletManager.add(bb);
-        return true;
-    }
-    
-    public void agregarSwing(Swing s) {
-        meleeManager.add(s);
-    }
-    
+    // Hooks para que Armas agreguen entidades a sus managers
+    public boolean agregarBala(Bullet b) { bulletManager.add(b); return true; }
+    public void agregarSwing(Swing s) { meleeManager.add(s); }
+
+    @Override public void show() { if (gameMusic != null) gameMusic.play(); }
+    @Override public void resize(int width, int height) {}
+
     @Override
-    public void show() {
-        gameMusic.play();
+    public void pause() {
+        paused = true;
+        float mv = game.getMasterVolume();
+        float mus = game.getMusicVolume();
+        gameMusic.setVolume(mv * mus * 0.33f);
     }
 
     @Override
-    public void resize(int width, int height) {
-        // opcional: camera.viewportWidth = width; camera.viewportHeight = height; camera.update();
+    public void resume() {
+        paused = false;
+        aplicarVolumenMusica();
+        keyCooldown = repeatDelay;
     }
 
-    @Override
-    public void pause() { }
-
-    @Override
-    public void resume() { }
-
-    @Override
-    public void hide() { }
+    @Override public void hide() {}
 
     @Override
     public void dispose() {
-        this.explosionSound.dispose();
-        this.gameMusic.dispose();
-        // limpiar managers (texturas/recursos manejados dentro de Ball2/Bullet si corresponde)
-        asteroidManager.clear();
-        bulletManager.clear();
+        if (explosionSound != null) explosionSound.dispose();
+        if (gameMusic != null) gameMusic.dispose();
+        if (texturaPausa != null) texturaPausa.dispose();
+        if (asteroidManager != null) asteroidManager.clear();
+        if (bulletManager != null) bulletManager.clear();
+        if (meleeManager != null) meleeManager.clear();
     }
 
-	public AsteroidManager getAsteroidManager() {
-		return asteroidManager;
-	}
-
-	public BulletManager getBulletManager() {
-		return bulletManager;
-	}
-
-	public CollisionManager getCollisionManager() {
-		return collisionManager;
-	}
-	
-	public MeleeManager getMeleeManager() {
-		return meleeManager;
-	}
-   
+    // Accesores para managers (si los necesitan las Armas o sistemas externos)
+    public AsteroidManager getAsteroidManager() { return asteroidManager; }
+    public BulletManager getBulletManager() { return bulletManager; }
+    public CollisionManager getCollisionManager() { return collisionManager; }
+    public MeleeManager getMeleeManager() { return meleeManager; }
 }

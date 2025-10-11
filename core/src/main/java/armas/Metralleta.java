@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Bullet;
 import pantallas.PantallaJuego;
-import personajes.Nave4;
+import personajes.Jugador;
 
 public class Metralleta extends Arma {
 
@@ -14,7 +14,7 @@ public class Metralleta extends Arma {
     }
 
     @Override
-    public void disparar(Nave4 nave, PantallaJuego juego, float delta) {
+    public void disparar(Jugador nave, PantallaJuego juego, float delta) {
         actualizar(delta);
         
         if (municion <= 0) {
@@ -33,7 +33,7 @@ public class Metralleta extends Arma {
         }
     }
 
-    private void crearBala(Nave4 nave, PantallaJuego juego) {
+    private void crearBala(Jugador nave, PantallaJuego juego) {
         float radians = (float) Math.toRadians(nave.getRotacion() + 90);
         float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
         float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;

@@ -1,4 +1,4 @@
-package personajes;
+/*package personajes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -8,8 +8,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
+<<<<<<< HEAD
 import armas.*;
+=======
+>>>>>>> origin/tarde
 
+import armas.Arma;
 import hitboxes.Ball2;
 import pantallas.PantallaJuego;
 
@@ -39,6 +43,7 @@ public class Nave4 {
     	spr.setOriginCenter();
 
     }
+    
     public void draw(SpriteBatch batch, PantallaJuego juego){
         float x =  spr.getX();
         float y =  spr.getY();
@@ -87,6 +92,12 @@ public class Nave4 {
         
         spr.setPosition(x+xVel, y+yVel);
 	    spr.draw(batch);
+<<<<<<< HEAD
+=======
+    
+
+        // disparo
+>>>>>>> origin/tarde
 	    
 	    
 	    if (armaActual.getMunicion() == 0) {
@@ -98,6 +109,7 @@ public class Nave4 {
 	    if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
 	        armaActual.disparar(this, juego, Gdx.graphics.getDeltaTime());
         	
+
         }
     }
       
@@ -169,4 +181,4 @@ public class Nave4 {
 		return yVel;
 	}
 	
-}
+}*/
