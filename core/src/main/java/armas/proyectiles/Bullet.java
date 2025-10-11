@@ -9,48 +9,53 @@ import hitboxes.Ball2;
 
 
 public class Bullet {
-
 	private float xSpeed;
 	private float ySpeed;
 	private boolean destroyed = false;
 	private Sprite spr;
-	    
-	    public Bullet(float x, float y, float rotation, float speed, Texture tx) {
-	    	spr = new Sprite(tx);
-	    	spr.setPosition(x, y);
-	    	
-	    	// Convertir rotación a radianes
-	        float radians = (float) Math.toRadians(rotation);
+	
+	public Bullet(float x, float y, float rotation, float speed, Texture tx) {
+    	spr = new Sprite(tx);
+    	
+    	// X, Y
+    	// X - TamañoTextura / 2
+    	spr.setPosition(x - tx.getWidth() / 2, y - tx.getHeight() / 2);
+    	spr.setOriginCenter();
+    	
+    	// Convertir rotación a radianes
+        float radians = (float) Math.toRadians(rotation + 90);
 
-	        // Calcular velocidad en X e Y según el ángulo
-	        this.xSpeed = (float) Math.cos(radians) * speed;
-	        this.ySpeed = (float) Math.sin(radians) * speed;
-	    }
-	    public void update() {
-	        spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);
-	        if (spr.getX() < 0 || spr.getX()+spr.getWidth() > Gdx.graphics.getWidth()) {
-	            destroyed = true;
-	        }
-	        if (spr.getY() < 0 || spr.getY()+spr.getHeight() > Gdx.graphics.getHeight()) {
-	        	destroyed = true;
-	        }
-	        
-	    }
-	    
-	    public void draw(SpriteBatch batch) {
-	    	spr.draw(batch);
-	    }
-	    
-	    public boolean checkCollision(Ball2 b2) {
-	        if(spr.getBoundingRectangle().overlaps(b2.getArea())){
-	        	// Se destruyen ambos
-	            this.destroyed = true;
-	            return true;
+        // Calcular velocidad en X e Y según el ángulo
+        this.xSpeed = (float) Math.cos(radians) * speed;
+        this.ySpeed = (float) Math.sin(radians) * speed;
+    }
 	
-	        }
-	        return false;
-	    }
+    public void update() {
+        spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);
+        if (spr.getX() < 0 || spr.getX()+spr.getWidth() > Gdx.graphics.getWidth()) {
+            destroyed = true;
+        }
+        if (spr.getY() < 0 || spr.getY()+spr.getHeight() > Gdx.graphics.getHeight()) {
+        	destroyed = true;
+        }
+        
+    }
 	    
-	    public boolean isDestroyed() {return destroyed;}
-	
+    public void draw(SpriteBatch batch) {
+    	spr.draw(batch);
+    }
+    
+    public boolean checkCollision(Ball2 b2) {
+        if(spr.getBoundingRectangle().overlaps(b2.getArea())){
+        	// Se destruyen ambos
+            this.destroyed = true;
+            return true;
+
+        }
+        return false;
+    }
+    
+    public boolean isDestroyed() {
+    	return destroyed;
+    }
 }

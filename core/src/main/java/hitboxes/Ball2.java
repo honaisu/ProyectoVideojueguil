@@ -16,6 +16,7 @@ public class Ball2 {
 
     public Ball2(int x, int y, int size, int xSpeed, int ySpeed, Texture tx) {
     	spr = new Sprite(tx);
+    	spr.setScale(2f);
     	this.x = x; 
  	
         //validar que borde de esfera no quede fuera
@@ -75,6 +76,4 @@ public class Ball2 {
 	public void setySpeed(int ySpeed) {
 		this.ySpeed = ySpeed;
 	}
-	
-    
 }
