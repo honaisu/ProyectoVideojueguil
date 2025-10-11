@@ -38,9 +38,11 @@ public class Melee extends Arma {
         
         float swingX = centerX + (float) Math.cos(radians) * length;
         float swingY = centerY + (float) Math.sin(radians) * length;
-
+        
+        soundBala.play(0.1f);
         swingActual = new Swing(swingX, swingY, radio , nave);
         juego.agregarSwing(swingActual);
+        
 
     }
 

@@ -10,8 +10,6 @@ import pantallas.PantallaJuego;
 import personajes.Nave4;
 
 public class Escopeta extends Arma {
-	
-	//private float tiempoDesdeUltimoDisparo = cadencia;
 
 	public Escopeta() {
 		super(3f, 8, new Texture(Gdx.files.internal("Rocket2.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-import armas.Arma;
+import armas.*;
 
 import hitboxes.Ball2;
 import pantallas.PantallaJuego;
@@ -21,7 +21,6 @@ public class Nave4 {
 
 	public Sprite spr;		//REVISAR ESTO
     private Sound sonidoHerido;
-    public Texture txBala;  //REVISAR ESTO
     private boolean herido = false;
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
@@ -88,10 +87,14 @@ public class Nave4 {
         
         spr.setPosition(x+xVel, y+yVel);
 	    spr.draw(batch);
-    
-        // disparo
 	    
-	    //armaActual.actualizar(Gdx.graphics.getDeltaTime());
+	    
+	    if (armaActual.getMunicion() == 0) {
+	    	this.setArma(new Melee());
+	    }
+	    
+        // disparo
+	    armaActual.actualizar(Gdx.graphics.getDeltaTime());
 	    if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
 	        armaActual.disparar(this, juego, Gdx.graphics.getDeltaTime());
         	
@@ -140,7 +143,6 @@ public class Nave4 {
     public int getVidas() {
     	return vidas;
     }
-    //public boolean isDestruida() { return destruida;}
     public int getX() {
     	return (int) spr.getX();
     }
@@ -155,7 +157,6 @@ public class Nave4 {
 	}
 	public void setArma(Arma arma) {
 		armaActual = arma;
-		
 	}
 	public Arma getArma() {
 		return armaActual;

@@ -75,9 +75,10 @@ public class PantallaJuego implements Screen {
         nave.setVidas(vidas);
         
         //PROBAR ARMAS
-        //nave.setArma(new Metralleta());
+        nave.setArma(new Metralleta());
         //nave.setArma(new Escopeta());
         //nave.setArma(new Melee());
+        
         
 
         // Inicializar managers
