@@ -12,16 +12,20 @@ import personajes.Jugador;
 public class Escopeta extends Arma {
 
 	public Escopeta() {
-		super(3f, 8, new Texture(Gdx.files.internal("Rocket2.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
+		super(3f, 															// cadencia
+				8, 															// municion
+				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));	// sonido
 	}
 
 	@Override
 	public void disparar(Jugador nave, PantallaJuego juego, float delta) {
 		actualizar(delta);
         
+		// sin balas
         if (municion <= 0) {
-            return; // SIN BALAS
+            return; 
         }
+        //cadencia
         if (municion > 0) {
         	tiempoDesdeUltimoDisparo += delta;
             if (tiempoDesdeUltimoDisparo >= cadencia) {
@@ -35,6 +39,7 @@ public class Escopeta extends Arma {
         }
 	}
 	
+	//crea la dispersion de las balas de la escopeta con direccion respecto al jugador
 	private void crearBala(Jugador nave, PantallaJuego juego) {
         float radians = (float) Math.toRadians(nave.getRotacion() + 90);
         float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
@@ -44,19 +49,21 @@ public class Escopeta extends Arma {
         float bulletX = centerX + (float) Math.cos(radians) * length;
         float bulletY = centerY + (float) Math.sin(radians) * length;
         
+        //simula una dispersion de balas aleatorias
         Random r = new Random();
-        int pellets = 8;
-        int spread = 15; // grados de apertura
+        
+        int pellets = 8;	// perdigones
+        int spread = 15; 	// grados de apertura
 
         for (int i = 0; i < pellets; i++) {
             // Ángulo con desviación aleatoria
             float angle = nave.getRotacion() + (r.nextFloat() * spread * 2 - spread); // -15 a +15 grados
 
             Bullet bala = new Bullet(
-                bulletX, bulletY,
-                angle,                     // dirección corregida
-                10f + r.nextInt(4),        // velocidad levemente aleatoria
-                txBala
+                bulletX, bulletY,								// posicion de la bala
+                angle,                     						// dirección de la bala
+                10f + r.nextInt(4),        						// velocidad levemente aleatoria
+                new Texture(Gdx.files.internal("Rocket2.png"))	// textura de la bala
             );
             juego.agregarBala(bala);
         }

@@ -7,14 +7,18 @@ import armas.proyectiles.Swing;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
+//Clase para el arma cuerpo a cuerpo
 public class Melee extends Arma {
-
-    private Swing swingActual;
+	
+    private Swing swingActual;	//usa un proyectil arqueado
 
     public Melee() {
-        super(0.8f, 9999, new Texture(Gdx.files.internal("semicirculo.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));  // cadencia de medio segundo, sin munición real
+        super(0.8f,															// cadencia
+        		9999,														// municion
+        		Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));	// sonido
     }
 
+    //clase sobrescrita
     @Override
     public void disparar(Jugador nave, PantallaJuego juego, float delta) {
         actualizar(delta);
@@ -26,13 +30,14 @@ public class Melee extends Arma {
         crearSwing(nave, juego);
         reiniciarCooldown();
     }
+    
+    //crea el swing del arma con direccion respecto al jugador
+    private void crearSwing(Jugador jug, PantallaJuego juego) {
+    	float radians = (float) Math.toRadians(jug.getRotacion() + 90);
 
-    private void crearSwing(Jugador nave, PantallaJuego juego) {
-    	float radians = (float) Math.toRadians(nave.getRotacion() + 90);
-
-        float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
-        float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;
-        float length = nave.spr.getHeight() / 2;
+        float centerX = jug.spr.getX() + jug.spr.getWidth() / 2;
+        float centerY = jug.spr.getY() + jug.spr.getHeight() / 2;
+        float length = jug.spr.getHeight() / 2;
         
         float radio = 100f;  // Alcance del golpe
         
@@ -40,10 +45,9 @@ public class Melee extends Arma {
         float swingY = centerY + (float) Math.sin(radians) * length;
         
         soundBala.play(0.1f);
-        swingActual = new Swing(swingX, swingY, radio , nave);
+        swingActual = new Swing(swingX, swingY, radio , jug);
         juego.agregarSwing(swingActual);
-        
-
+       
     }
 
     public Swing getSwingActual() {

@@ -5,26 +5,28 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
+//Clase que se encarga de crear una colision en forma de semicirculo
 public class ArcHitbox {
 
-    private float x;
-    private float y;
-    private float radio;
-    private float angulo; 
-    private Sprite spr;
-    private boolean visible = true;
+    private float x;				// posicion en eje x
+    private float y;				// posicion en eje y
+    private float radio;			// radio del semicirculo
+    private float rotacion; 		// rotacion del semicirculo
+    private Sprite spr;				// sprite del semicirculo
+    private boolean visible = true;	// visibilidad del semicirculo
 
-    public ArcHitbox(float x, float y, float radio, float angulo, Texture tx) {
+    public ArcHitbox(float x, float y, float radio, float rotacion, Texture tx) {
         this.x = x;
         this.y = y;
         this.radio = radio;
-        this.angulo = angulo; 
-
+        this.rotacion = rotacion; 
+        
+        //inicializa el sprite
         spr = new Sprite(tx);
         spr.setSize(radio * 2, radio * 2);
         spr.setOriginCenter();
         spr.setPosition(x - radio, y - radio);
-        spr.setRotation(angulo);
+        spr.setRotation(rotacion);
     }
 
     public void draw(SpriteBatch batch) {
@@ -32,8 +34,9 @@ public class ArcHitbox {
             spr.draw(batch);
         }
     }
-
-    public boolean colisionaCon(Ball2 b2) {
+    
+    //verifica la colision dentro del area del semicirculo
+    public boolean colisionaCon(BallHitbox b2) {
         Rectangle rect = b2.getArea();
 
         float cx = rect.x + rect.width / 2;
@@ -51,7 +54,7 @@ public class ArcHitbox {
         if (anguloObjetivo < 0) anguloObjetivo += 360;
 
         
-        float anguloAlineado = angulo + 90; // Ajustamos 90 grados
+        float anguloAlineado = rotacion + 90;
 
         float inicio = anguloAlineado - 90;
         float fin = anguloAlineado + 90;
@@ -76,7 +79,7 @@ public class ArcHitbox {
     }
 
     public void setAngulo(float angulo){
-        this.angulo = angulo;
+        this.rotacion = angulo;
         spr.setRotation(angulo);
     }
 
@@ -84,8 +87,14 @@ public class ArcHitbox {
 		return spr;
 	}
 	
-	public void mover(float xVel, float yVel) {
+	//actualiza el movimiento del sprite con el movimiento de la nave
+	public void mover(float xVel, float yVel, float rot) {
 		spr.setPosition(spr.getX()+xVel, spr.getY()+yVel);
+		spr.setRotation(rot);
+		
+		this.x = spr.getX() + radio;  // Centro X
+	    this.y = spr.getY() + radio;  // Centro Y
+	    this.rotacion = rot;
 
 	}
 }
