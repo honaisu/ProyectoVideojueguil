@@ -23,7 +23,7 @@ public class SpaceNavigation extends Game {
     // Volúmenes globales (0.0f a 1.0f)
     private float masterVolume = 1.0f;
     private float musicVolume  = 0.30f;
-    private float sfxVolume    = 0.60f;
+    private float sfxVolume    = 0.30f;
 
     @Override
     public void create() {

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hitboxes.Ball2;
 
-
 public class Bullet {
 
 	private float xSpeed;

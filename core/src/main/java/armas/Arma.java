@@ -17,12 +17,11 @@ public abstract class Arma {
     protected Texture txBala;
     protected Sound soundBala;
     
-    public Arma(float cadencia, int municionMax, Texture txBala, Sound soundBala) {
+    public Arma(float cadencia, int municionMax, Sound soundBala) {
     	this.cadencia = cadencia;
         this.municionMax = municionMax;
         this.municion = municionMax;
         
-        this.txBala = txBala;
         this.soundBala = soundBala;
         
         this.tiempoDesdeUltimoDisparo = cadencia;

@@ -12,7 +12,7 @@ public class Melee extends Arma {
     private Swing swingActual;
 
     public Melee() {
-        super(0.8f, 9999, new Texture(Gdx.files.internal("semicirculo.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));  // cadencia de medio segundo, sin munición real
+        super(0.8f, 9999, Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));  // cadencia de medio segundo, sin munición real
     }
 
     @Override

@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import armas.*;
 import armas.proyectiles.Bullet;
 import armas.proyectiles.Swing;
+import armas.proyectiles.RayoLaser;
 import managers.AsteroidManager;
 import managers.BulletManager;
 import managers.CollisionManager;
@@ -99,9 +100,12 @@ public class PantallaJuego implements Screen {
         game.setJugador(nave);
         nave.setVidas(vidas);
         
-        //probar armas
-        nave.setArma(new Metralleta());
+        //========================
+        //Probar armas
+        //========================
+        //nave.setArma(new Metralleta());
         //nave.setArma(new Escopeta());
+        nave.setArma(new Laser());
 
         // Crear textura overlay 1x1 para la pausa
         com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(

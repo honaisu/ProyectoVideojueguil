@@ -10,7 +10,7 @@ import personajes.Jugador;
 public class Metralleta extends Arma {
 
     public Metralleta() {
-        super(0.2f, 30, new Texture(Gdx.files.internal("semicirculo.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 
+        super(0.2f, 30, Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 
     }
 
     @Override
