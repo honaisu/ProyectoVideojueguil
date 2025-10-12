@@ -12,10 +12,10 @@ public class PantallaManager {
     public PantallaManager(NotHotlineMiami game) {
         this.game = game;
         this.pantallas = new HashMap<>();
-        this.initScreens();
+        this.iniciarPantallas();
     }
     
-    private void initScreens() {
+    private void iniciarPantallas() {
         // Crea una instancia de cada pantalla y la guarda en el mapa
         pantallas.put(TipoPantalla.MENU,			new PantallaMenu(game));
         pantallas.put(TipoPantalla.GAME_OVER, 		new PantallaGameOver(game));
@@ -23,13 +23,12 @@ public class PantallaManager {
         pantallas.put(TipoPantalla.CONFIGURACION, 	new PantallaConfiguracion(game));
     }
     
-    public void changeScreen(TipoPantalla tipoPantalla) {
+    public void cambiarPantalla(TipoPantalla tipoPantalla) {
         if (tipoPantalla.equals(TipoPantalla.JUEGO)) {
             // Desecha la pantalla de juego anterior si existe
-            PantallaBase oldGameScreen = pantallas.get(TipoPantalla.JUEGO);
-            if (oldGameScreen != null) {
-                oldGameScreen.dispose();
-            }
+            PantallaBase antiguaPantalla = pantallas.get(TipoPantalla.JUEGO);
+            if (antiguaPantalla != null) antiguaPantalla.dispose();
+            
             // Crea y establece la nueva pantalla de juego
             PantallaJuego nuevaPantallaJuego = new PantallaJuego(game, 1, 3, 0);
             pantallas.put(TipoPantalla.JUEGO, nuevaPantallaJuego);

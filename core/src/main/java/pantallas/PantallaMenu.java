@@ -2,7 +2,6 @@ package pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 
@@ -91,13 +90,13 @@ public class PantallaMenu extends PantallaBase {
 	private void activarSeleccion() {
 	    switch (opcionActual) {
 	        case INICIAR:
-	        	game.getPantallaManager().changeScreen(TipoPantalla.JUEGO);
+	        	game.getPantallaManager().cambiarPantalla(TipoPantalla.JUEGO);
 	        	break;
 	        case PERSONALIZAR: 
-	        	game.getPantallaManager().changeScreen(TipoPantalla.PERSONALIZACION);
+	        	game.getPantallaManager().cambiarPantalla(TipoPantalla.PERSONALIZACION);
 	        	break;
 	        case OPCIONES:
-	        	game.getPantallaManager().changeScreen(TipoPantalla.CONFIGURACION);
+	        	game.getPantallaManager().cambiarPantalla(TipoPantalla.CONFIGURACION);
 	        	break;
 	        case TUTORIAL: 
 	        	/* abrirTutorial(); */ 

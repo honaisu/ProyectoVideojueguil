@@ -20,7 +20,6 @@ public class AssetsLoader {
 	private static AssetsLoader instancia;
 	
 	// Texturas
-    
 	// Jugador
     private Map<SkinJugador, Texture> skinJugadorTextures;	
     

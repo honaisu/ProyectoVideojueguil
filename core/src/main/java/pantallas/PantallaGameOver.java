@@ -2,7 +2,6 @@ package pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -27,9 +26,7 @@ public class PantallaGameOver extends PantallaBase {
 	public void show() {
 	    // Reproducir una sola vez al entrar con master*sfx
 	    if (!played && sonidoMuerte != null) {
-	        float mv = game.getMasterVolume();
-	        float sfx = game.getSfxVolume();
-	        sonidoMuerte.play(mv * sfx);
+	        sonidoMuerte.play(game.getSfxVolume());
 	        played = true;
 	    }
 	}
@@ -39,29 +36,26 @@ public class PantallaGameOver extends PantallaBase {
 		this.update(delta);
 		this.draw();
 	}
-	
-	@Override
-	public void dispose() {
-	    if (sonidoMuerte != null) sonidoMuerte.dispose();
-	}
 
 	@Override
 	protected void update(float delta) {
-		if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			Screen ss = new PantallaJuego(game,1,3,0);
-			ss.resize(1200, 800);
-			game.setScreen(ss);
-			this.dispose();
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+			game.getPantallaManager().cambiarPantalla(TipoPantalla.JUEGO);
 		}
 	}
 
 	@Override
 	protected void draw() {
-		ScreenUtils.clear(Color.FOREST);
+		ScreenUtils.clear(Color.NAVY);
 
 	    game.getBatch().begin();
 	    game.getFont().draw(game.getBatch(), "Perdiste WUAAAJAJAJAJN !!! ", 120, 400, 400, 1, true);
 	    game.getFont().draw(game.getBatch(), "Pincha en cualquier lado o presiona una tecla para reiniciar ...", 100, 300);
 	    game.getBatch().end();
+	}
+	
+	@Override
+	public void dispose() {
+	    if (sonidoMuerte != null) sonidoMuerte.dispose();
 	}
 }

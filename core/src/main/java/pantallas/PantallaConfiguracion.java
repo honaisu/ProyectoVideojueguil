@@ -64,14 +64,14 @@ public class PantallaConfiguracion extends PantallaBase {
         		aplicarCambios();
         		break;
         	case VOLVER:
-        		game.setScreen(new PantallaMenu(game));
-        		return;
+        		game.getPantallaManager().cambiarPantalla(TipoPantalla.MENU);
+        		break;
         	default: break;
         	}
         }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new PantallaMenu(game));
+        	game.getPantallaManager().cambiarPantalla(TipoPantalla.MENU);
             return;
         }
     }
@@ -138,6 +138,7 @@ public class PantallaConfiguracion extends PantallaBase {
 
     /**
      * Sub-clase que sólo se encarga de manejar los valores del sonido.
+     * TODO Conversar con ayudante o profes no se si dejen hacer esto, me pasé :p
      */
     private static class Sonido {    	
     	static float master;

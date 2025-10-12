@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
 import hitboxes.BallHitbox;
+import logica.AnimationManager;
 import logica.NotHotlineMiami;
 import pantallas.PantallaJuego;
 
@@ -23,7 +24,7 @@ public class Jugador {
 	private float yVel = 0;
 
 	// Visual y audio
-	public Sprite spr = SkinJugador.JUGADOR_ORIGINAL.crearSprite();
+	public Sprite spr;
 	private Sound sonidoHerido = null /*TODO*/;
 	
 	// ENCARGADOS DE ANIMACIÓN
@@ -41,34 +42,15 @@ public class Jugador {
 	// Armas
 	private Arma armaActual;
 
-	// Volúmenes globales
-	private NotHotlineMiami gameRef; //TODO arreglar esto
-	
-	private Animation<TextureRegion> getWalkFrames(Texture texture) {
-		// Parte encargada de la textura para la animación
-    	TextureRegion[][] tmp = TextureRegion.split(texture, texture.getWidth() / 4, texture.getHeight() / 1);
-    	
-    	TextureRegion[] walkFrames = new TextureRegion[4 * 1];
-    	int index = 0;
-		for (int i = 0; i < 1; i++) {
-			for (int j = 0; j < 4; j++) {
-				walkFrames[index++] = tmp[i][j];
-			}
-		}
-		
-		return new Animation<>(0.2f, walkFrames);
-	}
-
-	public Jugador(int x, int y, float rotacion, Texture texture, Arma armaActual, NotHotlineMiami gameRef) {
-	    this.gameRef = gameRef;
+	public Jugador(int x, int y, float rotacion, Arma armaActual, SkinJugador skin) {
 	    this.armaActual = armaActual;
 	    this.rotacion = rotacion;
 	    
 	    // Sprite del jugador
-	    spr.setTexture(texture);
+	    spr = skin.crearSprite();
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animacion = getWalkFrames(spr.getTexture());
+    	this.animacion = AnimationManager.createJugadorAnimation(skin);
 	    
     	spr.scale(1f);
     	spr.rotate90(false);
@@ -179,7 +161,7 @@ public class Jugador {
 	}
 
 	// Colisión con asteroide (rebotes + estados/sonido)
-	public boolean checkCollision(BallHitbox b) {
+	public boolean checkCollision(BallHitbox b, float sfxVolume) {
 		if (herido) return false;
 		
 		boolean colision = b.getArea().overlaps(spr.getBoundingRectangle());
@@ -209,8 +191,7 @@ public class Jugador {
         herido = true;
         tiempoHerido = tiempoHeridoMax;
 
-        float vol = gameRef.getMasterVolume() * gameRef.getSfxVolume();
-        if (sonidoHerido != null) sonidoHerido.play(vol);
+        if (sonidoHerido != null) sonidoHerido.play(sfxVolume);
 
         if (vidas <= 0) destruida = true;
         return true;

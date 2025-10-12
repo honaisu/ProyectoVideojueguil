@@ -5,5 +5,6 @@ public enum TipoPantalla {
 	JUEGO,
 	PERSONALIZACION,
 	CONFIGURACION,
+	TUTORIAL,
 	GAME_OVER;
 }

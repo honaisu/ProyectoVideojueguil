@@ -22,6 +22,7 @@ import managers.BulletManager;
 import managers.CollisionManager;
 import managers.MeleeManager;
 import personajes.Jugador;
+import personajes.SkinJugador;
 
 public class PantallaJuego extends PantallaBase {
     private SpriteBatch batch;
@@ -35,7 +36,7 @@ public class PantallaJuego extends PantallaBase {
     private int velYAsteroides = 2;
     private int cantAsteroides = 5;
 
-    private Jugador nave;
+    private Jugador jugador;
 
     // Managers
     private AsteroidManager asteroidManager;
@@ -63,9 +64,6 @@ public class PantallaJuego extends PantallaBase {
 
         batch = game.getBatch();
 
-        // Audio
-        //explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-
         explosionSound = AssetsLoader.getInstancia().getExplosionSound();
         gameMusic = AssetsLoader.getInstancia().getGameMusic();
         gameMusic.setLooping(true);
@@ -77,30 +75,27 @@ public class PantallaJuego extends PantallaBase {
         asteroidManager = new AsteroidManager(cantAsteroides, velXAsteroides, velYAsteroides);
         bulletManager = new BulletManager();
         meleeManager = new MeleeManager();
-        collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
-
-        // La Skin a usar del player
-        Texture skinTexture = game.getSkinSelectedTx();
+        //collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
+        collisionManager = new CollisionManager(game);
         
         //Crear Jugador
-        nave = new Jugador(
-            Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2,
-            0f, // rotación inicial
-            skinTexture,
-            new Melee(),
-            game
+        jugador = new Jugador(
+            Gdx.graphics.getWidth() / 2, 	// X
+            Gdx.graphics.getHeight() / 2,	// Y
+            0f,								// ROTACION
+            new Melee(),					// ARMA PRINCIPAL
+            game.getSkinSelected()			// SKIN
         );
         
-        game.setJugador(nave);
-        nave.setVidas(vidas);
+        jugador.setVidas(vidas);
         
         //probar armas
-        nave.setArma(new Metralleta());
-        //nave.setArma(new Escopeta());
+        //jugador.setArma(new Metralleta());
+        jugador.setArma(new Escopeta());
 
         // Crear textura overlay 1x1 para la pausa
         Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pm.setColor(1, 1, 1, 1);
+        pm.setColor(Color.WHITE);
         pm.fill();
         texturaPausa = new Texture(pm);
         pm.dispose();
@@ -114,16 +109,16 @@ public class PantallaJuego extends PantallaBase {
 
     private void dibujaEncabezado() {
         game.getFont().getData().setScale(2f);
-        game.getFont().draw(batch, "Vidas: " + nave.getVidas() + " Ronda: " + ronda, 10, 30);
+        game.getFont().draw(batch, "Vidas: " + jugador.getVidas() + " Ronda: " + ronda, 10, 30);
         game.getFont().draw(batch, "Score:" + this.score, Gdx.graphics.getWidth() - 150, 30);
         game.getFont().draw(batch, "HighScore:" + game.getHighScore(), Gdx.graphics.getWidth() / 2 - 100, 30);
 
         // Munición arma (si aplica)
         //if (nave.getArma() == null || nave.getArma() instanceof Melee) return;
         
-        if (nave.getArma() != null && !(nave.getArma() instanceof Melee)) {
-            int mun = nave.getArma().getMunicion();
-            int max = nave.getArma().getMunicionMax();
+        if (jugador.getArma() != null && !(jugador.getArma() instanceof Melee)) {
+            int mun = jugador.getArma().getMunicion();
+            int max = jugador.getArma().getMunicionMax();
             game.getFont().draw(batch, "Municion: " + mun + " / " + max,
                     Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
         }
@@ -140,15 +135,15 @@ public class PantallaJuego extends PantallaBase {
         }
 
         // Update si no está en pausa ni herido
-        if (!paused && !nave.estaHerido()) {
+        if (!paused && !jugador.estaHerido()) {
             bulletManager.update();
             meleeManager.update(delta);
             asteroidManager.update();
 
-            int gained = collisionManager.handleCollisions(nave, bulletManager, meleeManager, asteroidManager);
+            int gained = collisionManager.handleCollisions(jugador, bulletManager, meleeManager, asteroidManager);
             if (gained > 0) score += gained;
 
-            if (nave.estaDestruido()) {
+            if (jugador.estaDestruido()) {
                 if (score > game.getHighScore()) game.setHighScore(score);
                 Screen ss = new PantallaGameOver(game);
                 ss.resize(1200, 800);
@@ -156,7 +151,8 @@ public class PantallaJuego extends PantallaBase {
                 dispose();
                 return;
             }
-
+            
+            // TODO
             if (asteroidManager.isEmpty()) {
                 
             }
@@ -168,7 +164,7 @@ public class PantallaJuego extends PantallaBase {
 
         bulletManager.render(batch);
         meleeManager.render(batch);
-        nave.draw(batch, this, paused, delta);
+        jugador.draw(batch, this, paused, delta);
         asteroidManager.render(batch);
 
         if (paused) dibujarMenuPausa(delta);
@@ -232,9 +228,7 @@ public class PantallaJuego extends PantallaBase {
     @Override
     public void pause() {
         paused = true;
-        float mv = game.getMasterVolume();
-        float mus = game.getMusicVolume();
-        gameMusic.setVolume(mv * mus * 0.33f);
+        gameMusic.setVolume(game.getMusicVolume() * 0.33f);
     }
 
     @Override

@@ -21,13 +21,12 @@ public class NotHotlineMiami extends Game {
 	private int highScore;
 	
     // Jugador y selección de skin
-    private Jugador jugador;		// se crea al iniciar partida
-    private Texture skinSelected;	// la skin a usar
+    private SkinJugador skinSelected;	// la skin a usar
 	
     // Volúmenes globales (0.0f a 1.0f)
     private float masterVolume = 1.0f;
-    private float musicVolume  = 0.30f;
-    private float sfxVolume    = 0.60f;
+    private float musicVolume  = 0.3f;
+    private float sfxVolume    = 0.6f;
     
     private PantallaManager pantallaManager;
     
@@ -46,11 +45,10 @@ public class NotHotlineMiami extends Game {
 		// ESTE ES UN SINGLETON!! carga los assets :D
 		AssetsLoader.getInstancia().load();
 		
-        jugador = null;
-        skinSelected = AssetsLoader.getInstancia().getSkinTexture(SkinJugador.JUGADOR_ORIGINAL);
+        skinSelected = SkinJugador.JUGADOR_ORIGINAL;
 		
         pantallaManager = new PantallaManager(this);
-        pantallaManager.changeScreen(TipoPantalla.MENU);
+        pantallaManager.cambiarPantalla(TipoPantalla.MENU);
 	}
 
 	@Override
@@ -68,18 +66,14 @@ public class NotHotlineMiami extends Game {
     public int getHighScore() { return highScore; }
     public void setHighScore(int highScore) { this.highScore = highScore; }
 
-    // Jugador
-    public Jugador getJugador() { return jugador; }
-    public void setJugador(Jugador jugador) { this.jugador = jugador; }
-
     // Volúmenes globales
     public float getMasterVolume() { return masterVolume; }
     public void setMasterVolume(float v) { masterVolume = clamp01(v); }
 
-    public float getMusicVolume() { return musicVolume; }
+    public float getMusicVolume() { return masterVolume * musicVolume; }
     public void setMusicVolume(float v) { musicVolume = clamp01(v); }
 
-    public float getSfxVolume() { return sfxVolume; }
+    public float getSfxVolume() { return masterVolume * sfxVolume; }
     public void setSfxVolume(float v) { sfxVolume = clamp01(v); }
 
     // Utilidad local para limitar 0..1
@@ -90,11 +84,11 @@ public class NotHotlineMiami extends Game {
 	}
 
 	// SKIN
-	public void setSkinSelected(Texture texture) {
-		this.skinSelected = texture;
+	public void setSkinSelected(SkinJugador skin) {
+		this.skinSelected = skin;
 	}
 	
-	public Texture getSkinSelectedTx() {
+	public SkinJugador getSkinSelected() {
 		return skinSelected;
 	}
 

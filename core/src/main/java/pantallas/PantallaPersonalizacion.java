@@ -47,16 +47,14 @@ public class PantallaPersonalizacion extends PantallaBase {
 
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-        	game.setSkinSelected(AssetsLoader.getInstancia().getSkinTexture(skinActual));
-            game.setScreen(new PantallaMenu(game));
-            this.dispose();
+        	game.setSkinSelected(skinActual);
+            game.getPantallaManager().cambiarPantalla(TipoPantalla.MENU);
             return;
         }
 
         // Volver sin cambios
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new PantallaMenu(game));
-            this.dispose();
+            game.getPantallaManager().cambiarPantalla(TipoPantalla.MENU);
             return;
         }
 	}
