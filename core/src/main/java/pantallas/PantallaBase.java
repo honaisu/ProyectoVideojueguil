@@ -21,11 +21,15 @@ public abstract class PantallaBase implements Screen {
     public PantallaBase(SpaceNavigation game) {
         this.game = game;
     }
+    
+    public SpaceNavigation getGame() {
+    	return game;
+    }
 	
 	@Override public void show() {}
     @Override public void render(float delta) {}
     @Override public void resize(int width, int height) {
-        game.viewport.update(width, height, true);
+        game.getViewport().update(width, height, true);
     }
     @Override public void pause() {}
     @Override public void resume() {}

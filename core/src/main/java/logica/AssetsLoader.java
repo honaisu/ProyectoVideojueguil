@@ -28,10 +28,10 @@ public class AssetsLoader {
         asteroideTexture = new Texture(Gdx.files.internal("Mono.png"));
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-        hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.ogg"));
+        hurtSound = Gdx.audio.newSound(Gdx.files.internal("hurt.mp3"));
         disparoSound = Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"));
         
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav"));
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("musicaDoom.mp3"));
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.03f);
     }

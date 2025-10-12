@@ -1,3 +1,4 @@
+/*
 package personajes;
 
 import com.badlogic.gdx.Gdx;
@@ -10,8 +11,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
-import armas.Melee;
-import armas.proyectiles.Bullet;
+
+import armas.Arma;
 import hitboxes.Ball2;
 import pantallas.PantallaJuego;
 
@@ -20,25 +21,21 @@ public class Nave4 {
     private int vidas = 3;
     private float xVel = 0;
     private float yVel = 0;
-    private Sprite spr;
-    
-    // TODO quitar creo? o implementar de otra forma
     private Sound sonidoHerido;
-    private Sound soundBala;
-    private Texture txBala;
+    public Texture txBala;  //REVISAR ESTO
     private boolean herido = false;
     private int tiempoHeridoMax=50;
     private int tiempoHerido;
 	private float rotacion = 0f;
 	// ENCARGADOS DE ANIMACIÓN
-	public Animation<TextureRegion> animacion;
+	private Animation<TextureRegion> animacion;
     private float stateTime = 0f;
+    private Sprite spr;
+	
+	private Arma armaActual;
     
-    public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
+    public Nave4(int x, int y, float rotacion, Texture tx, Sound soundChoque, Arma armaActual) {
     	sonidoHerido = soundChoque;
-    	this.soundBala = soundBala;
-    	this.txBala = txBala;
-    	spr = new Sprite(tx, 64, 64);
     	
     	// Parte encargada de la textura para la animación
     	TextureRegion[][] tmp = TextureRegion.split(tx, tx.getWidth() / 4, tx.getHeight() / 1);
@@ -52,28 +49,14 @@ public class Nave4 {
 		}
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
     	this.animacion = new Animation<TextureRegion>(0.2f, walkFrames);
-    	
-    	spr.scale(2f);
-    	spr.rotate90(false);
-    	
-    	spr.setPosition(x, y);
-    	spr.setBounds(x, y, 45, 45);
-    	
-    	spr.setOriginCenter();
     }
     
     
     public void draw(SpriteBatch batch, PantallaJuego juego, float delta){
-		float x =  spr.getX();
-		float y =  spr.getY();
-		
 		// NECESARIOS PARA ANIMACION
 		TextureRegion currentFrame;
 		boolean isMoving = Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
-	    
-		/**
-		 * Parte encargada de cambiar el si se mueve o no el jugador
-		 */
+
 	    if (isMoving) {
 	        // Si se está moviendo, avanza el tiempo de la animación
 	        stateTime += delta; 
@@ -82,7 +65,9 @@ public class Nave4 {
 	        // Si está quieto, muestra siempre el primer fotograma de la animación
 	        currentFrame = animacion.getKeyFrame(0, true);
 	    }
-        
+    	this.armaActual = armaActual;
+    	this.rotacion = rotacion;
+    
 	    // LA LOGICA DEL HERIDO (el movimiento que hace)
         if (herido) {
         	spr.setX(spr.getX()+MathUtils.random(-2,2));
@@ -93,15 +78,20 @@ public class Nave4 {
         	return;
         }
         
-    	if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) spr.setRotation(++rotacion );
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) spr.setRotation(--rotacion);
+    	if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) rotacion += 5f;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
+        spr.setRotation(rotacion);
         
+        float friccion = 0.97f;
+        		
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
         	xVel -= Math.sin(Math.toRadians(rotacion)) * 0.2f;
         	yVel += Math.cos(Math.toRadians(rotacion)) * 0.2f;
-        } 
-        	
-        
+        } else {
+        	xVel *= friccion;
+        	yVel *= friccion;
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
         	xVel += Math.sin(Math.toRadians(rotacion)) * 0.2f;
         	yVel -= Math.cos(Math.toRadians(rotacion)) * 0.2f;
@@ -139,21 +129,10 @@ public class Nave4 {
                 spr.getWidth(), spr.getHeight(), 	// Dimensiones
                 spr.getScaleX(), spr.getScaleY(), 	// Escala
                 spr.getRotation()); 	// Rotación
-        
-        // disparo
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            float radians = (float) Math.toRadians(rotacion+90);
-
-            float centerX = spr.getX() + spr.getWidth() / 2;
-            float centerY = spr.getY() + spr.getHeight() / 2;
-            float length = spr.getHeight() / 2;
-
-            float bulletX = centerX + (float) Math.cos(radians) * length;
-            float bulletY = centerY + (float) Math.sin(radians) * length;
-
-            Bullet bala = new Bullet(bulletX, bulletY, rotacion, 10f, txBala);
-            juego.agregarBala(bala);
-            soundBala.play(0.1f);
+       
+	    //armaActual.actualizar(Gdx.graphics.getDeltaTime());
+	    if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+	        armaActual.disparar(this, juego, Gdx.graphics.getDeltaTime());
         }
     }
       
@@ -186,18 +165,16 @@ public class Nave4 {
         return false;
     }
     
+    
+    
     public boolean estaDestruido() {
        return (!herido && destruida);
-    }
-    
-    public boolean estaHerido() {
- 	   return herido;
     }
     
     public int getVidas() {
     	return vidas;
     }
-    //public boolean isDestruida() { return destruida;}
+
     public int getX() {
     	return (int) spr.getX();
     }
@@ -207,12 +184,23 @@ public class Nave4 {
 	public void setVidas(int vidas2) {
 		vidas = vidas2;
 	}
-	protected float getRotacion() {
+	public float getRotacion() {
 		return rotacion;
 	}
-
-	public void update(float delta) {
+	
+	public void setArma(Arma arma) {
+		armaActual = arma;
 		
 	}
+	public Arma getArma() {
+		return armaActual;
+	}
 	
-}
+	public float getxVel() {
+		return xVel;
+	}
+	public float getyVel() {
+		return yVel;
+	}
+	
+}*/
