@@ -7,15 +7,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import personajes.SpaceNavigation;
+import logica.SpaceNavigation;
 
 public class PantallaCustomizar implements Screen {
     private final SpaceNavigation game;
     private OrthographicCamera camera;
     private Texture tx1, tx2, seleccion;
 
-    // Rutas de los archivos en assets 
-    private static final String PATH_1 = "MainShip3.png";
+    // Rutas de los archivos en assets
+    private static final String PATH_1 = "referencia.png";	//TODO
     private static final String PATH_2 = "MainShipAlt.png";
 
     public PantallaCustomizar(SpaceNavigation game) {

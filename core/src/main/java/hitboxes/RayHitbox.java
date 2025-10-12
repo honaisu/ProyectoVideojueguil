@@ -112,7 +112,7 @@ public class RayHitbox {
         setToScreenEnd();
     }
 
-    public boolean colisionaCon(Ball2 b2) {
+    public boolean colisionaCon(BallHitbox b2) {
         if (!activo) return false;
 
         // Centro y radio aproximados del asteroide a partir de su AABB

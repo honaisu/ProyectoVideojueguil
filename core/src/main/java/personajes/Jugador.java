@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;         
-import hitboxes.Ball2;
+import hitboxes.BallHitbox;
+import logica.SpaceNavigation;
 import pantallas.PantallaJuego;
 
 public class Jugador {
@@ -21,40 +24,79 @@ public class Jugador {
 	private float yVel = 0;
 
 	// Visual y audio
-	public Sprite spr; // se mantiene público como en Nave4 si armas/hitboxes lo usan
+	public Sprite spr; // se mantiene público si armas/hitboxes lo usan
 	private Sound sonidoHerido;
-
+	
+	public Animation<TextureRegion> animacion;
+    private float stateTime = 0f;
+	
+	
 	// Herido
 	private boolean herido = false;
 	private int tiempoHeridoMax = 50;
 	private int tiempoHerido;
 
-	// Rotación (Nave4)
+	// Rotación Jugador
 	private float rotacion;
 
 	// Armas
 	private Arma armaActual;
 
 	// Volúmenes globales
-	private SpaceNavigation gameRef;
+	private SpaceNavigation gameRef; //TODO arreglar esto
 
 	public Jugador(int x, int y, float rotacion, Texture tx, Sound soundChoque, Arma armaActual, SpaceNavigation gameRef) {
 	    this.gameRef = gameRef;
 	    this.sonidoHerido = soundChoque;
 	    this.armaActual = armaActual;
 	    this.rotacion = rotacion;
-
-	    spr = new Sprite(tx);
-	    spr.setPosition(x, y);
-	    spr.setBounds(x, y, 45, 45);
-	    spr.setOriginCenter();
-	    spr.setRotation(rotacion);
+	    
+	    // Sprite del jugador
+	    spr = new Sprite(tx, 64, 64);
+	    
+	    // Parte encargada de la textura para la animación
+    	TextureRegion[][] tmp = TextureRegion.split(tx, tx.getWidth() / 4, tx.getHeight() / 1);
+    	
+    	TextureRegion[] walkFrames = new TextureRegion[4 * 1];
+    	int index = 0;
+		for (int i = 0; i < 1; i++) {
+			for (int j = 0; j < 4; j++) {
+				walkFrames[index++] = tmp[i][j];
+			}
+		}
+		// IMPLEMENTACIÓN DE LA ANIMACIÓN
+    	this.animacion = new Animation<TextureRegion>(0.2f, walkFrames);
+	    
+    	spr.scale(1f);
+    	spr.rotate90(false);
+    	
+    	spr.setPosition(x, y);
+    	spr.setBounds(x, y, 45, 45);
+    	
+    	spr.setOriginCenter();
+	    //spr.setRotation(rotacion);
 	}
 
 	// Dibuja y actualiza; si paused, no procesa input, físicas ni disparo
-	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused) {
+	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused, float delta) {
 	    float x = spr.getX();
 	    float y = spr.getY();
+	    
+	    // NECESARIOS PARA ANIMACION
+ 		TextureRegion currentFrame;
+ 		boolean isMoving = Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+ 	    
+ 		/**
+ 		 * Parte encargada de cambiar el si se mueve o no el jugador
+ 		 */
+ 	    if (isMoving) {
+ 	        // Si se está moviendo, avanza el tiempo de la animación
+ 	        stateTime += delta; 
+ 	        currentFrame = animacion.getKeyFrame(stateTime, true);
+ 	    } else {
+ 	        // Si está quieto, muestra siempre el primer fotograma de la animación
+ 	        currentFrame = animacion.getKeyFrame(0, true);
+ 	    }
 
 	    // Estado herido: parpadeo/temblor y contador
 	    if (herido) {
@@ -71,57 +113,66 @@ public class Jugador {
 	    }
 
 	    if (!paused) {
-	        // Rotación (LEFT/RIGHT) como Nave4
+	        // Rotación (LEFT/RIGHT) para el Jugador
 	        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  rotacion += 5f;
 	        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
 	        spr.setRotation(rotacion);
 
-	        // Thrust (UP) y freno (DOWN) + fricción 0.97
+	        // Acelerar (UP) y freno (DOWN) + fricción 0.9
 	        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
 	            xVel -= (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
 	            yVel += (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
 	        } else {
-	            xVel *= 0.97f;
-	            yVel *= 0.97f;
+	            xVel *= 0.9f;
+	            yVel *= 0.9f;
 	        }
 	        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 	            xVel += (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
 	            yVel -= (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
 	        }
 
-	        // Límites de velocidad como Nave4
+	        // Límites de velocidad para el Jugador
 	        if (xVel > 10.0f)  xVel = 10.0f;
 	        if (xVel < -10.0f) xVel = -10.0f;
 	        if (yVel > 10.0f)  yVel = 10.0f;
 	        if (yVel < -10.0f) yVel = -10.0f;
 
-	        // Rebote en bordes (mismo comportamiento)
+	        // Rebote en bordes
 	        if (x + xVel < 0 || x + xVel + spr.getWidth() > Gdx.graphics.getWidth())  xVel *= -1;
 	        if (y + yVel < 0 || y + yVel + spr.getHeight() > Gdx.graphics.getHeight()) yVel *= -1;
 
-	        // Aplicar movimiento
 	        spr.setPosition(x + xVel, y + yVel);
 	        
+	        // ENCARGADO DE MOSTRAR LA ANIMACIÓN
+	        batch.draw(
+	        		currentFrame, 						// Fotograma 
+	                spr.getX(), spr.getY(), 			// Posición
+	                spr.getOriginX(), spr.getOriginY(), // Punto de origen
+	                spr.getWidth(), spr.getHeight(), 	// Dimensiones
+	                spr.getScaleX(), spr.getScaleY(), 	// Escala
+	                spr.getRotation()); 				// Rotación
+	        
+	        // Arma sin municion automaticamente cambia a ataque Melee
 	        if (armaActual.getMunicion() == 0) {
+	        	//TODO ver que no dispare dos veces
 	            this.setArma(new Melee());
 	        }
 	        
-	        // Disparo vía Arma (tecla Z). El arma controla cadencia/munición y agrega entidades a la pantalla.
-	        if (armaActual != null) {
-	            float dt = Gdx.graphics.getDeltaTime();
-	            armaActual.actualizar(dt);
-	            if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-	                armaActual.disparar(this, juego, dt);
-	            }
-	        }
+	        // Disparo del arma actual (Z).
+	        
+            float dt = Gdx.graphics.getDeltaTime();
+            armaActual.actualizar(dt);
+            if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+                armaActual.disparar(this, juego, dt);
+            }
 	    }
-
+	    
 	    // Dibujar la nave
-	    spr.draw(batch);
+	    //spr.draw(batch);
 	}
 
 	// Colisión con asteroide (rebotes + estados/sonido)
-	public boolean checkCollision(Ball2 b) {
+	public boolean checkCollision(BallHitbox b) {
 	    if (!herido && b.getArea().overlaps(spr.getBoundingRectangle())) {
 	        // Rebote X
 	        if (xVel == 0) xVel += b.getXSpeed() / 2f;

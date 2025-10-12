@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hitboxes.RayHitbox;
-import hitboxes.Ball2;
+import hitboxes.BallHitbox;
 import personajes.Jugador;
 import armas.Laser;
 
@@ -89,7 +89,7 @@ public class RayoLaser extends Swing {
     }
 
     @Override
-    public boolean checkCollision(Ball2 b2) {
+    public boolean checkCollision(BallHitbox b2) {
         return !destroyed && rayo.colisionaCon(b2);
     }
 
