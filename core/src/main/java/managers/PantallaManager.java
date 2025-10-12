@@ -2,14 +2,14 @@ package managers;
 
 import java.util.HashMap;
 
-import logica.SpaceNavigation;
+import logica.NotHotlineMiami;
 import pantallas.*;
 
 public class PantallaManager {
-	private final SpaceNavigation game;
+	private final NotHotlineMiami game;
     private HashMap<TipoPantalla, PantallaBase> pantallas;
 
-    public PantallaManager(SpaceNavigation game) {
+    public PantallaManager(NotHotlineMiami game) {
         this.game = game;
         this.pantallas = new HashMap<>();
         initScreens();
@@ -19,12 +19,10 @@ public class PantallaManager {
         // Crea una instancia de cada pantalla y la guarda en el mapa
         pantallas.put(TipoPantalla.MENU,		new PantallaMenu(game));
         pantallas.put(TipoPantalla.GAME_OVER, 	new PantallaGameOver(game));
-        // La pantalla de juego se puede crear aquí o dinámicamente
     }
     
     public void changeScreen(TipoPantalla tipoPantalla) {
-        // Para la pantalla de juego, es mejor crear una nueva instancia cada vez para reiniciar el estado
-        if (tipoPantalla == TipoPantalla.JUEGO) {
+        if (tipoPantalla.equals(TipoPantalla.JUEGO)) {
             // Desecha la pantalla de juego anterior si existe
             PantallaBase oldGameScreen = pantallas.get(TipoPantalla.JUEGO);
             if (oldGameScreen != null) {

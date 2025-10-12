@@ -2,7 +2,7 @@ package pantallas;
 
 import com.badlogic.gdx.Screen;
 
-import logica.SpaceNavigation;
+import logica.NotHotlineMiami;
 
 /**
  * Clase abstracta encargada de poder tener una base de la lógica interna de las pantallas
@@ -12,22 +12,26 @@ import logica.SpaceNavigation;
  * requerimiento implementar todas a las sub-clases.
  */
 public abstract class PantallaBase implements Screen {
-    protected SpaceNavigation game;
+    protected NotHotlineMiami game;
 	
     /**
      * Constructor que toma el juego.
      * @param game
      */
-    public PantallaBase(SpaceNavigation game) {
+    public PantallaBase(NotHotlineMiami game) {
         this.game = game;
     }
     
-    public SpaceNavigation getGame() {
+    public NotHotlineMiami getGame() {
     	return game;
     }
-	
+    
+    // No son necesarias pero ayudan a ordenar mejor el codigo de cada una
+    public abstract void render(float delta);
+    protected abstract void update(float delta);
+    protected abstract void draw();
+    
 	@Override public void show() {}
-    @Override public void render(float delta) {}
     @Override public void resize(int width, int height) {
         game.getViewport().update(width, height, true);
     }

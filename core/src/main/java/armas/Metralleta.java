@@ -1,38 +1,38 @@
 package armas;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
 import armas.proyectiles.Bullet;
+import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
+//Clase para un arma escopeta
 public class Metralleta extends Arma {
-
     public Metralleta() {
-        super(0.2f, 30, new Texture(Gdx.files.internal("semicirculo.png")), Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 
+        super(0.2f,												// cadencia
+        		30, 											// municion
+        		AssetsLoader.getInstancia().getDisparoSound()); // sonido
     }
-
+    
+  //clase sobrescrita
     @Override
     public void disparar(Jugador nave, PantallaJuego juego, float delta) {
         actualizar(delta);
         
-        if (municion <= 0) {
-            return; // SIN BALAS
+        //sin balas
+        if (this.getMunicion() <= 0) return;
+        
+        //cadencia
+    	tiempoDesdeUltimoDisparo += delta;
+        if (tiempoDesdeUltimoDisparo >= cadencia) {
+            crearBala(nave, juego);
+            municion--; 
+            tiempoDesdeUltimoDisparo = 0;
         }
-        if (municion > 0) {
-        	tiempoDesdeUltimoDisparo += delta;
-            if (tiempoDesdeUltimoDisparo >= cadencia) {
-                crearBala(nave, juego);
-                municion--; 
-                tiempoDesdeUltimoDisparo = 0;
-            }
-        }
-        if (puedeDisparar()) {
-            reiniciarCooldown();
-        }
+        
+        if (puedeDisparar()) reiniciarCooldown();
     }
-
+    
+    //crea la bala de la metralleta con direccion respecto al jugador
     private void crearBala(Jugador nave, PantallaJuego juego) {
         float radians = (float) Math.toRadians(nave.getRotacion() + 90);
         float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
@@ -42,7 +42,12 @@ public class Metralleta extends Arma {
         float bulletX = centerX + (float) Math.cos(radians) * length;
         float bulletY = centerY + (float) Math.sin(radians) * length;
 
-        Bullet bala = new Bullet(bulletX, bulletY, nave.getRotacion(), 10f, new Texture(Gdx.files.internal("Rocket2.png")));
+        Bullet bala = new Bullet(
+        		bulletX, bulletY,									// posicion de la bala
+        		nave.getRotacion(),									// dirección de la bala
+        		10f,												// velocidad levemente aleatoria
+        		AssetsLoader.getInstancia().getBalaTexture());	// textura de la bala
+        
         juego.agregarBala(bala);
         soundBala.play(0.1f);
     }

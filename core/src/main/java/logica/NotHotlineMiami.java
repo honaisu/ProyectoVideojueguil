@@ -1,8 +1,8 @@
 package logica;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -10,18 +10,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import pantallas.PantallaMenu;
 import personajes.Jugador;
+import personajes.SkinJugador;
 
-public class SpaceNavigation extends Game {	
+public class NotHotlineMiami extends Game {	
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private Viewport viewport;
-	private AssetsLoader assets;
 	private int highScore;
 	
     // Jugador y selección de skin
-    private Jugador jugador;                 // se crea al iniciar partida
-    private Texture selectedShipTexture;     // (opcional) no usado ya para flujo principal
-    private String selectedShipPath;         // path elegido en Customizar
+    private Jugador jugador;		// se crea al iniciar partida
+    private Texture skinSelected;	// la skin a usar
 	
     // Volúmenes globales (0.0f a 1.0f)
     private float masterVolume = 1.0f;
@@ -40,30 +39,24 @@ public class SpaceNavigation extends Game {
 		font.getData().setScale(2f);
 		
 		viewport = new FitViewport(1200, 800, new OrthographicCamera());
-		
-		assets = new AssetsLoader();
-		assets.load();
+		// ESTE ES UN SINGLETON!! carga los assets :D
+		AssetsLoader.getInstancia().load();
 		
         jugador = null;
-        selectedShipTexture = null;
-        selectedShipPath = null;
+        skinSelected = AssetsLoader.getInstancia().getSkinTexture(SkinJugador.JUGADOR_ORIGINAL);
 		
 		this.setScreen(new PantallaMenu(this));
 	}
 
-    //private String nombreJuego = "Space Navigation"; // ver si lo ocupo
 	@Override
 	public void dispose() {
 		batch.dispose();
 		font.dispose();
-		assets.dispose();
+		//assets.dispose();
 	}
 
+    @Override public void render() { super.render(); }
     
-
-    @Override
-    public void render() { super.render(); }
-
     public SpriteBatch getBatch() { return batch; }
     public BitmapFont getFont() { return font; }
     public int getHighScore() { return highScore; }
@@ -72,14 +65,6 @@ public class SpaceNavigation extends Game {
     // Jugador
     public Jugador getJugador() { return jugador; }
     public void setJugador(Jugador jugador) { this.jugador = jugador; }
-
-    // Selección de skin (por path)
-    public String getSelectedShipPath() { return selectedShipPath; }
-    public void setSelectedShipPath(String p) { this.selectedShipPath = p; }
-
-    // Mantener por compatibilidad si lo usabas en otros sitios
-    public Texture getSelectedShipTexture() { return selectedShipTexture; }
-    public void setSelectedShipTexture(Texture t) { this.selectedShipTexture = t; }
 
     // Volúmenes globales
     public float getMasterVolume() { return masterVolume; }
@@ -98,4 +83,12 @@ public class SpaceNavigation extends Game {
 		return viewport;
 	}
 
+	// SKIN
+	public void setSkinSelected(Texture texture) {
+		this.skinSelected = texture;
+	}
+	
+	public Texture getSkinSelectedTx() {
+		return skinSelected;
+	}
 }

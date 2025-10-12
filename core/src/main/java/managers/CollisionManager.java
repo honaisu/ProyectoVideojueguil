@@ -6,11 +6,10 @@ import com.badlogic.gdx.audio.Sound;
 
 import armas.proyectiles.Bullet;
 import armas.proyectiles.Swing;
-import hitboxes.Ball2;
+import hitboxes.BallHitbox;
 import personajes.Jugador;
 
 public class CollisionManager {
-
 	private final Sound explosionSound;
     private final int scorePerAsteroid;
 
@@ -26,14 +25,11 @@ public class CollisionManager {
     /**
      * Resuelve colisiones y devuelve la cantidad total de puntos ganados en esta invocación.
      */
-
-    public int handleCollisions(Jugador nave, BulletManager bm, MeleeManager mm,AsteroidManager am) {
-
+    public int handleCollisions(Jugador nave, BulletManager bm, MeleeManager mm, AsteroidManager am) {
         int totalScore = 0;
 
         ArrayList<Bullet> bullets = bm.getBullets();
-        ArrayList<Ball2> asteroids = am.getAsteroids();
-
+        ArrayList<BallHitbox> asteroids = am.getAsteroids();
 
         // 1) Balas vs Asteroides
         // Iteramos hacia atrás para permitir remociones seguras
@@ -42,7 +38,7 @@ public class CollisionManager {
 
             boolean bulletHit = false;
             for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
-                Ball2 a = asteroids.get(ai);
+                BallHitbox a = asteroids.get(ai);
                 // Usamos el método existente en Bullet: checkCollision(Ball2)
                 if (b.checkCollision(a)) {
                     // Marca bala destruida internamente; también la removemos de la lista aquí
@@ -57,26 +53,26 @@ public class CollisionManager {
                     break; // esta bala ya fue usada
                 }
             }
+            
             if (bulletHit) {
                 // continue con la siguiente bala
+            	// TODO?
             }
         }
 
         // 2) Nave vs Asteroides
         // Si nave está herida o destruida, la nave misma maneja su estado, aquí solo removemos asteroides que colisionen
         for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
-            Ball2 a = asteroids.get(ai);
+            BallHitbox a = asteroids.get(ai);
             if (nave.checkCollision(a)) {
-                // En la versión original removías el asteroide en PantallaJuego
                 am.removeAsteroid(ai);
-                // No sumamos score por colisión con la nave (puedes cambiar esto si quieres)
             }
         }
         
-     // 3) Melee (Swings) vs Asteroides
+        // 3) Melee (Swings) vs Asteroides
         for (Swing s : mm.getSwings()) {
             for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
-                Ball2 a = asteroids.get(ai);
+                BallHitbox a = asteroids.get(ai);
                 if (s.checkCollision(a)) {
                     am.removeAsteroid(ai);
                     if (explosionSound != null) explosionSound.play(0.03f);

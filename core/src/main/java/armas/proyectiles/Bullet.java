@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import hitboxes.Ball2;
+import hitboxes.BallHitbox;
 
-
+//Clase que representa una balla dentro del juego
 public class Bullet {
-	private float xSpeed;
-	private float ySpeed;
-	private boolean destroyed = false;
-	private Sprite spr;
+	private float xSpeed;					// velocidad de la bala eje x
+	private float ySpeed;					// velocidad de la bala eje y
+	private boolean destroyed = false;		// ver si la bala esta destruida
+	private Sprite spr;						// sprite de la bala
 	    
-	public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
+    public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
     	spr = new Sprite(tx);
     	spr.setPosition(x, y);
     	spr.setRotation(rotacion);
@@ -27,6 +27,7 @@ public class Bullet {
         this.ySpeed = (float) Math.sin(radians) * speed;
     }
 	
+    //movimiento de la bala y colision con el borde de la ventana
     public void update() {
         spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);
         if (spr.getX() < 0 || spr.getX()+spr.getWidth() > Gdx.graphics.getWidth()) {
@@ -37,12 +38,13 @@ public class Bullet {
         }
         
     }
-	    
+    
     public void draw(SpriteBatch batch) {
     	spr.draw(batch);
     }
     
-    public boolean checkCollision(Ball2 b2) {
+    //colision con un asteroide
+    public boolean checkCollision(BallHitbox b2) {
         if(spr.getBoundingRectangle().overlaps(b2.getArea())){
         	// Se destruyen ambos
             this.destroyed = true;
@@ -52,7 +54,5 @@ public class Bullet {
         return false;
     }
     
-    public boolean isDestroyed() {
-    	return destroyed;
-    }
+    public boolean isDestroyed() { return destroyed; }
 }
