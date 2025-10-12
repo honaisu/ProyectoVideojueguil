@@ -18,10 +18,9 @@ import managers.BulletManager;
 import managers.CollisionManager;
 import managers.MeleeManager;
 import personajes.Jugador;
-import personajes.SpaceNavigation;
+import logica.SpaceNavigation;
 
 public class PantallaJuego implements Screen {
-
     private SpaceNavigation game;
     private OrthographicCamera camera;
     private SpriteBatch batch;
@@ -84,11 +83,10 @@ public class PantallaJuego implements Screen {
         collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
 
         // Jugador (lógica Nave4 + Arma)
-        String path = (game.getSelectedShipPath() != null) ? game.getSelectedShipPath() : "MainShip3.png";
+        String path = (game.getSelectedShipPath() != null) ? game.getSelectedShipPath() : "referencia.png";
         Texture naveTex = new Texture(Gdx.files.internal(path));
         
-        
-        
+        //Crear Jugador
         nave = new Jugador(
             Gdx.graphics.getWidth() / 2 - 50, 30,
             0f, // rotación inicial
@@ -101,8 +99,8 @@ public class PantallaJuego implements Screen {
         nave.setVidas(vidas);
         
         //probar armas
-        nave.setArma(new Metralleta());
-        //nave.setArma(new Escopeta());
+        //nave.setArma(new Metralleta());
+        nave.setArma(new Escopeta());
 
         // Crear textura overlay 1x1 para la pausa
         com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(
@@ -113,7 +111,6 @@ public class PantallaJuego implements Screen {
         texturaPausa = new Texture(pm);
         pm.dispose();
     }
-
     private Sound cargarSoundSeguro(String primario, String alterno) {
         if (Gdx.files.internal(primario).exists()) return Gdx.audio.newSound(Gdx.files.internal(primario));
         if (Gdx.files.internal(alterno).exists()) return Gdx.audio.newSound(Gdx.files.internal(alterno));
@@ -182,15 +179,15 @@ public class PantallaJuego implements Screen {
         // Render
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        dibujaEncabezado();
 
         bulletManager.render(batch);
         meleeManager.render(batch);
-        nave.draw(batch, this, paused);
+        nave.draw(batch, this, paused, delta);
         asteroidManager.render(batch);
 
         if (paused) dibujarMenuPausa(delta);
 
+        dibujaEncabezado();
         batch.end();
     }
 

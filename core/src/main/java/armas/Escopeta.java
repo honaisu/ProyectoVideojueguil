@@ -63,7 +63,7 @@ public class Escopeta extends Arma {
                 bulletX, bulletY,								// posicion de la bala
                 angle,                     						// dirección de la bala
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
-                new Texture(Gdx.files.internal("Rocket2.png"))	// textura de la bala
+                new Texture(Gdx.files.internal("Bala.png"))	// textura de la bala
             );
             juego.agregarBala(bala);
         }

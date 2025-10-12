@@ -36,7 +36,7 @@ public class AsteroidManager {
 			BallHitbox bb = new BallHitbox(r.nextInt((int)Gdx.graphics.getWidth()),
 	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
 	  	            20+r.nextInt(10), 0, 0, 
-	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));	
+	  	            new Texture(Gdx.files.internal("Mono.png")));	
 	        asteroids.add(bb);
 	        auxColliders.add(bb);
 	  	}

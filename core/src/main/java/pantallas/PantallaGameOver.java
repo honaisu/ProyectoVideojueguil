@@ -7,7 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import personajes.SpaceNavigation;
+import logica.SpaceNavigation;
 
 
 public class PantallaGameOver implements Screen {

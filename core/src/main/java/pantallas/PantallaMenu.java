@@ -6,7 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import personajes.SpaceNavigation;
+import logica.SpaceNavigation;
 
 
 public class PantallaMenu implements Screen {

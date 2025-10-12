@@ -1,24 +1,48 @@
-package personajes;
+package logica;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import pantallas.PantallaMenu;
+import personajes.Jugador;
 
 public class SpaceNavigation extends Game {
+	public SpriteBatch batch;
+	public BitmapFont font;
+	public OrthographicCamera camera;
+	public Viewport viewport;
+	public AssetsLoader assets;
+	
+	private int highScore;
+	
+	/**
+	 * Método encargado de crear el juego
+	 * Crea una camara y UNA pantalla.
+	 * 
+	 * TODO futuro colaborador si quieres reemplazas esto pq es mi implementacion :D
+	 */
+	
+
 
     //private String nombreJuego = "Space Navigation"; // ver si lo ocupo
-    private SpriteBatch batch;
-    private BitmapFont font;
-    private int highScore;
-
+    
     // Jugador y selección de skin
     private Jugador jugador;                 // se crea al iniciar partida
     private Texture selectedShipTexture;     // (opcional) no usado ya para flujo principal
     private String selectedShipPath;         // path elegido en Customizar
+
+	@Override
+	public void dispose() {
+		batch.dispose();
+		font.dispose();
+		//assets.dispose();
+	}
+
 
     // Volúmenes globales (0.0f a 1.0f)
     private float masterVolume = 1.0f;
@@ -41,11 +65,7 @@ public class SpaceNavigation extends Game {
     @Override
     public void render() { super.render(); }
 
-    @Override
-    public void dispose() {
-        if (batch != null) batch.dispose();
-        if (font != null) font.dispose();
-    }
+
 
     public SpriteBatch getBatch() { return batch; }
     public BitmapFont getFont() { return font; }
@@ -78,3 +98,4 @@ public class SpaceNavigation extends Game {
     private float clamp01(float v) { return Math.max(0f, Math.min(1f, v)); }
 
 }
+

@@ -54,7 +54,7 @@ public class Metralleta extends Arma {
         		bulletX, bulletY,									// posicion de la bala
         		nave.getRotacion(),									// dirección de la bala
         		10f,												// velocidad levemente aleatoria
-        		new Texture(Gdx.files.internal("Rocket2.png")));	// textura de la bala
+        		new Texture(Gdx.files.internal("Bala.png")));	// textura de la bala
         
         juego.agregarBala(bala);
         soundBala.play(0.1f);

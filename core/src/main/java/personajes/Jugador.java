@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;         
 import hitboxes.BallHitbox;
+import logica.SpaceNavigation;
 import pantallas.PantallaJuego;
 
 public class Jugador {
@@ -21,9 +24,13 @@ public class Jugador {
 	private float yVel = 0;
 
 	// Visual y audio
-	public Sprite spr; // se mantiene público como en Nave4 si armas/hitboxes lo usan
+	public Sprite spr; // se mantiene público si armas/hitboxes lo usan
 	private Sound sonidoHerido;
-
+	
+	public Animation<TextureRegion> animacion;
+    private float stateTime = 0f;
+	
+	
 	// Herido
 	private boolean herido = false;
 	private int tiempoHeridoMax = 50;
@@ -45,17 +52,51 @@ public class Jugador {
 	    this.rotacion = rotacion;
 	    
 	    // Sprite del jugador
-	    spr = new Sprite(tx);
-	    spr.setPosition(x, y);
-	    spr.setBounds(x, y, 45, 45);
-	    spr.setOriginCenter();
-	    spr.setRotation(rotacion);
+	    spr = new Sprite(tx, 64, 64);
+	    
+	    // Parte encargada de la textura para la animación
+    	TextureRegion[][] tmp = TextureRegion.split(tx, tx.getWidth() / 4, tx.getHeight() / 1);
+    	
+    	TextureRegion[] walkFrames = new TextureRegion[4 * 1];
+    	int index = 0;
+		for (int i = 0; i < 1; i++) {
+			for (int j = 0; j < 4; j++) {
+				walkFrames[index++] = tmp[i][j];
+			}
+		}
+		// IMPLEMENTACIÓN DE LA ANIMACIÓN
+    	this.animacion = new Animation<TextureRegion>(0.2f, walkFrames);
+	    
+    	spr.scale(1f);
+    	spr.rotate90(false);
+    	
+    	spr.setPosition(x, y);
+    	spr.setBounds(x, y, 45, 45);
+    	
+    	spr.setOriginCenter();
+	    //spr.setRotation(rotacion);
 	}
 
 	// Dibuja y actualiza; si paused, no procesa input, físicas ni disparo
-	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused) {
+	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused, float delta) {
 	    float x = spr.getX();
 	    float y = spr.getY();
+	    
+	    // NECESARIOS PARA ANIMACION
+ 		TextureRegion currentFrame;
+ 		boolean isMoving = Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN);
+ 	    
+ 		/**
+ 		 * Parte encargada de cambiar el si se mueve o no el jugador
+ 		 */
+ 	    if (isMoving) {
+ 	        // Si se está moviendo, avanza el tiempo de la animación
+ 	        stateTime += delta; 
+ 	        currentFrame = animacion.getKeyFrame(stateTime, true);
+ 	    } else {
+ 	        // Si está quieto, muestra siempre el primer fotograma de la animación
+ 	        currentFrame = animacion.getKeyFrame(0, true);
+ 	    }
 
 	    // Estado herido: parpadeo/temblor y contador
 	    if (herido) {
@@ -102,6 +143,14 @@ public class Jugador {
 
 	        spr.setPosition(x + xVel, y + yVel);
 	        
+	        // ENCARGADO DE MOSTRAR LA ANIMACIÓN
+	        batch.draw(
+	        		currentFrame, 						// Fotograma 
+	                spr.getX(), spr.getY(), 			// Posición
+	                spr.getOriginX(), spr.getOriginY(), // Punto de origen
+	                spr.getWidth(), spr.getHeight(), 	// Dimensiones
+	                spr.getScaleX(), spr.getScaleY(), 	// Escala
+	                spr.getRotation()); 				// Rotación
 	        
 	        // Arma sin municion automaticamente cambia a ataque Melee
 	        if (armaActual.getMunicion() == 0) {
@@ -119,7 +168,7 @@ public class Jugador {
 	    }
 	    
 	    // Dibujar la nave
-	    spr.draw(batch);
+	    //spr.draw(batch);
 	}
 
 	// Colisión con asteroide (rebotes + estados/sonido)
