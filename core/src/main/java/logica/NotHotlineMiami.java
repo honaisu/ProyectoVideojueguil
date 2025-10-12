@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import managers.PantallaManager;
 import pantallas.PantallaMenu;
+import pantallas.TipoPantalla;
 import personajes.Jugador;
 import personajes.SkinJugador;
 
@@ -26,6 +28,8 @@ public class NotHotlineMiami extends Game {
     private float masterVolume = 1.0f;
     private float musicVolume  = 0.30f;
     private float sfxVolume    = 0.60f;
+    
+    private PantallaManager pantallaManager;
     
 	/**
 	 * Método encargado de crear el juego
@@ -45,13 +49,15 @@ public class NotHotlineMiami extends Game {
         jugador = null;
         skinSelected = AssetsLoader.getInstancia().getSkinTexture(SkinJugador.JUGADOR_ORIGINAL);
 		
-		this.setScreen(new PantallaMenu(this));
+        pantallaManager = new PantallaManager(this);
+        pantallaManager.changeScreen(TipoPantalla.MENU);
 	}
 
 	@Override
 	public void dispose() {
 		batch.dispose();
 		font.dispose();
+		pantallaManager.dispose();
 		//assets.dispose();
 	}
 
@@ -90,5 +96,9 @@ public class NotHotlineMiami extends Game {
 	
 	public Texture getSkinSelectedTx() {
 		return skinSelected;
+	}
+
+	public PantallaManager getPantallaManager() {
+		return pantallaManager;
 	}
 }

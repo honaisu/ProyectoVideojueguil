@@ -3,7 +3,7 @@ package pantallas;
 public enum TipoPantalla {
 	MENU,
 	JUEGO,
-	CUSTOMIZAR,
-	OPCIONES,
+	PERSONALIZACION,
+	CONFIGURACION,
 	GAME_OVER;
 }

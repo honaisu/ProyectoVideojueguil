@@ -17,9 +17,6 @@ public class PantallaMenu extends PantallaBase {
 	// Cooldown, retraso para el feedback del usuario :3
 	private float keyCooldown = 0f;
 	private final float repeatDelay = 0.1f;
-	
-    private final int ABAJO = 1;
-    private final int ARRIBA = -1;
 
 	public PantallaMenu(NotHotlineMiami game) {
 	    super(game);
@@ -30,22 +27,22 @@ public class PantallaMenu extends PantallaBase {
 		this.update(delta);
 		this.draw();
 	}
-
-    private int navegar(int direccion, int indiceActual, int length) {
-        int nuevoIndice = (indiceActual + direccion + length) % length;
-        return nuevoIndice;
-    }
     
     @Override
     protected void update(float delta) {
 	    // Navegación con flechas + Enter
 	    keyCooldown -= delta;
 	    if (keyCooldown <= 0f) {
-	        if (Gdx.input.isKeyPressed(Input.Keys.UP)) 
-	        	opcionActual = opciones[navegar(ARRIBA, opcionActual.ordinal(), opciones.length)];
+	    	int indiceActual = opcionActual.ordinal();
+	    	int largo = opciones.length;
+	    	int nuevoIndice = indiceActual;
+	    	
+	        if (Gdx.input.isKeyPressed(Input.Keys.UP))
+	        	nuevoIndice = navegar(Direccion.ARRIBA, indiceActual, largo);
 	        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) 
-	        	opcionActual = opciones[navegar(ABAJO, opcionActual.ordinal(), opciones.length)];
+	        	nuevoIndice = navegar(Direccion.ABAJO, indiceActual, largo);
 	        
+	        opcionActual = opciones[nuevoIndice];
 	        keyCooldown = repeatDelay;
 	    }
 	    
@@ -56,21 +53,20 @@ public class PantallaMenu extends PantallaBase {
     
     @Override
     protected void draw() {
-		ScreenUtils.clear(Color.FOREST);
+		ScreenUtils.clear(Color.NAVY);
 
-		game.getViewport().apply();
-	    game.getBatch().setProjectionMatrix(game.getViewport().getCamera().combined);
-	    
 	    // Dibujo
 	    game.getBatch().begin();
 
 	    // Título
-	    game.getFont().getData().setScale(2.2f);
+	    game.getFont().getData().setScale(2.5f);
 	    game.getFont().setColor(0.95f, 0.9f, 0.85f, 1f);
-	    game.getFont().draw(game.getBatch(), "NOT HOTLINE MIAMI", 330, 650);
+	    game.getFont().draw(game.getBatch(), "NOT HOTLINE MIAMI", 
+	    		400f, 
+	    		700f);
 
 	    // Menú
-	    game.getFont().getData().setScale(1.6f);
+	    game.getFont().getData().setScale(2.5f);
 	    float cx = 600f, y = 480f;
 	    
 	    for (OpcionMenu opcion : opciones) {
@@ -88,34 +84,27 @@ public class PantallaMenu extends PantallaBase {
 	    // Hint de controles
 	    game.getFont().getData().setScale(1.0f);
 	    game.getFont().setColor(0.9f, 0.9f, 0.9f, 0.9f);
-	    //no creo que lo ocupe game.getFont().draw(game.getBatch(), "Usa UP/DOWN para moverte y ENTER para confirmar", 360, 220);
-
+	    
 	    game.getBatch().end();
     }
 
 	private void activarSeleccion() {
-		Screen pantallaActual = null;
-		
 	    switch (opcionActual) {
 	        case INICIAR:
-	        	pantallaActual = new PantallaJuego(game, 1, 3, 0);
+	        	game.getPantallaManager().changeScreen(TipoPantalla.JUEGO);
 	        	break;
 	        case PERSONALIZAR: 
-	        	pantallaActual = new PantallaPersonalizacion(game);
+	        	game.getPantallaManager().changeScreen(TipoPantalla.PERSONALIZACION);
 	        	break;
 	        case OPCIONES:
-	        	pantallaActual = new PantallaConfiguracion(game);
+	        	game.getPantallaManager().changeScreen(TipoPantalla.CONFIGURACION);
 	        	break;
 	        case TUTORIAL: 
 	        	/* abrirTutorial(); */ 
 	        	break;
 	        case SALIR: 
 	        	Gdx.app.exit(); 
-	        	return;
+	        	break;
 	    }
-	    if (pantallaActual == null) return;
-	    
-	    game.setScreen(pantallaActual);
-	    this.dispose();
 	}
 }

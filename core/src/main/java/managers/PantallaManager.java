@@ -12,13 +12,15 @@ public class PantallaManager {
     public PantallaManager(NotHotlineMiami game) {
         this.game = game;
         this.pantallas = new HashMap<>();
-        initScreens();
+        this.initScreens();
     }
     
     private void initScreens() {
         // Crea una instancia de cada pantalla y la guarda en el mapa
-        pantallas.put(TipoPantalla.MENU,		new PantallaMenu(game));
-        pantallas.put(TipoPantalla.GAME_OVER, 	new PantallaGameOver(game));
+        pantallas.put(TipoPantalla.MENU,			new PantallaMenu(game));
+        pantallas.put(TipoPantalla.GAME_OVER, 		new PantallaGameOver(game));
+        pantallas.put(TipoPantalla.PERSONALIZACION, new PantallaPersonalizacion(game));
+        pantallas.put(TipoPantalla.CONFIGURACION, 	new PantallaConfiguracion(game));
     }
     
     public void changeScreen(TipoPantalla tipoPantalla) {
@@ -45,7 +47,6 @@ public class PantallaManager {
     public void dispose() {
         for (PantallaBase screen : pantallas.values()) {
             if (screen == null) continue;
-            
             screen.dispose();
         }
     }

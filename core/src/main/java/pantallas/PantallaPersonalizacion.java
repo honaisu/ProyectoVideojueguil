@@ -10,8 +10,12 @@ import logica.NotHotlineMiami;
 import personajes.SkinJugador;
 
 public class PantallaPersonalizacion extends PantallaBase {
-    private SkinJugador seleccion = SkinJugador.JUGADOR_ORIGINAL;
+	private SkinJugador[] skinsDisponibles = SkinJugador.values();
+    private SkinJugador skinActual = SkinJugador.JUGADOR_ORIGINAL;
 
+    private float keyCooldown = 0f;
+	private final float repeatDelay = 0.1f;
+    
     public PantallaPersonalizacion(NotHotlineMiami game) {
         super(game);
     }
@@ -25,17 +29,25 @@ public class PantallaPersonalizacion extends PantallaBase {
 	@Override
 	protected void update(float delta) {
 		// Entrada
-		
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
-        	seleccion = SkinJugador.JUGADOR_ORIGINAL;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
-        	seleccion = SkinJugador.JUGADOR_ALT_1;
+
+        keyCooldown -= delta;
+        if (keyCooldown <= 0f) {        	
+        	int indiceActual = skinActual.ordinal();
+        	int largo = skinsDisponibles.length;
+        	int nuevoIndice = indiceActual;
+        	
+        	if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+        		nuevoIndice = navegar(Direccion.DERECHA, indiceActual, largo);
+        	else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) 
+        		nuevoIndice = navegar(Direccion.IZQUIERDA, indiceActual, largo);
+        	
+        	skinActual = skinsDisponibles[nuevoIndice];
+        	keyCooldown = repeatDelay;
         }
 
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-        	game.setSkinSelected(AssetsLoader.getInstancia().getSkinTexture(seleccion));
+        	game.setSkinSelected(AssetsLoader.getInstancia().getSkinTexture(skinActual));
             game.setScreen(new PantallaMenu(game));
             this.dispose();
             return;
@@ -53,34 +65,38 @@ public class PantallaPersonalizacion extends PantallaBase {
 	protected void draw() {
 		ScreenUtils.clear(Color.NAVY);
 		
-        // Dibujo
         game.getBatch().begin();
-        game.getFont().getData().setScale(1.6f);
-        game.getFont().draw(game.getBatch(), "Elige nave: [1] MainShip3  |  [2] MainShipAlt", 220, 520);
-        game.getFont().draw(game.getBatch(), "ENTER para confirmar   |   ESC para volver", 240, 470);
+        game.getFont().getData().setScale(2.5f);
+        game.getFont().draw(game.getBatch(), "CHOOSE YOUR CHARACTER!!", 360, 600);
 
-        int y = 320, x = 420;
-        float previewW = 96f, previewH = 96f;
+        game.getFont().draw(game.getBatch(), "ENTER para confirmar   |   ESC para volver", 240, 100);
+
+        game.getFont().getData().setScale(1.5f);
+        int x = 360, y = 300;
+        final float PREVIEW_HW = 128f;
         
         int i = 1;
         String mensajeSeleccionado;
         for (SkinJugador skin : SkinJugador.values()) {
-        	boolean seleccionado = (seleccion.equals(skin));
+        	boolean seleccionado = (skinActual.equals(skin));
 
+        	// Mensaje al estar apretando en uno
         	mensajeSeleccionado = "[" + i + "]";
+        	if (seleccionado) mensajeSeleccionado += " SELECCIONADO";
         	
+        	// Nombre de la skin
+        	game.getFont().draw(game.getBatch(), skin.getNombre(),
+        			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f + 200);
+        	
+        	// Sprite de la skin
         	game.getBatch().draw(skin.crearSprite(),
-        			x - previewW/2f, y - previewH/2f, 
-        			previewW, previewH);
+        			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f, 
+        			PREVIEW_HW, PREVIEW_HW);
         	
-        	if (seleccionado) {
-        		mensajeSeleccionado += " SELECCIONADO";
-        	}
-        	
-        	game.getFont().getData().setScale(1.3f);
+        	// Sólo imprime el mensaje original :D
             game.getFont().draw(game.getBatch(), mensajeSeleccionado, x - 100, y - 70);
             
-        	x += 200;
+        	x += 250;
         	i++;
         }
 
