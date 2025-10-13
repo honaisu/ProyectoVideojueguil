@@ -40,12 +40,12 @@ public class Jugador {
 	private float rotacion;
 
 	// Armas
-	private Arma armaActual;
+	private Weapon armaActual;
 
 	// Volúmenes globales
 	private SpaceNavigation gameRef; //TODO arreglar esto
 
-	public Jugador(int x, int y, float rotacion, Texture tx, Sound soundChoque, Arma armaActual, SpaceNavigation gameRef) {
+	public Jugador(int x, int y, float rotacion, Texture tx, Sound soundChoque, Weapon armaActual, SpaceNavigation gameRef) {
 	    this.gameRef = gameRef;
 	    this.sonidoHerido = soundChoque;
 	    this.armaActual = armaActual;
@@ -242,9 +242,9 @@ public class Jugador {
 
 	public int getY() { return (int) spr.getY(); }
 
-	public Arma getArma() { return armaActual; }
+	public Weapon getArma() { return armaActual; }
 
-	public void setArma(Arma arma) { this.armaActual = arma; }
+	public void setArma(Weapon arma) { this.armaActual = arma; }
 
 	public void setTexture(Texture nueva) {
 	    float x = spr.getX(), y = spr.getY();

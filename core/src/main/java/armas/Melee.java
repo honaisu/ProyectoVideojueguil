@@ -7,7 +7,7 @@ import pantallas.PantallaJuego;
 import personajes.Jugador;
 
 //Clase para el arma cuerpo a cuerpo
-public class Melee extends Arma {
+public class Melee extends Weapon {
 	
     private Swing swingActual;	//usa un proyectil arqueado
 

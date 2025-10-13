@@ -3,17 +3,17 @@ package armas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import armas.proyectiles.RayoLaser;
+import armas.proyectiles.LaserBeam;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
-public class CanonLaser extends Arma {
+public class CanonLaser extends Weapon {
 
     private final Texture texturaLaser;
     private final Sound soundLaser;
 
     // Configuración del pulso
-    private final float anchoLaser = 40f;     // grosor visual/efectivo
+    private final float anchoLaser = 20f;     // grosor visual/efectivo
     private final float duracionPulso = 0.25f; // duración del rayo por disparo (segundos)
     private final int estiloRayo = 2;         // usa el “num” para grosor/estilo en RayHitbox
 
@@ -33,14 +33,14 @@ public class CanonLaser extends Arma {
         if (!puedeDisparar() || municion <= 0) return;
 
         // crear rayo como pulso (no se refresca cada frame)
-        RayoLaser rayo = new RayoLaser(nave, anchoLaser, texturaLaser, estiloRayo);
+        LaserBeam rayo = new LaserBeam(nave, anchoLaser, texturaLaser, estiloRayo);
         rayo.configurarPulso(duracionPulso); // fija TTL del pulso
 
         // registrar en melee (para update/draw/colisión existentes)
         pantalla.agregarSwing(rayo);
 
         // feedback y consumo
-        if (soundLaser != null) soundLaser.play(0.35f);
+        if (soundLaser != null) soundLaser.play(0.1f);
         municion = Math.max(0, municion - 1);
 
         // entra en cooldown; aunque se mantenga Z, no se disparará de nuevo hasta que termine

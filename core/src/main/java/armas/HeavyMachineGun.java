@@ -8,9 +8,9 @@ import pantallas.PantallaJuego;
 import personajes.Jugador;
 
 //Clase para un arma escopeta
-public class Metralleta extends Arma {
+public class HeavyMachineGun extends Weapon {
 
-    public Metralleta() {
+    public HeavyMachineGun() {
         super(0.2f,															// cadencia
         		30, 														// municion
         		Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 	// sonido

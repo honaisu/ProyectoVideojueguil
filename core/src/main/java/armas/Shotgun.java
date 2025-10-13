@@ -9,9 +9,9 @@ import armas.proyectiles.Bullet;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
-public class Escopeta extends Arma {
+public class Shotgun extends Weapon {
 
-	public Escopeta() {
+	public Shotgun() {
 		super(3f, 															// cadencia
 				8, 															// municion
 				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));	// sonido

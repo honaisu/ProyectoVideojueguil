@@ -8,7 +8,7 @@ import hitboxes.BallHitbox;
 import personajes.Jugador;
 import armas.Laser;
 
-public class RayoLaser extends Swing {
+public class LaserBeam extends Swing {
 
     private final Jugador nave;
     private final RayHitbox rayo;
@@ -21,7 +21,7 @@ public class RayoLaser extends Swing {
     // Consumo de munición por tiempo
     private float acumuladorMunicion = 0f; // acumula fracciones hasta consumir unidades enteras
 
-    public RayoLaser(Jugador nave, float ancho, Texture textura, int num) {
+    public LaserBeam(Jugador nave, float ancho, Texture textura, int num) {
         super(0f, 0f, 0f, nave); // no usamos ArcHitbox del Swing base
         this.nave = nave;
 

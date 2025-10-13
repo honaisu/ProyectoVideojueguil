@@ -6,7 +6,7 @@ import pantallas.PantallaJuego;
 import personajes.Jugador;
 
 //Clase Abstracta Arma generica
-public abstract class Arma {
+public abstract class Weapon {
 	
 	
 	protected float cadencia;					//tiempo que dura un ataque despues de otro
@@ -17,7 +17,7 @@ public abstract class Arma {
     
     protected Sound soundBala;					//sonido de la bala
     
-    public Arma(float cadencia, int municionMax, Sound soundBala) {
+    public Weapon(float cadencia, int municionMax, Sound soundBala) {
     	this.cadencia = cadencia;
         this.municionMax = municionMax;
         this.municion = municionMax;
