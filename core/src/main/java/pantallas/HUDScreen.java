@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.Melee;
-import logica.NotHotlineMiami;
+import logica.MainGame;
 import personajes.Jugador;
 
 public class HUDScreen extends BaseScreen {
 	private final Jugador jugador;
 
-	public HUDScreen(NotHotlineMiami game, Jugador jugador) {
+	public HUDScreen(MainGame game, Jugador jugador) {
 		super(game);
 		this.jugador = jugador;
 	}

@@ -1,7 +1,6 @@
 package logica;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,22 +8,20 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import managers.ScreenManager;
-import pantallas.MenuScreen;
 import pantallas.ScreenType;
+import pantallas.Volumen;
 import personajes.Jugador;
-import personajes.SkinJugador;
 
-public class NotHotlineMiami extends Game {	
+public class MainGame extends Game {	
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private Viewport viewport;
 	private int highScore;
 	
+	private Jugador jugador;
+	
     // Volúmenes globales (0.0f a 1.0f)
-    private float masterVolume = 1.0f;
-    private float musicVolume  = 0.3f;
-    private float sfxVolume    = 0.6f;
-    
+	private Volumen volumen;
     private ScreenManager pantallaManager;
     
 	/**
@@ -38,6 +35,7 @@ public class NotHotlineMiami extends Game {
 		font = new BitmapFont();
 		font.getData().setScale(2f);
 		
+		volumen = new Volumen();
 		viewport = new FitViewport(1200, 800, new OrthographicCamera());
 		// ESTE ES UN SINGLETON!! carga los assets :D
 		AssetsLoader.getInstancia().load();
@@ -62,17 +60,9 @@ public class NotHotlineMiami extends Game {
     public void setHighScore(int highScore) { this.highScore = highScore; }
 
     // Volúmenes globales
-    public float getMasterVolume() { return masterVolume; }
-    public void setMasterVolume(float v) { masterVolume = clamp01(v); }
-
-    public float getMusicVolume() { return masterVolume * musicVolume; }
-    public void setMusicVolume(float v) { musicVolume = clamp01(v); }
-
-    public float getSfxVolume() { return masterVolume * sfxVolume; }
-    public void setSfxVolume(float v) { sfxVolume = clamp01(v); }
-
-    // Utilidad local para limitar 0..1
-    private float clamp01(float v) { return Math.max(0f, Math.min(1f, v)); }
+    public Volumen getVolumen() {
+    	return volumen;
+    }
 
 	public Viewport getViewport() {
 		return viewport;
@@ -80,5 +70,9 @@ public class NotHotlineMiami extends Game {
 	
 	public ScreenManager getPantallaManager() {
 		return pantallaManager;
+	}
+	
+	public Jugador getPlayer() {
+		return jugador;
 	}
 }

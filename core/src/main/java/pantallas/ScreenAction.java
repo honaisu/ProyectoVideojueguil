@@ -1,7 +1,7 @@
 package pantallas;
 
-import logica.NotHotlineMiami;
+import managers.ScreenManager;
 
 public interface ScreenAction {
-	public void ejecutar(NotHotlineMiami game);
+	public void ejecutar(ScreenManager pantallaManager);
 }

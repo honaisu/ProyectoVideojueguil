@@ -4,7 +4,7 @@ public enum PauseOption {
 	CONTINUAR("Continuar"),
 	MENU("Menú Principal");
 	
-	private String nombre;
+	private final String nombre;
 	
 	PauseOption(String nombre) {
 		this.nombre = nombre;

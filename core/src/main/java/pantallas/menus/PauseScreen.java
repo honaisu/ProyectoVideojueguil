@@ -1,4 +1,4 @@
-package pantallas;
+package pantallas.menus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,10 +9,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import logica.NotHotlineMiami;
+import logica.MainGame;
+import pantallas.ScreenType;
 import pantallas.opciones.PauseOption;
 
-public class PauseScreen extends BaseScreen implements Navigation {
+public class PauseScreen extends NavigableScreen {
 	private final Color TRANSPARENTE = new Color(0f, 0f, 0f, 0.45f);
     private final Texture TEXTURA_PAUSA;
     
@@ -23,7 +24,7 @@ public class PauseScreen extends BaseScreen implements Navigation {
     private float keyCooldown = 0f;
     private final float repeatDelay = 0.08f;
 	
-	public PauseScreen(NotHotlineMiami game) {
+	public PauseScreen(MainGame game) {
 		super(game);
 		
 		// Rellena un cuadrado entero con solo blanco para que sirva de "textura"
@@ -36,7 +37,8 @@ public class PauseScreen extends BaseScreen implements Navigation {
 
 	@Override
 	public void render(float delta) {
-		
+		this.update(delta);
+		this.draw(game.getBatch(), game.getFont());
 	}
 
 	@Override

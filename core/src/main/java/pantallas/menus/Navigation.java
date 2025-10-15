@@ -1,11 +1,10 @@
-package pantallas;
+package pantallas.menus;
 
 /**
  * Interfaz de navegación. Provee direcciones hacia las que se puede mover una selección
  * junto con un método default para navegar.
  */
 public interface Navigation {
-	
 	/**
      * Enum simple que indica que direcciones puede tener cierta selección
      * (en caso de menús con movimiento entre pantallas)
@@ -25,6 +24,15 @@ public interface Navigation {
     	
     	if (direccion.equals(Direction.ARRIBA)
     			|| direccion.equals(Direction.IZQUIERDA)) eleccion = -1;
+    	
+        int nuevoIndice = (indiceActual + eleccion + length) % length;
+        return nuevoIndice;
+    }
+    
+    default public int navegar(boolean adelante, int indiceActual, int length) {
+    	int eleccion = 1;
+    	
+    	if (adelante) eleccion = -1;
     	
         int nuevoIndice = (indiceActual + eleccion + length) % length;
         return nuevoIndice;

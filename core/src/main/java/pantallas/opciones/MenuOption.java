@@ -5,20 +5,20 @@ import com.badlogic.gdx.Gdx;
 import pantallas.ScreenAction;
 import pantallas.ScreenType;
 
-public enum MenuOption {
-	INICIAR("Iniciar Juego", (game) -> {
-		game.getPantallaManager().cambiarPantalla(ScreenType.JUEGO);
+public enum MenuOption implements NavigableOption {
+	INICIAR("Iniciar Juego", (manager) -> {
+		manager.cambiarPantalla(ScreenType.JUEGO);
 	}),
-	PERSONALIZAR("Personalizar Personaje", (game) -> {
-		game.getPantallaManager().cambiarPantalla(ScreenType.PERSONALIZACION);
+	PERSONALIZAR("Personalizar Personaje", (manager) -> {
+		manager.cambiarPantalla(ScreenType.PERSONALIZACION);
 	}),
-	OPCIONES("Configuración", (game) -> {
-		game.getPantallaManager().cambiarPantalla(ScreenType.CONFIGURACION);
+	OPCIONES("Configuración", (manager) -> {
+		manager.cambiarPantalla(ScreenType.CONFIGURACION);
 	}),
-	TUTORIAL("Tutorial", (game) -> {
-		game.getPantallaManager().cambiarPantalla(ScreenType.TUTORIAL);
+	TUTORIAL("Tutorial", (manager) -> {
+		manager.cambiarPantalla(ScreenType.TUTORIAL);
 	}),
-	SALIR("Salir del Juego", (game) -> { Gdx.app.exit();});
+	SALIR("Salir del Juego", (manager) -> { Gdx.app.exit();});
 	
 	private final String nombre;
 	private final ScreenAction accion;
@@ -27,10 +27,11 @@ public enum MenuOption {
 		this.nombre = nombre;
 		this.accion = accion;
 	}
-	
-	public String getNombre() {
-		return nombre;
-	}
-	
+		
     public ScreenAction getAction() { return accion; }
+    
+    @Override
+    public String getNombre() {
+    	return nombre;
+    }
 }

@@ -3,7 +3,6 @@ package personajes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,7 +12,6 @@ import com.badlogic.gdx.math.MathUtils;
 import armas.*;
 import hitboxes.BallHitbox;
 import logica.AnimationManager;
-import logica.NotHotlineMiami;
 import pantallas.juego.PantallaJuego;
 
 public class Jugador {
@@ -31,7 +29,7 @@ public class Jugador {
 	private Sound sonidoHerido = null /*TODO*/;
 	
 	// ENCARGADOS DE ANIMACIÓN
-	private final Animation<TextureRegion> animacion;
+	private Animation<TextureRegion> animacion;
     private float stateTime = 0f;
     
 	// Herido
@@ -42,26 +40,41 @@ public class Jugador {
 	private final float V_LIMITE = 10.0f;
 
 	// Rotación Jugador
-	private float rotacion;
+	private float rotacion = 0f;
 
 	// Armas
-	private Arma armaActual;
+	private Arma armaActual = new Melee();
 	
-	public Jugador(int x, int y, Arma armaActual) {
-	    this.armaActual = armaActual;
-	    this.rotacion = 0f;
-	    
+	public Jugador(int x, int y) {
 	    // Sprite del jugador
 	    spr = SkinJugador.JUGADOR_ORIGINAL.crearSprite();
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
     	this.animacion = AnimationManager.createJugadorAnimation(SkinJugador.JUGADOR_ORIGINAL);
+    	
+    	spr.scale(1f);
+    	spr.setPosition(x, y);
+    	spr.setOriginCenter();
+	}
+	
+	public Jugador(int x, int y, Arma armaActual) {
+		this(x, y);
+		
+	    this.armaActual = armaActual;
+	}
+	
+	public Jugador(int x, int y, Arma armaActual, SkinJugador skin) {
+	    this(x, y, armaActual);
+	    
+	    // Sprite del jugador
+	    spr = skin.crearSprite();
+	    
+		// IMPLEMENTACIÓN DE LA ANIMACIÓN
+    	this.animacion = AnimationManager.createJugadorAnimation(skin);
 	    
     	spr.scale(1f);
     	
     	spr.setPosition(x, y);
-    	//spr.setBounds(x, y, 45, 45);
-    	
     	spr.setOriginCenter();
 	}
 
@@ -242,15 +255,6 @@ public class Jugador {
 	public Arma getArma() { return armaActual; }
 
 	public void setArma(Arma arma) { this.armaActual = arma; }
-
-	public void setTexture(Texture nueva) {
-	    float x = spr.getX(), y = spr.getY();
-	    float w = spr.getWidth(), h = spr.getHeight();
-	    spr.setTexture(nueva);
-	    spr.setBounds(x, y, w, h);
-	    spr.setOriginCenter();
-	    spr.setRotation(rotacion);
-	}
 	
 	public int getScore() {
 		return score;
@@ -258,5 +262,13 @@ public class Jugador {
 
 	public int getRonda() {
 		return ronda;
+	}
+	
+	public void aumentarScore(int cantidad) {
+		score += cantidad;
+	}
+
+	public void setScore(int i) {
+		score = i;
 	}
 }

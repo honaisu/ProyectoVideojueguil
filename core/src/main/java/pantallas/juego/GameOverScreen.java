@@ -9,7 +9,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import logica.AssetsLoader;
-import logica.NotHotlineMiami;
+import logica.MainGame;
 import pantallas.BaseScreen;
 import pantallas.ScreenType;
 
@@ -17,31 +17,23 @@ import pantallas.ScreenType;
  * Clase que muest
  */
 public class GameOverScreen extends BaseScreen {
-
 	// Efecto de muerte al entrar en Game Over
 	private Sound sonidoMuerte = AssetsLoader.getInstancia().getMuerteSound();
 	private boolean played = false;
 
-	public GameOverScreen(NotHotlineMiami game) {
+	public GameOverScreen(MainGame game) {
 		super(game);
+		sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
 	}
 
 	@Override
 	public void show() {
 	    // Reproducir una sola vez al entrar con master*sfx
 	    if (!played && sonidoMuerte != null) {
-	    	// TODO REEMPLAZAR GAME.GETSFXVOLUME() (MALA PRACTICA ROMPE PRINCIPIOS)
-	        sonidoMuerte.play(game.getSfxVolume());
 	        played = true;
 	    }
 	}
-
-	@Override
-	public void render(float delta) {
-		this.update(delta);
-		this.draw(game.getBatch(), game.getFont());
-	}
-
+	
 	@Override
 	protected void update(float delta) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {

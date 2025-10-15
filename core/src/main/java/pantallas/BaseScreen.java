@@ -4,7 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import logica.NotHotlineMiami;
+import logica.MainGame;
 
 /**
  * Clase abstracta encargada de poder tener una base de la lógica interna de las pantallas
@@ -13,25 +13,27 @@ import logica.NotHotlineMiami;
  * Hace Override a los métodos de Screen con implementaciones vacías para que no sea
  * requerimiento implementar todas a las sub-clases.
  */
-public abstract class BaseScreen implements Screen, Navigation {
+public abstract class BaseScreen implements Screen {
     // TODO Cambiar parámetro a private para usar el getGame
-	protected NotHotlineMiami game;
+	protected MainGame game;
 	
     /**
      * Constructor que toma el juego.
      * @param game
      */
-    public BaseScreen(NotHotlineMiami game) {
+    public BaseScreen(MainGame game) {
         this.game = game;
     }
     
-    public NotHotlineMiami getGame() {
+    public MainGame getGame() {
     	return game;
     }
     
-    // Todos los hijos van a implementarla
-    // (Es parte de Screen, sólo colocada acá para referencia :3)
-    public abstract void render(float delta);
+    @Override
+    public void render(float delta) {
+    	this.update(delta);
+    	this.draw(game.getBatch(), game.getFont());
+    }
     
     /**
      * Método encargado de poder manejar únicamente la lógica de una pantalla específica.

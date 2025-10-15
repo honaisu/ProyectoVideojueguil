@@ -2,38 +2,24 @@ package pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.*;
-import armas.proyectiles.Bullet;
-import armas.proyectiles.Swing;
 import logica.AssetsLoader;
-import logica.NotHotlineMiami;
+import logica.MainGame;
 
-import managers.AsteroidManager;
-import managers.BulletManager;
-import managers.CollisionManager;
 import managers.GameManager;
-import managers.MeleeManager;
 import pantallas.BaseScreen;
+import pantallas.ScreenType;
 import personajes.Jugador;
 
 public class PantallaJuego extends BaseScreen {
-    private SpriteBatch batch;
-
-    private Sound explosionSound;
-    private Music gameMusic;
-
-
-    private Jugador jugador;
+    private Sound explosionSound = AssetsLoader.getInstancia().getExplosionSound();
+    private Music gameMusic = AssetsLoader.getInstancia().getGameMusic();
 
     // Managers
     private GameManager gameManager;
@@ -43,28 +29,18 @@ public class PantallaJuego extends BaseScreen {
     private float pauseToggleCooldown = 0f;
     private final float pauseToggleDelay = 0.2f;
 
-    private float keyCooldown = 0f;
-    private final float repeatDelay = 0.15f;
-
     // Overlay de pausa
-    public PantallaJuego(NotHotlineMiami game) {
+    public PantallaJuego(MainGame game) {
     	super(game);
-    	
-    	int x = Gdx.graphics.getWidth() / 2;
-    	int y = Gdx.graphics.getHeight() / 2;
-    	
-    	jugador = new Jugador(x, y, new Melee());
     }
 
-    public PantallaJuego(NotHotlineMiami game, int ronda, int vidas, int score) {
+    public PantallaJuego(MainGame game, int ronda, int vidas, int score) {
     	super(game);
-
-        batch = game.getBatch();
 
         explosionSound = AssetsLoader.getInstancia().getExplosionSound();
         gameMusic = AssetsLoader.getInstancia().getGameMusic();
         gameMusic.setLooping(true);
-        aplicarVolumenMusica();
+        gameMusic.setVolume(game.getVolumen().getMusicVolume());
         gameMusic.play();
         
         //Crear Jugador
@@ -77,51 +53,9 @@ public class PantallaJuego extends BaseScreen {
             game.getSkinSelected()			// SKIN
         );*/
         
-        jugador.setVidas(vidas);
-        jugador.setArma(new Escopeta());
+        //jugador.setVidas(vidas);
+        //jugador.setArma(new Escopeta());
     }
-    
-    private void aplicarVolumenMusica() {
-        gameMusic.setVolume(game.getMusicVolume());
-    }
-
-    private void dibujaEncabezado() {
-        
-    }
-
-    @Override
-    public void render(float delta) {
-        // Toggle pausa con ESC
-        pauseToggleCooldown -= delta;
-        if (pauseToggleCooldown <= 0f && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            pauseToggleCooldown = pauseToggleDelay;
-            if (!paused) pause();
-            else resume();
-        }
-
-        // Update si no está en pausa ni herido
-        if (!paused && !jugador.estaHerido()) {
-            gameManager.update(delta);
-
-            int gained = gameManager.getCollisionManager().handleCollisions(jugador, bulletManager, meleeManager, asteroidManager);
-            if (gained > 0) score += gained;
-
-            if (jugador.estaDestruido()) {
-                if (score > game.getHighScore()) game.setHighScore(score);
-                Screen ss = new GameOverScreen(game);
-                ss.resize(1200, 800);
-                game.setScreen(ss);
-                dispose();
-                return;
-            }
-            
-            // TODO si AsteroidManager está vacío (?)
-        }
-    }
-    
-    // Hooks para que Armas agreguen entidades a sus managers
-    public boolean agregarBala(Bullet b) { bulletManager.add(b); return true; }
-    public void agregarSwing(Swing s) { meleeManager.add(s); }
 
     @Override public void show() { 
     	if (gameMusic != null) gameMusic.play(); 
@@ -130,14 +64,13 @@ public class PantallaJuego extends BaseScreen {
     @Override
     public void pause() {
         paused = true;
-        gameMusic.setVolume(game.getMusicVolume() * 0.33f);
+        gameMusic.setVolume(gameMusic.getVolume() * 0.33f);
     }
 
     @Override
     public void resume() {
         paused = false;
-        aplicarVolumenMusica();
-        keyCooldown = repeatDelay;
+        gameMusic.setVolume(game.getVolumen().getMusicVolume());
     }
 
     @Override
@@ -149,7 +82,32 @@ public class PantallaJuego extends BaseScreen {
     
 	@Override
 	protected void update(float delta) {
-		
+		// Toggle pausa con ESC
+        pauseToggleCooldown -= delta;
+        if (pauseToggleCooldown <= 0f && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            pauseToggleCooldown = pauseToggleDelay;
+            if (!paused) pause();
+            else resume();
+        }
+
+        // Update si no está en pausa ni herido
+        if (!paused && !jugador.estaHerido()) {
+            gameManager.update(delta);
+
+            int gained = gameManager.getCollisionManager().handleCollisions(jugador, 
+            		gameManager.getBulletManager(), 
+            		gameManager.getMeleeManager(), 
+            		gameManager.getAsteroidManager());
+            if (gained > 0) jugador.aumentarScore(gained);
+
+            if (jugador.estaDestruido()) {
+                if (jugador.getScore() > game.getHighScore()) game.setHighScore(jugador.getScore());
+                game.getPantallaManager().cambiarPantalla(ScreenType.GAME_OVER);
+                return;
+            }
+            
+            // TODO si AsteroidManager está vacío (?)
+        }
 	}
 
 	@Override
@@ -158,10 +116,9 @@ public class PantallaJuego extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         gameManager.render(batch);
-        jugador.draw(batch, this, paused, delta);
-
-        if (paused) dibujarMenuPausa(delta);
-
+        jugador.draw(batch, this, paused, 0);
+        // TODO reemplazarlo con HUD screen o algo similar
+        if (paused) game.getPantallaManager().cambiarPantalla(ScreenType.PAUSA);
         dibujaEncabezado();
         batch.end();
 	}

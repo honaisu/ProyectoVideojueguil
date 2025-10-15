@@ -6,7 +6,6 @@ public enum ScreenType {
 	PERSONALIZACION,
 	CONFIGURACION,
 	TUTORIAL,
+	PAUSA,
 	GAME_OVER;
-	
-	
 }

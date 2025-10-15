@@ -21,13 +21,16 @@ public class AssetsLoader {
 	
 	// Texturas
 	// Jugador
-    private Map<SkinJugador, Texture> skinJugadorTextures;	
+	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
+    private Map<SkinJugador, Texture> skinJugadorTextures;
     
+    // TODO TextureManager?
     // Enemigos
     private Texture balaTexture;
     private Texture enemigoTexture;
     private Texture swingHitboxTexture;
     
+    // TODO SoundMusicManager?
     // Sonidos y Música
     private Sound explosionSound;
     private Sound hurtSound;
@@ -63,7 +66,6 @@ public class AssetsLoader {
         
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/musicaDoom.mp3"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(0.03f);
     }
     
     private void loadTexturesJugador() {

@@ -3,16 +3,20 @@ package managers;
 import java.util.EnumMap;
 import java.util.Map;
 
-import logica.NotHotlineMiami;
+import logica.MainGame;
 import pantallas.*;
 import pantallas.juego.GameOverScreen;
 import pantallas.juego.PantallaJuego;
+import pantallas.menus.ConfigurationScreen;
+import pantallas.menus.CustomizationScreen;
+import pantallas.menus.MainMenuScreen;
+import pantallas.menus.PauseScreen;
 
 public class ScreenManager {
-	private final NotHotlineMiami game;
+	private final MainGame game;
     private Map<ScreenType, BaseScreen> pantallas;
 
-    public ScreenManager(NotHotlineMiami game) {
+    public ScreenManager(MainGame game) {
         this.game = game;
         this.pantallas = new EnumMap<>(ScreenType.class);
         this.iniciarPantallas();
@@ -20,13 +24,11 @@ public class ScreenManager {
     
     private void iniciarPantallas() {
         // Crea una instancia de cada pantalla y la guarda en el mapa
-    	
-    	
-    	pantallas.put(ScreenType.MENU,			new MenuScreen(game));
+    	pantallas.put(ScreenType.MENU,			new MainMenuScreen(game));
         pantallas.put(ScreenType.GAME_OVER, 		new GameOverScreen(game));
         pantallas.put(ScreenType.PERSONALIZACION, new CustomizationScreen(game));
         pantallas.put(ScreenType.CONFIGURACION, 	new ConfigurationScreen(game));
-        //pantallas.put(ScreenType.PAUSA, new PausaScreen(game));
+        pantallas.put(ScreenType.PAUSA, new PauseScreen(game));
     }
     
     public void cambiarPantalla(ScreenType tipoPantalla) {

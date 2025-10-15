@@ -8,7 +8,7 @@ import armas.proyectiles.Bullet;
 import armas.proyectiles.Swing;
 import hitboxes.BallHitbox;
 import logica.AssetsLoader;
-import logica.NotHotlineMiami;
+import logica.MainGame;
 import personajes.Jugador;
 
 public class CollisionManager {
