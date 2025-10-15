@@ -10,7 +10,6 @@ import hitboxes.BallHitbox;
 //Clase que representa una balla dentro del juego
 
 public class Bullet {
-
 	private float xSpeed;					// velocidad de la bala eje x
 	private float ySpeed;					// velocidad de la bala eje y
 	private boolean destroyed = false;		// ver si la bala esta destruida
@@ -28,7 +27,7 @@ public class Bullet {
         this.xSpeed = (float) Math.cos(radians) * speed;
         this.ySpeed = (float) Math.sin(radians) * speed;
     }
-    
+	
     //movimiento de la bala y colision con el borde de la ventana
     public void update() {
         spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);
@@ -56,6 +55,5 @@ public class Bullet {
         return false;
     }
     
-    public boolean isDestroyed() {return destroyed;}
-
+    public boolean isDestroyed() { return destroyed; }
 }

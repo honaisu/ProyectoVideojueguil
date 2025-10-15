@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 //Clase que se encarga de crear una colision en forma de semicirculo
 public class ArcHitbox {
-
     private float x;				// posicion en eje x
     private float y;				// posicion en eje y
     private float radio;			// radio del semicirculo

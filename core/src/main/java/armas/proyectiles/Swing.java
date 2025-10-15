@@ -1,15 +1,13 @@
 package armas.proyectiles;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hitboxes.ArcHitbox;
 import hitboxes.BallHitbox;
+import logica.AssetsLoader;
 import personajes.Jugador;
 
 public class Swing {
-
     private ArcHitbox hitbox;			// la colision es de tipo arqueada
     private float duracion = 0.25f;     // tiempo que dura activo el golpe
     private float tiempoActivo = 0f;  	// Contador
@@ -25,13 +23,12 @@ public class Swing {
         		x, y,													// posicion del ataque
         		radio,													// radio del ataque
         		nave.getRotacion(),										// la rotacion con respecto de la nave
-        		new Texture(Gdx.files.internal("semicirculo2.png"))); 	// textura del ataqque
+        		AssetsLoader.getInstancia().getSwingHitboxTexture()); 	// textura del ataqque
         
         this.nave = nave;
     }
 
     public void update(float delta) {
-    	
     	xVel = nave.getxVel();
     	yVel = nave.getyVel();
     	rot = nave.getRotacion();

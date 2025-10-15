@@ -5,25 +5,24 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.*;
 import armas.proyectiles.Bullet;
 import armas.proyectiles.Swing;
-import armas.proyectiles.RayoLaser;
+import logica.AssetsLoader;
+import logica.NotHotlineMiami;
 import managers.AsteroidManager;
 import managers.BulletManager;
 import managers.CollisionManager;
 import managers.MeleeManager;
 import personajes.Jugador;
-import logica.SpaceNavigation;
 
-public class PantallaJuego implements Screen {
-    private SpaceNavigation game;
-    private OrthographicCamera camera;
+public class PantallaJuego extends PantallaBase {
     private SpriteBatch batch;
 
     private Sound explosionSound;
@@ -31,11 +30,11 @@ public class PantallaJuego implements Screen {
 
     private int score;
     private int ronda;
-    private int velXAsteroides;
-    private int velYAsteroides;
-    private int cantAsteroides;
+    private int velXAsteroides = 2;
+    private int velYAsteroides = 2;
+    private int cantAsteroides = 5;
 
-    private Jugador nave;
+    private Jugador jugador;
 
     // Managers
     private AsteroidManager asteroidManager;
@@ -56,22 +55,15 @@ public class PantallaJuego implements Screen {
     // Overlay de pausa
     private Texture texturaPausa;
 
-    public PantallaJuego(SpaceNavigation game, int ronda, int vidas, int score,
-                         int velXAsteroides, int velYAsteroides, int cantAsteroides) {
-        this.game = game;
+    public PantallaJuego(NotHotlineMiami game, int ronda, int vidas, int score) {
+        super(game);
         this.ronda = ronda;
         this.score = score;
-        this.velXAsteroides = velXAsteroides;
-        this.velYAsteroides = velYAsteroides;
-        this.cantAsteroides = cantAsteroides;
 
         batch = game.getBatch();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 640);
 
-        // Audio
-        explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("musicaDoom.mp3"));
+        explosionSound = AssetsLoader.getInstancia().getExplosionSound();
+        gameMusic = AssetsLoader.getInstancia().getGameMusic();
         gameMusic.setLooping(true);
         aplicarVolumenMusica();
         gameMusic.play();
@@ -81,48 +73,39 @@ public class PantallaJuego implements Screen {
         asteroidManager = new AsteroidManager(cantAsteroides, velXAsteroides, velYAsteroides);
         bulletManager = new BulletManager();
         meleeManager = new MeleeManager();
-        collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
-
-        // Jugador (lógica Nave4 + Arma)
-        String path = (game.getSelectedShipPath() != null) ? game.getSelectedShipPath() : "referencia.png";
-        Texture naveTex = new Texture(Gdx.files.internal(path));
+        //collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
+        collisionManager = new CollisionManager(game);
         
         //Crear Jugador
-        nave = new Jugador(
-            Gdx.graphics.getWidth() / 2 - 50, 30,
-            0f, // rotación inicial
-            naveTex,
-            cargarSoundSeguro("hurt.mp3", "hurt.ogg"),
-            new Melee(),
-            game
+        jugador = new Jugador(
+            Gdx.graphics.getWidth() / 2, 	// X
+            Gdx.graphics.getHeight() / 2,	// Y
+            0f,								// ROTACION
+            new Melee(),					// ARMA PRINCIPAL
+            game.getSkinSelected()			// SKIN
         );
-        game.setJugador(nave);
-        nave.setVidas(vidas);
         
+        jugador.setVidas(vidas);
+        
+
 
         //========================
         //Probar armas
         //========================
         //nave.setArma(new Metralleta());
         //nave.setArma(new Escopeta());
-        nave.setArma(new CanonLaser());
+        jugador.setArma(new CanonLaser());
+
 
 
         // Crear textura overlay 1x1 para la pausa
-        com.badlogic.gdx.graphics.Pixmap pm = new com.badlogic.gdx.graphics.Pixmap(
-            1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888
-        );
-        pm.setColor(1, 1, 1, 1);
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pm.setColor(Color.WHITE);
         pm.fill();
         texturaPausa = new Texture(pm);
         pm.dispose();
     }
-    private Sound cargarSoundSeguro(String primario, String alterno) {
-        if (Gdx.files.internal(primario).exists()) return Gdx.audio.newSound(Gdx.files.internal(primario));
-        if (Gdx.files.internal(alterno).exists()) return Gdx.audio.newSound(Gdx.files.internal(alterno));
-        return null;
-    }
-
+    
     private void aplicarVolumenMusica() {
         float mv = game.getMasterVolume();
         float mus = game.getMusicVolume();
@@ -131,14 +114,16 @@ public class PantallaJuego implements Screen {
 
     private void dibujaEncabezado() {
         game.getFont().getData().setScale(2f);
-        game.getFont().draw(batch, "Vidas: " + nave.getVidas() + " Ronda: " + ronda, 10, 30);
+        game.getFont().draw(batch, "Vidas: " + jugador.getVidas() + " Ronda: " + ronda, 10, 30);
         game.getFont().draw(batch, "Score:" + this.score, Gdx.graphics.getWidth() - 150, 30);
         game.getFont().draw(batch, "HighScore:" + game.getHighScore(), Gdx.graphics.getWidth() / 2 - 100, 30);
 
         // Munición arma (si aplica)
-        if (nave.getArma() != null) {
-            int mun = nave.getArma().getMunicion();
-            int max = nave.getArma().getMunicionMax();
+        //if (nave.getArma() == null || nave.getArma() instanceof Melee) return;
+        
+        if (jugador.getArma() != null && !(jugador.getArma() instanceof Melee)) {
+            int mun = jugador.getArma().getMunicion();
+            int max = jugador.getArma().getMunicionMax();
             game.getFont().draw(batch, "Municion: " + mun + " / " + max,
                     Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
         }
@@ -155,15 +140,15 @@ public class PantallaJuego implements Screen {
         }
 
         // Update si no está en pausa ni herido
-        if (!paused && !nave.estaHerido()) {
+        if (!paused && !jugador.estaHerido()) {
             bulletManager.update();
             meleeManager.update(delta);
             asteroidManager.update();
 
-            int gained = collisionManager.handleCollisions(nave, bulletManager, meleeManager, asteroidManager);
+            int gained = collisionManager.handleCollisions(jugador, bulletManager, meleeManager, asteroidManager);
             if (gained > 0) score += gained;
 
-            if (nave.estaDestruido()) {
+            if (jugador.estaDestruido()) {
                 if (score > game.getHighScore()) game.setHighScore(score);
                 Screen ss = new PantallaGameOver(game);
                 ss.resize(1200, 800);
@@ -171,14 +156,10 @@ public class PantallaJuego implements Screen {
                 dispose();
                 return;
             }
-
+            
+            // TODO
             if (asteroidManager.isEmpty()) {
-                Screen ss = new PantallaJuego(game, ronda + 1, nave.getVidas(), score,
-                        velXAsteroides + 3, velYAsteroides + 3, cantAsteroides + 10);
-                ss.resize(1200, 800);
-                game.setScreen(ss);
-                dispose();
-                return;
+                
             }
         }
 
@@ -188,7 +169,7 @@ public class PantallaJuego implements Screen {
 
         bulletManager.render(batch);
         meleeManager.render(batch);
-        nave.draw(batch, this, paused, delta);
+        jugador.draw(batch, this, paused, delta);
         asteroidManager.render(batch);
 
         if (paused) dibujarMenuPausa(delta);
@@ -198,12 +179,14 @@ public class PantallaJuego implements Screen {
     }
 
     private void dibujarMenuPausa(float delta) {
+    	final Color transparente = new Color(0f, 0f, 0f, 0.45f);
+    	
         // Overlay
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        batch.setColor(0f, 0f, 0f, 0.45f);
+        batch.setColor(transparente);
         batch.draw(texturaPausa, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.setColor(1f, 1f, 1f, 1f);
+        batch.setColor(Color.WHITE);
 
         // Navegación
         keyCooldown -= delta;
@@ -243,15 +226,14 @@ public class PantallaJuego implements Screen {
     public boolean agregarBala(Bullet b) { bulletManager.add(b); return true; }
     public void agregarSwing(Swing s) { meleeManager.add(s); }
 
-    @Override public void show() { if (gameMusic != null) gameMusic.play(); }
-    @Override public void resize(int width, int height) {}
+    @Override public void show() { 
+    	if (gameMusic != null) gameMusic.play(); 
+    }
 
     @Override
     public void pause() {
         paused = true;
-        float mv = game.getMasterVolume();
-        float mus = game.getMusicVolume();
-        gameMusic.setVolume(mv * mus * 0.33f);
+        gameMusic.setVolume(game.getMusicVolume() * 0.33f);
     }
 
     @Override
@@ -260,8 +242,6 @@ public class PantallaJuego implements Screen {
         aplicarVolumenMusica();
         keyCooldown = repeatDelay;
     }
-
-    @Override public void hide() {}
 
     @Override
     public void dispose() {
@@ -278,4 +258,15 @@ public class PantallaJuego implements Screen {
     public BulletManager getBulletManager() { return bulletManager; }
     public CollisionManager getCollisionManager() { return collisionManager; }
     public MeleeManager getMeleeManager() { return meleeManager; }
+
+	@Override
+	protected void update(float delta) {
+		
+	}
+
+	@Override
+	protected void draw() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,8 +1,8 @@
 package armas;
 
-import com.badlogic.gdx.Gdx;
 
 import armas.proyectiles.Swing;
+import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
@@ -14,7 +14,7 @@ public class Melee extends Arma {
     public Melee() {
         super(0.8f,															// cadencia
         		9999,														// municion
-        		Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));	// sonido
+        		AssetsLoader.getInstancia().getDisparoSound());	// sonido
     }
 
     //clase sobrescrita

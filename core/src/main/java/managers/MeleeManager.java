@@ -6,9 +6,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.proyectiles.Swing;
 
-// Clase encargada del manejo de los ataques cuerpo a cuerpo
+/** 
+ * Clase encargada del manejo de los ataques cuerpo a cuerpo
+ */
 public class MeleeManager {
-
     private final ArrayList<Swing> swings = new ArrayList<>();
     
     // Agrega un nuevo swing

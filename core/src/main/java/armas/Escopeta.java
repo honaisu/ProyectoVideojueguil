@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Bullet;
+import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
@@ -14,7 +15,7 @@ public class Escopeta extends Arma {
 	public Escopeta() {
 		super(3f, 															// cadencia
 				8, 															// municion
-				Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));	// sonido
+				AssetsLoader.getInstancia().getDisparoSound());	// sonido
 	}
 
 	@Override
@@ -22,21 +23,17 @@ public class Escopeta extends Arma {
 		actualizar(delta);
         
 		// sin balas
-        if (municion <= 0) {
-            return; 
+        if (this.getMunicion() <= 0) return;
+        
+        // cadencia
+    	tiempoDesdeUltimoDisparo += delta;
+        if (tiempoDesdeUltimoDisparo >= cadencia) {
+            crearBala(nave, juego);
+            municion--; 
+            tiempoDesdeUltimoDisparo = 0;
         }
-        //cadencia
-        if (municion > 0) {
-        	tiempoDesdeUltimoDisparo += delta;
-            if (tiempoDesdeUltimoDisparo >= cadencia) {
-                crearBala(nave, juego);
-                municion--; 
-                tiempoDesdeUltimoDisparo = 0;
-            }
-        }
-        if (puedeDisparar()) {
-            reiniciarCooldown();
-        }
+        
+        if (puedeDisparar()) reiniciarCooldown();
 	}
 	
 	//crea la dispersion de las balas de la escopeta con direccion respecto al jugador

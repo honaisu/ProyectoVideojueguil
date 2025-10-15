@@ -8,10 +8,12 @@ import armas.proyectiles.RayoLaser;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
+
 public class Laser extends Arma {
 
     private final Texture texturaLaser;
     private final Sound soundLaser;
+
 
     private RayoLaser rayoActivo;
 
@@ -71,4 +73,5 @@ public class Laser extends Arma {
     public void consumirUnidadMunicion(int unidades) {
         municion = Math.max(0, municion - unidades);
     }
+
 }

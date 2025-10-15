@@ -1,19 +1,16 @@
 package armas;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
 import armas.proyectiles.Bullet;
+import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
 //Clase para un arma escopeta
 public class Metralleta extends Arma {
-
     public Metralleta() {
-        super(0.2f,															// cadencia
-        		30, 														// municion
-        		Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3"))); 	// sonido
+        super(0.2f,												// cadencia
+        		30, 											// municion
+        		AssetsLoader.getInstancia().getDisparoSound()); // sonido
     }
     
   //clase sobrescrita
@@ -22,22 +19,17 @@ public class Metralleta extends Arma {
         actualizar(delta);
         
         //sin balas
-        if (municion <= 0) {
-            return; 
-        }
+        if (this.getMunicion() <= 0) return;
         
         //cadencia
-        if (municion > 0) {
-        	tiempoDesdeUltimoDisparo += delta;
-            if (tiempoDesdeUltimoDisparo >= cadencia) {
-                crearBala(nave, juego);
-                municion--; 
-                tiempoDesdeUltimoDisparo = 0;
-            }
+    	tiempoDesdeUltimoDisparo += delta;
+        if (tiempoDesdeUltimoDisparo >= cadencia) {
+            crearBala(nave, juego);
+            municion--; 
+            tiempoDesdeUltimoDisparo = 0;
         }
-        if (puedeDisparar()) {
-            reiniciarCooldown();
-        }
+        
+        if (puedeDisparar()) reiniciarCooldown();
     }
     
     //crea la bala de la metralleta con direccion respecto al jugador
@@ -54,7 +46,7 @@ public class Metralleta extends Arma {
         		bulletX, bulletY,									// posicion de la bala
         		nave.getRotacion(),									// dirección de la bala
         		10f,												// velocidad levemente aleatoria
-        		new Texture(Gdx.files.internal("Bala.png")));	// textura de la bala
+        		AssetsLoader.getInstancia().getBalaTexture());	// textura de la bala
         
         juego.agregarBala(bala);
         soundBala.play(0.1f);

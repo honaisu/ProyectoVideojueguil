@@ -10,13 +10,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
-import armas.*;         
+import armas.*;
 import hitboxes.BallHitbox;
-import logica.SpaceNavigation;
+import logica.AnimationManager;
+import logica.NotHotlineMiami;
 import pantallas.PantallaJuego;
 
 public class Jugador {
-
 	// Estado básico 
 	private boolean destruida = false;
 	private int vidas = 3;
@@ -24,13 +24,13 @@ public class Jugador {
 	private float yVel = 0;
 
 	// Visual y audio
-	public Sprite spr; // se mantiene público si armas/hitboxes lo usan
-	private Sound sonidoHerido;
+	public Sprite spr;
+	private Sound sonidoHerido = null /*TODO*/;
 	
-	public Animation<TextureRegion> animacion;
+	// ENCARGADOS DE ANIMACIÓN
+	private Animation<TextureRegion> animacion;
     private float stateTime = 0f;
-	
-	
+    
 	// Herido
 	private boolean herido = false;
 	private int tiempoHeridoMax = 50;
@@ -42,39 +42,23 @@ public class Jugador {
 	// Armas
 	private Arma armaActual;
 
-	// Volúmenes globales
-	private SpaceNavigation gameRef; //TODO arreglar esto
-
-	public Jugador(int x, int y, float rotacion, Texture tx, Sound soundChoque, Arma armaActual, SpaceNavigation gameRef) {
-	    this.gameRef = gameRef;
-	    this.sonidoHerido = soundChoque;
+	public Jugador(int x, int y, float rotacion, Arma armaActual, SkinJugador skin) {
 	    this.armaActual = armaActual;
 	    this.rotacion = rotacion;
 	    
 	    // Sprite del jugador
-	    spr = new Sprite(tx, 64, 64);
+	    spr = skin.crearSprite();
 	    
-	    // Parte encargada de la textura para la animación
-    	TextureRegion[][] tmp = TextureRegion.split(tx, tx.getWidth() / 4, tx.getHeight() / 1);
-    	
-    	TextureRegion[] walkFrames = new TextureRegion[4 * 1];
-    	int index = 0;
-		for (int i = 0; i < 1; i++) {
-			for (int j = 0; j < 4; j++) {
-				walkFrames[index++] = tmp[i][j];
-			}
-		}
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animacion = new Animation<TextureRegion>(0.2f, walkFrames);
+    	this.animacion = AnimationManager.createJugadorAnimation(skin);
 	    
     	spr.scale(1f);
     	spr.rotate90(false);
     	
     	spr.setPosition(x, y);
-    	spr.setBounds(x, y, 45, 45);
+    	//spr.setBounds(x, y, 45, 45);
     	
     	spr.setOriginCenter();
-	    //spr.setRotation(rotacion);
 	}
 
 	// Dibuja y actualiza; si paused, no procesa input, físicas ni disparo
@@ -89,7 +73,7 @@ public class Jugador {
  		/**
  		 * Parte encargada de cambiar el si se mueve o no el jugador
  		 */
- 	    if (isMoving) {
+ 	    if (isMoving && !paused) {
  	        // Si se está moviendo, avanza el tiempo de la animación
  	        stateTime += delta; 
  	        currentFrame = animacion.getKeyFrame(stateTime, true);
@@ -102,13 +86,12 @@ public class Jugador {
 	    if (herido) {
 	        if (!paused) {
 	            spr.setX(spr.getX() + MathUtils.random(-2, 2));
-	            spr.draw(batch);
 	            spr.setX(x);
 	            tiempoHerido--;
 	            if (tiempoHerido <= 0) herido = false;
-	        } else {
-	            spr.draw(batch);
 	        }
+	        
+	        spr.draw(batch);
 	        return;
 	    }
 
@@ -166,45 +149,52 @@ public class Jugador {
                 armaActual.disparar(this, juego, dt);
             }
 	    }
+
+	    // ENCARGADO DE MOSTRAR LA ANIMACIÓN
 	    
-	    // Dibujar la nave
-	    //spr.draw(batch);
+        batch.draw(currentFrame, 		// Fotograma 
+                spr.getX(), spr.getY(), // Posición
+                spr.getOriginX(), spr.getOriginY(), // Punto de origen
+                spr.getWidth(), spr.getHeight(), 	// Dimensiones
+                spr.getScaleX(), spr.getScaleY(), 	// Escala
+                spr.getRotation()); 	// Rotación
 	}
 
 	// Colisión con asteroide (rebotes + estados/sonido)
-	public boolean checkCollision(BallHitbox b) {
-	    if (!herido && b.getArea().overlaps(spr.getBoundingRectangle())) {
-	        // Rebote X
-	        if (xVel == 0) xVel += b.getXSpeed() / 2f;
-	        if (b.getXSpeed() == 0) b.setXSpeed(b.getXSpeed() + (int) (xVel / 2f));
-	        xVel = -xVel;
-	        b.setXSpeed(-b.getXSpeed());
+	public boolean checkCollision(BallHitbox b, float sfxVolume) {
+		if (herido) return false;
+		
+		boolean colision = b.getArea().overlaps(spr.getBoundingRectangle());
+		if (!colision) return false;
+		
+		// Rebote X
+        if (xVel == 0) xVel += b.getXSpeed() / 2f;
+        if (b.getXSpeed() == 0) b.setXSpeed(b.getXSpeed() + (int) (xVel / 2f));
+        xVel = -xVel;
+        b.setXSpeed(-b.getXSpeed());
 
-	        // Rebote Y
-	        if (yVel == 0) yVel += b.getySpeed() / 2f;
-	        if (b.getySpeed() == 0) b.setySpeed(b.getySpeed() + (int) (yVel / 2f));
-	        yVel = -yVel;
-	        b.setySpeed(-b.getySpeed());
+        // Rebote Y
+        if (yVel == 0) yVel += b.getySpeed() / 2f;
+        if (b.getySpeed() == 0) b.setySpeed(b.getySpeed() + (int) (yVel / 2f));
+        yVel = -yVel;
+        b.setySpeed(-b.getySpeed());
+		
+        // Separación mínima para evitar solape
+        int cont = 0;
+        while (cont < Math.abs(xVel)) {
+            spr.setX(spr.getX() + Math.signum(xVel));
+            cont++;
+        }
 
-	        // Separación mínima para evitar solape
-	        int cont = 0;
-	        while (b.getArea().overlaps(spr.getBoundingRectangle()) && cont < Math.abs(xVel)) {
-	            spr.setX(spr.getX() + Math.signum(xVel));
-	            cont++;
-	        }
+        // Herida/vidas y sonido con volúmenes globales
+        vidas--;
+        herido = true;
+        tiempoHerido = tiempoHeridoMax;
 
-	        // Herida/vidas y sonido con volúmenes globales
-	        vidas--;
-	        herido = true;
-	        tiempoHerido = tiempoHeridoMax;
+        if (sonidoHerido != null) sonidoHerido.play(sfxVolume);
 
-	        float vol = gameRef.getMasterVolume() * gameRef.getSfxVolume();
-	        if (sonidoHerido != null) sonidoHerido.play(vol);
-
-	        if (vidas <= 0) destruida = true;
-	        return true;
-	    }
-	    return false;
+        if (vidas <= 0) destruida = true;
+        return true;
 	}
 
 	// Getters y Setters 
