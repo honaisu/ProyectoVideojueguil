@@ -2,7 +2,7 @@ package armas;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import pantallas.PantallaJuego;
+import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
 public class Laser extends Arma {

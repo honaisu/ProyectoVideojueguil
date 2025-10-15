@@ -14,8 +14,6 @@ import personajes.Jugador;
 public class CollisionManager {
 	private final Sound explosionSound;
     private final int scorePerAsteroid;
-    
-    private NotHotlineMiami game;
 
     /**
      * @param explosionSound sonido que se reproduce al destruir asteroide (puede ser null)
@@ -26,8 +24,7 @@ public class CollisionManager {
         this.scorePerAsteroid = scorePerAsteroid;
     }
     
-    public CollisionManager(NotHotlineMiami game) {
-    	this.game = game;
+    public CollisionManager() {
         this.explosionSound = AssetsLoader.getInstancia().getExplosionSound();
         this.scorePerAsteroid = 10; // TODO los asteroides probablemente manejen sus propios puntajes
     }
@@ -74,7 +71,7 @@ public class CollisionManager {
         // Si nave está herida o destruida, la nave misma maneja su estado, aquí solo removemos asteroides que colisionen
         for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
             BallHitbox a = asteroids.get(ai);
-            if (nave.checkCollision(a, game.getSfxVolume())) {
+            if (nave.checkCollision(a)) {
                 am.removeAsteroid(ai);
             }
         }
@@ -85,7 +82,7 @@ public class CollisionManager {
                 BallHitbox a = asteroids.get(ai);
                 if (s.checkCollision(a)) {
                     am.removeAsteroid(ai);
-                    if (explosionSound != null) explosionSound.play(game.getSfxVolume());
+                    if (explosionSound != null) explosionSound.play(0f);
                     totalScore += scorePerAsteroid;
                 }
             }

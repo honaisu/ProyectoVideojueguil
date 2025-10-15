@@ -41,4 +41,15 @@ public class AnimationManager {
 		Animation<TextureRegion> animacionJugador = createAnimation(jugadorSheet, filas, columnas, duracionFrames);
 		return animacionJugador;
 	}
+	
+	public static Animation<TextureRegion> createAtaqueMeleeAnimation() {
+		Texture ataqueSheet = AssetsLoader.getInstancia().getSwingHitboxTexture();
+		int filas = 1;
+		int columnas = 8;
+		float duracionFrames = 0.25f;
+		
+		Animation<TextureRegion> animacionAtaque = createAnimation(ataqueSheet, filas, columnas, duracionFrames);
+	    animacionAtaque.setPlayMode(PlayMode.NORMAL); 
+		return animacionAtaque;
+	}
 }

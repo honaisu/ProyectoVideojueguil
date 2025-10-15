@@ -2,7 +2,7 @@ package armas;
 
 import armas.proyectiles.Swing;
 import logica.AssetsLoader;
-import pantallas.PantallaJuego;
+import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
 //Clase para el arma cuerpo a cuerpo

@@ -2,7 +2,7 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 
-import pantallas.PantallaJuego;
+import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
 //Clase Abstracta Arma generica

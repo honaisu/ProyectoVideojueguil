@@ -2,12 +2,9 @@ package armas;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
 import armas.proyectiles.Bullet;
 import logica.AssetsLoader;
-import pantallas.PantallaJuego;
+import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
 public class Escopeta extends Arma {
@@ -60,7 +57,7 @@ public class Escopeta extends Arma {
                 bulletX, bulletY,								// posicion de la bala
                 angle,                     						// dirección de la bala
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
-                new Texture(Gdx.files.internal("Bala.png"))	// textura de la bala
+                AssetsLoader.getInstancia().getBalaTexture()	// textura de la bala
             );
             juego.agregarBala(bala);
         }

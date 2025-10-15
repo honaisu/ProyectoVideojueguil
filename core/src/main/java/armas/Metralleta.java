@@ -2,7 +2,7 @@ package armas;
 
 import armas.proyectiles.Bullet;
 import logica.AssetsLoader;
-import pantallas.PantallaJuego;
+import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
 //Clase para un arma escopeta

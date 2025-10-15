@@ -1,6 +1,6 @@
 package pantallas.opciones;
 
-public enum OpcionConfiguracion {
+public enum ConfigurationOption {
 	VOLUMEN_GENERAL("Volumen General"),
 	VOLUMEN_MUSICA("Volumen Música"),
 	VOLUMEN_EFECTOS("Volumen Efectos"),
@@ -9,7 +9,7 @@ public enum OpcionConfiguracion {
 	
 	private String nombre;
 	
-	OpcionConfiguracion(String nombre) {
+	ConfigurationOption(String nombre) {
 		this.nombre = nombre;
 	}
 	

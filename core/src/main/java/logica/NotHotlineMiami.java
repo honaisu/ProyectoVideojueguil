@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import managers.PantallaManager;
-import pantallas.PantallaMenu;
-import pantallas.TipoPantalla;
+import managers.ScreenManager;
+import pantallas.MenuScreen;
+import pantallas.ScreenType;
 import personajes.Jugador;
 import personajes.SkinJugador;
 
@@ -20,15 +20,12 @@ public class NotHotlineMiami extends Game {
 	private Viewport viewport;
 	private int highScore;
 	
-    // Jugador y selección de skin
-    private SkinJugador skinSelected;	// la skin a usar
-	
     // Volúmenes globales (0.0f a 1.0f)
     private float masterVolume = 1.0f;
     private float musicVolume  = 0.3f;
     private float sfxVolume    = 0.6f;
     
-    private PantallaManager pantallaManager;
+    private ScreenManager pantallaManager;
     
 	/**
 	 * Método encargado de crear el juego
@@ -45,10 +42,8 @@ public class NotHotlineMiami extends Game {
 		// ESTE ES UN SINGLETON!! carga los assets :D
 		AssetsLoader.getInstancia().load();
 		
-        skinSelected = SkinJugador.JUGADOR_ORIGINAL;
-		
-        pantallaManager = new PantallaManager(this);
-        pantallaManager.cambiarPantalla(TipoPantalla.MENU);
+        pantallaManager = new ScreenManager(this);
+        pantallaManager.cambiarPantalla(ScreenType.MENU);
 	}
 
 	@Override
@@ -82,17 +77,8 @@ public class NotHotlineMiami extends Game {
 	public Viewport getViewport() {
 		return viewport;
 	}
-
-	// SKIN
-	public void setSkinSelected(SkinJugador skin) {
-		this.skinSelected = skin;
-	}
 	
-	public SkinJugador getSkinSelected() {
-		return skinSelected;
-	}
-
-	public PantallaManager getPantallaManager() {
+	public ScreenManager getPantallaManager() {
 		return pantallaManager;
 	}
 }

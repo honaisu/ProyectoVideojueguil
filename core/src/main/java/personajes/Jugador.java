@@ -14,12 +14,15 @@ import armas.*;
 import hitboxes.BallHitbox;
 import logica.AnimationManager;
 import logica.NotHotlineMiami;
-import pantallas.PantallaJuego;
+import pantallas.juego.PantallaJuego;
 
 public class Jugador {
 	// Estado básico 
 	private boolean destruida = false;
 	private int vidas = 3;
+	private int score = 0;
+    private int ronda = 0;
+	
 	private float xVel = 0;
 	private float yVel = 0;
 
@@ -28,19 +31,39 @@ public class Jugador {
 	private Sound sonidoHerido = null /*TODO*/;
 	
 	// ENCARGADOS DE ANIMACIÓN
-	private Animation<TextureRegion> animacion;
+	private final Animation<TextureRegion> animacion;
     private float stateTime = 0f;
     
 	// Herido
 	private boolean herido = false;
 	private int tiempoHeridoMax = 50;
 	private int tiempoHerido;
+	
+	private final float V_LIMITE = 10.0f;
 
 	// Rotación Jugador
 	private float rotacion;
 
 	// Armas
 	private Arma armaActual;
+	
+	public Jugador(int x, int y, Arma armaActual) {
+	    this.armaActual = armaActual;
+	    this.rotacion = 0f;
+	    
+	    // Sprite del jugador
+	    spr = SkinJugador.JUGADOR_ORIGINAL.crearSprite();
+	    
+		// IMPLEMENTACIÓN DE LA ANIMACIÓN
+    	this.animacion = AnimationManager.createJugadorAnimation(SkinJugador.JUGADOR_ORIGINAL);
+	    
+    	spr.scale(1f);
+    	
+    	spr.setPosition(x, y);
+    	//spr.setBounds(x, y, 45, 45);
+    	
+    	spr.setOriginCenter();
+	}
 
 	public Jugador(int x, int y, float rotacion, Arma armaActual, SkinJugador skin) {
 	    this.armaActual = armaActual;
@@ -62,7 +85,12 @@ public class Jugador {
 	}
 
 	// Dibuja y actualiza; si paused, no procesa input, físicas ni disparo
-	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused, float delta) {
+	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused, float delta) {		
+		if (paused) {
+			if (herido) spr.draw(batch);
+			return;
+		}
+		
 	    float x = spr.getX();
 	    float y = spr.getY();
 	    
@@ -84,75 +112,53 @@ public class Jugador {
 
 	    // Estado herido: parpadeo/temblor y contador
 	    if (herido) {
-	        if (!paused) {
-	            spr.setX(spr.getX() + MathUtils.random(-2, 2));
-	            spr.setX(x);
-	            tiempoHerido--;
-	            if (tiempoHerido <= 0) herido = false;
-	        }
-	        
-	        spr.draw(batch);
+            spr.setX(spr.getX() + MathUtils.random(-2, 2));
+            spr.setX(x);
+            tiempoHerido--;
+            if (tiempoHerido <= 0) herido = false;
 	        return;
 	    }
 
-	    if (!paused) {
-	        // Rotación (LEFT/RIGHT) para el Jugador
-	        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  rotacion += 5f;
-	        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
-	        spr.setRotation(rotacion);
+        // Rotación (LEFT/RIGHT) para el Jugador
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  rotacion += 5f;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
+        spr.setRotation(rotacion);
 
-	        // Acelerar (UP) y freno (DOWN) + fricción 0.9
-	        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-	            xVel -= (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
-	            yVel += (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
-	        } else {
-	            xVel *= 0.9f;
-	            yVel *= 0.9f;
-	        }
-	        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-	            xVel += (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
-	            yVel -= (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
-	        }
+        // Acelerar (UP) y freno (DOWN) + fricción 0.9
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            xVel -= (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
+            yVel += (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
+        } else {
+            xVel *= 0.9f;
+            yVel *= 0.9f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            xVel += (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
+            yVel -= (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
+        }
 
-	        // Límites de velocidad para el Jugador
-	        if (xVel > 10.0f)  xVel = 10.0f;
-	        if (xVel < -10.0f) xVel = -10.0f;
-	        if (yVel > 10.0f)  yVel = 10.0f;
-	        if (yVel < -10.0f) yVel = -10.0f;
+        // Límites de velocidad para el Jugador
+        if (Math.abs(xVel) > V_LIMITE) xVel = V_LIMITE;
+        if (Math.abs(yVel) > V_LIMITE) yVel = V_LIMITE;
 
-	        // Rebote en bordes
-	        if (x + xVel < 0 || x + xVel + spr.getWidth() > Gdx.graphics.getWidth())  xVel *= -1;
-	        if (y + yVel < 0 || y + yVel + spr.getHeight() > Gdx.graphics.getHeight()) yVel *= -1;
+        // Rebote en bordes
+        if (x + xVel < 0 || x + xVel + spr.getWidth() > Gdx.graphics.getWidth())  xVel *= -1;
+        if (y + yVel < 0 || y + yVel + spr.getHeight() > Gdx.graphics.getHeight()) yVel *= -1;
 
-	        spr.setPosition(x + xVel, y + yVel);
-	        
-	        // ENCARGADO DE MOSTRAR LA ANIMACIÓN
-	        batch.draw(
-	        		currentFrame, 						// Fotograma 
-	                spr.getX(), spr.getY(), 			// Posición
-	                spr.getOriginX(), spr.getOriginY(), // Punto de origen
-	                spr.getWidth(), spr.getHeight(), 	// Dimensiones
-	                spr.getScaleX(), spr.getScaleY(), 	// Escala
-	                spr.getRotation()); 				// Rotación
-	        
-	        // Arma sin municion automaticamente cambia a ataque Melee
-	        if (armaActual.getMunicion() == 0) {
-	        	//TODO ver que no dispare dos veces
-	            this.setArma(new Melee());
-	        }
-	        
-	        // Disparo del arma actual (Z).
-	        
-            float dt = Gdx.graphics.getDeltaTime();
-            armaActual.actualizar(dt);
-            if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-                armaActual.disparar(this, juego, dt);
-            }
-	    }
+        spr.setPosition(x + xVel, y + yVel);
+        
+        // Arma sin municion automaticamente cambia a ataque Melee
+        if (armaActual.getMunicion() == 0) this.setArma(new Melee());
+        
+        // Disparo del arma actual (Z).
+        armaActual.actualizar(delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+            armaActual.disparar(this, juego, delta);
+        }
 
 	    // ENCARGADO DE MOSTRAR LA ANIMACIÓN
 	    
-        batch.draw(currentFrame, 		// Fotograma 
+	    batch.draw(currentFrame, 		// Fotograma 
                 spr.getX(), spr.getY(), // Posición
                 spr.getOriginX(), spr.getOriginY(), // Punto de origen
                 spr.getWidth(), spr.getHeight(), 	// Dimensiones
@@ -161,7 +167,8 @@ public class Jugador {
 	}
 
 	// Colisión con asteroide (rebotes + estados/sonido)
-	public boolean checkCollision(BallHitbox b, float sfxVolume) {
+	public boolean checkCollision(BallHitbox b) {
+		float sfxVolume = 0f;
 		if (herido) return false;
 		
 		boolean colision = b.getArea().overlaps(spr.getBoundingRectangle());
@@ -244,5 +251,12 @@ public class Jugador {
 	    spr.setOriginCenter();
 	    spr.setRotation(rotacion);
 	}
+	
+	public int getScore() {
+		return score;
+	}
 
+	public int getRonda() {
+		return ronda;
+	}
 }

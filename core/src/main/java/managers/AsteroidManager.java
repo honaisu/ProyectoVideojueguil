@@ -21,6 +21,11 @@ public class AsteroidManager {
 		spawnAsteroids(cantAsteroides, velXAsteroides, velYAsteroides);
     }
 	
+	// TODO Poner algo génerico o similar
+	public AsteroidManager() {
+		spawnAsteroids(5, 0, 0);
+	}
+
 	// Genera los asteroides con atributos levemente aleatorios
 	private void spawnAsteroids(int cant, int velX, int velY) {
 		Random r = new Random();

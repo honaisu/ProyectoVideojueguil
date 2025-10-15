@@ -54,7 +54,7 @@ public class AssetsLoader {
         
         balaTexture = new Texture(Gdx.files.internal("Bala.png"));
         enemigoTexture = new Texture(Gdx.files.internal("Mono.png"));
-        swingHitboxTexture = new Texture(Gdx.files.internal("semicirculo2.png"));
+        swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("audios/explosionSound.ogg"));
         disparoSound = Gdx.audio.newSound(Gdx.files.internal("audios/popSound.mp3"));
@@ -66,7 +66,7 @@ public class AssetsLoader {
         gameMusic.setVolume(0.03f);
     }
     
-    public void loadTexturesJugador() {
+    private void loadTexturesJugador() {
     	skinJugadorTextures = new EnumMap<>(SkinJugador.class);
         // Se itera sobre todos los valores de Skin
         for (SkinJugador skin : SkinJugador.values()) {

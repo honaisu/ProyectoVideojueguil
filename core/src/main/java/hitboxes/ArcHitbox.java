@@ -96,4 +96,11 @@ public class ArcHitbox {
 	    this.rotacion = rot;
 
 	}
+	
+	public float getX() {
+		return x;
+	}
+	public float getY() {
+		return y;
+	}
 }
