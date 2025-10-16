@@ -94,7 +94,7 @@ public class PantallaJuego extends PantallaBase {
         //========================
         //nave.setArma(new Metralleta());
         //nave.setArma(new Escopeta());
-        jugador.setArma(new CanonLaser());
+        jugador.setArma(new Laser());
 
 
 

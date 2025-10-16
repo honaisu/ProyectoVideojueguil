@@ -21,6 +21,7 @@ public class PantallaManager {
         pantallas.put(TipoPantalla.GAME_OVER, 		new PantallaGameOver(game));
         pantallas.put(TipoPantalla.PERSONALIZACION, new PantallaPersonalizacion(game));
         pantallas.put(TipoPantalla.CONFIGURACION, 	new PantallaConfiguracion(game));
+        pantallas.put(TipoPantalla.TUTORIAL, 	new PantallaTutorial(game));
     }
     
     public void cambiarPantalla(TipoPantalla tipoPantalla) {
