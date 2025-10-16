@@ -1,8 +1,7 @@
 package armas;
 
-import com.badlogic.gdx.Gdx;
-
 import armas.proyectiles.Swing;
+import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
@@ -14,19 +13,19 @@ public class Melee extends Weapon {
     public Melee() {
         super(0.8f,															// cadencia
         		9999,														// municion
-        		Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));	// sonido
+        		AssetsLoader.getInstancia().getDisparoSound());	// sonido
     }
 
     //clase sobrescrita
     @Override
-    public void disparar(Jugador nave, PantallaJuego juego, float delta) {
+    public void disparar(Jugador nave, PantallaJuego pantalla, float delta) {
         actualizar(delta);
 
         // No hay munición que contar en ataques melee
         if (!puedeDisparar()) return;
 
         // Crear golpe (Swing)
-        crearSwing(nave, juego);
+        crearSwing(nave, pantalla);
         reiniciarCooldown();
     }
     
@@ -36,15 +35,15 @@ public class Melee extends Weapon {
 
         float centerX = jug.spr.getX() + jug.spr.getWidth() / 2;
         float centerY = jug.spr.getY() + jug.spr.getHeight() / 2;
-        float length = jug.spr.getHeight() / 2;
+        //float length = jug.spr.getHeight() / 2;
         
-        float radio = 100f;  // Alcance del golpe
+        float length = jug.spr.getHeight() / 2 + 40; // distancia delante del jugador
         
         float swingX = centerX + (float) Math.cos(radians) * length;
         float swingY = centerY + (float) Math.sin(radians) * length;
         
         soundBala.play(0.1f);
-        swingActual = new Swing(swingX, swingY, radio , jug);
+        swingActual = new Swing(swingX, swingY, jug);
         juego.agregarSwing(swingActual);
        
     }

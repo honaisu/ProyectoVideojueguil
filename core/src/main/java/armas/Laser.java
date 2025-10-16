@@ -1,17 +1,12 @@
 package armas;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
-
 import armas.proyectiles.LaserBeam;
+import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
-public class Laser extends Weapon {
 
-    private final Texture texturaLaser;
-    private final Sound soundLaser;
+public class Laser extends Weapon {
 
     private LaserBeam rayoActivo;
 
@@ -21,9 +16,7 @@ public class Laser extends Weapon {
 
     public Laser() {
         // cadencia solo como gate de reactivación
-        super(0.01f, 300, Gdx.audio.newSound(Gdx.files.internal("laserSong.mp3")));
-        this.texturaLaser = new Texture(Gdx.files.internal("cosaFea.png"));
-        this.soundLaser = this.soundBala;
+        super(0.01f, 300, AssetsLoader.getInstancia().getLaserSound());
     }
 
     @Override
@@ -50,11 +43,11 @@ public class Laser extends Weapon {
         // Si no hay rayo, crear uno si hay munición y cadencia lista
         if (!puedeDisparar() || getMunicion() <= 0) return;
 
-        rayoActivo = new LaserBeam(nave, anchoLaser, texturaLaser, 1);
+        rayoActivo = new LaserBeam(nave, anchoLaser, AssetsLoader.getInstancia().getLaserContTexture(), 1);
         pantalla.agregarSwing(rayoActivo); // se gestiona vía MeleeManager
         rayoActivo.refrescarEncendido();        // arranca vivo
 
-        if (soundLaser != null) soundLaser.play(0.1f);
+        if (soundBala != null) soundBala.play(0.1f);
 
         reiniciarCooldown();
     }
@@ -71,4 +64,5 @@ public class Laser extends Weapon {
     public void consumirUnidadMunicion(int unidades) {
         municion = Math.max(0, municion - unidades);
     }
+
 }

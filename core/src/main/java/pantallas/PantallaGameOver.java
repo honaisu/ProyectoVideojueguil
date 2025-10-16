@@ -2,72 +2,60 @@ package pantallas;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import logica.SpaceNavigation;
+import logica.AssetsLoader;
+import logica.NotHotlineMiami;
 
-
-public class PantallaGameOver implements Screen {
-
-	private SpaceNavigation game;
-	private OrthographicCamera camera;
+/**ra la pantalla de game over:)
+ * Clase que muest
+ */
+public class PantallaGameOver extends PantallaBase {
 
 	// Efecto de muerte al entrar en Game Over
-	private Sound sonidoMuerte;
+	private Sound sonidoMuerte = AssetsLoader.getInstancia().getMuerteSound();
 	private boolean played = false;
 
-	public PantallaGameOver(SpaceNavigation game) {
-	    this.game = game;
-	    camera = new OrthographicCamera();
-	    camera.setToOrtho(false, 1200, 800);
-
-	    // Cargar el sonido (asegúrate que exista en assets)
-	    sonidoMuerte = Gdx.audio.newSound(Gdx.files.internal("muerteSound.mp3"));
+	public PantallaGameOver(NotHotlineMiami game) {
+		super(game);
 	}
 
 	@Override
 	public void show() {
 	    // Reproducir una sola vez al entrar con master*sfx
 	    if (!played && sonidoMuerte != null) {
-	        float mv = game.getMasterVolume();
-	        float sfx = game.getSfxVolume();
-	        sonidoMuerte.play(mv * sfx);
+	        sonidoMuerte.play(game.getSfxVolume());
 	        played = true;
 	    }
 	}
 
 	@Override
 	public void render(float delta) {
-	    ScreenUtils.clear(0, 0, 0.2f, 1);
+		this.update(delta);
+		this.draw();
+	}
 
-	    camera.update();
-	    game.getBatch().setProjectionMatrix(camera.combined);
+	@Override
+	protected void update(float delta) {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
+			game.getPantallaManager().cambiarPantalla(TipoPantalla.JUEGO);
+		}
+	}
+
+	@Override
+	protected void draw() {
+		ScreenUtils.clear(Color.NAVY);
 
 	    game.getBatch().begin();
 	    game.getFont().draw(game.getBatch(), "Perdiste WUAAAJAJAJAJN !!! ", 120, 400, 400, 1, true);
 	    game.getFont().draw(game.getBatch(), "Pincha en cualquier lado o presiona una tecla para reiniciar ...", 100, 300);
 	    game.getBatch().end();
-
-	    if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-	        Screen ss = new PantallaJuego(game, 1, 3, 0, 1, 1, 10);
-	        ss.resize(1200, 800);
-	        game.setScreen(ss);
-	        dispose();
-	    }
 	}
-
-	@Override public void resize(int width, int height) {}
-	@Override public void pause() {}
-	@Override public void resume() {}
-	@Override public void hide() {}
-
+	
 	@Override
 	public void dispose() {
 	    if (sonidoMuerte != null) sonidoMuerte.dispose();
 	}
-
-   
 }

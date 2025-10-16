@@ -7,21 +7,16 @@ import personajes.Jugador;
 
 //Clase Abstracta Arma generica
 public abstract class Weapon {
-	
-	
 	protected float cadencia;					//tiempo que dura un ataque despues de otro
     protected float tiempoDesdeUltimoDisparo;	//contador para que se cumpla la cadencia
-    
     protected int municion;						//municion actual que tiene un arma
     protected int municionMax;					//municion máxima que puede poseer un arma
-    
     protected Sound soundBala;					//sonido de la bala
     
     public Weapon(float cadencia, int municionMax, Sound soundBala) {
     	this.cadencia = cadencia;
         this.municionMax = municionMax;
         this.municion = municionMax;
-        
         this.soundBala = soundBala;
         
         this.tiempoDesdeUltimoDisparo = cadencia; //para que dispare instantaneamente el primer disparo
@@ -29,6 +24,8 @@ public abstract class Weapon {
     
     //metodo abstracto para disparar un arma
     public abstract void disparar(Jugador nave, PantallaJuego juego, float delta);
+    
+    //TODO crear proyectil
     
     //actualiza el timer entre disparo y disparo
     public void actualizar(float delta) {

@@ -4,21 +4,38 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
-
-public class BallHitbox {
-	private int x;
-    private int y;
+public class BallHitbox extends Hitbox{
     private int xSpeed;
     private int ySpeed;
-    private Sprite spr;
+    public Sprite spr; // TODO
+    
+	public ShapeRenderer shapeRenderer = new ShapeRenderer();;
 
-    public BallHitbox(int x, int y, int size, int xSpeed, int ySpeed, Texture tx) {
+    public BallHitbox(float x, float y, int size, int xSpeed, int ySpeed, Texture tx) {
+    	super(x,y);
+    	
     	spr = new Sprite(tx);
-    	this.x = x; 
+    	spr.setBounds(x, y, size * 2, size * 2);
+    	spr.setOriginCenter();
+
+    	// Ajusta la posición para asegurar que no se salga de la pantalla al iniciar
+        if (spr.getX() < 0) spr.setX(0);
+        if (spr.getX() + spr.getWidth() > Gdx.graphics.getWidth()) spr.setX(Gdx.graphics.getWidth() - spr.getWidth());
+        if (spr.getY() < 0) spr.setY(0);
+        if (spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) spr.setY(Gdx.graphics.getHeight() - spr.getHeight());
+
+        this.setXSpeed(xSpeed);
+        this.setySpeed(ySpeed);
+    	
+    	
+    	//this.x = x; 
  	
         //validar que borde de esfera no quede fuera
+    	/*
     	if (x-size < 0) this.x = x+size;
     	if (x+size > Gdx.graphics.getWidth())this.x = x-size;
          
@@ -30,16 +47,16 @@ public class BallHitbox {
         spr.setPosition(x, y);
         this.setXSpeed(xSpeed);
         this.setySpeed(ySpeed);
+        */
     }
+    
     public void update() {
-        x += getXSpeed();
-        y += getySpeed();
+        spr.setPosition(spr.getX() + getXSpeed(), spr.getY() + getySpeed());
 
-        if (x+getXSpeed() < 0 || x+getXSpeed()+spr.getWidth() > Gdx.graphics.getWidth())
+        if (spr.getX()+getXSpeed() < 0 || spr.getX()+getXSpeed()+spr.getWidth() > Gdx.graphics.getWidth())
         	setXSpeed(getXSpeed() * -1);
-        if (y+getySpeed() < 0 || y+getySpeed()+spr.getHeight() > Gdx.graphics.getHeight())
+        if (spr.getY()+getySpeed() < 0 || spr.getY()+getySpeed()+spr.getHeight() > Gdx.graphics.getHeight())
         	setySpeed(getySpeed() * -1);
-        spr.setPosition(x, y);
     }
     
     public Rectangle getArea() {
@@ -49,9 +66,25 @@ public class BallHitbox {
     	spr.draw(batch);
     }
     
-    public void checkCollision(BallHitbox b2) {
-        if(spr.getBoundingRectangle().overlaps(b2.spr.getBoundingRectangle())){
-        	// rebote
+    @Override
+    public boolean checkCollision(BallHitbox b2) {
+    	return Intersector.overlapConvexPolygons(getRotatedPolygon(spr), getRotatedPolygon(b2.spr));
+    }
+    
+    
+    public void rebote(BallHitbox b2) {
+        if(checkCollision(b2)){
+        	// Lógica de rebote simple
+            int tempXSpeed = this.getXSpeed();
+            int tempYSpeed = this.getySpeed();
+            
+            this.setXSpeed(b2.getXSpeed());
+            this.setySpeed(b2.getySpeed());
+            
+            b2.setXSpeed(tempXSpeed);
+            b2.setySpeed(tempYSpeed);
+            
+        	/*
             if (getXSpeed() ==0) setXSpeed(getXSpeed() + b2.getXSpeed()/2);
             if (b2.getXSpeed() ==0) b2.setXSpeed(b2.getXSpeed() + getXSpeed()/2);
         	setXSpeed(- getXSpeed());
@@ -60,9 +93,11 @@ public class BallHitbox {
             if (getySpeed() ==0) setySpeed(getySpeed() + b2.getySpeed()/2);
             if (b2.getySpeed() ==0) b2.setySpeed(b2.getySpeed() + getySpeed()/2);
             setySpeed(- getySpeed());
-            b2.setySpeed(- b2.getySpeed()); 
+            b2.setySpeed(- b2.getySpeed());*/
+        	
         }
     }
+    
 	public int getXSpeed() {
 		return xSpeed;
 	}
@@ -75,10 +110,7 @@ public class BallHitbox {
 	public void setySpeed(int ySpeed) {
 		this.ySpeed = ySpeed;
 	}
-	public int getX() {
-		return x;
-	}
-	public int getY() {
-		return y;
-	}
+	public Sprite getSpr() {
+        return spr;
+    }
 }

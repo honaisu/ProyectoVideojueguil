@@ -63,7 +63,7 @@ public class AsteroidManager {
             for (int j = 0; j < auxColliders.size(); j++) {
                 BallHitbox ball2 = auxColliders.get(j);
                 if (i < j) {
-                    ball1.checkCollision(ball2);
+                    ball1.rebote(ball2);
                 }
             }
         }

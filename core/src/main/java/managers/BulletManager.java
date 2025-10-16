@@ -8,17 +8,13 @@ import armas.proyectiles.Bullet;
 
 // Clase encargada del manejo de las balas  
 public class BulletManager {
-
 	private final ArrayList<Bullet> bullets = new ArrayList<>();
-
-    public BulletManager() { }
     
     // Agregar una bala a la pantalla del juego
     public void add(Bullet b) {
         if (b != null) bullets.add(b);
     }
 
- 
     // Actualiza cada bala y elimina las destruidas
     public void update() {
         for (int i = bullets.size() - 1; i >= 0; i--) {
@@ -44,4 +40,6 @@ public class BulletManager {
     public void clear() {
         bullets.clear();
     }
+    
+    //public boolean agregarBala(Bullet b) { add(b); return true; }
 }
