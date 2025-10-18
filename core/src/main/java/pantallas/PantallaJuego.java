@@ -14,10 +14,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import armas.*;
 import armas.proyectiles.Bullet;
+import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Swing;
 import hitboxes.BallHitbox;
-import armas.proyectiles.LaserBeam;
-
 import logica.AssetsLoader;
 import logica.NotHotlineMiami;
 
@@ -25,9 +24,9 @@ import logica.NotHotlineMiami;
 import managers.AsteroidManager;
 import managers.BulletManager;
 import managers.CollisionManager;
+import managers.LaserManager;
 import managers.MeleeManager;
 import personajes.Jugador;
-import personajes.SkinJugador;
 
 public class PantallaJuego extends PantallaBase {
     private SpriteBatch batch;
@@ -48,6 +47,7 @@ public class PantallaJuego extends PantallaBase {
     private BulletManager bulletManager;
     private CollisionManager collisionManager;
     private MeleeManager meleeManager;
+    private LaserManager laserManager;
 
     // Pausa
     private boolean paused = false;
@@ -61,6 +61,7 @@ public class PantallaJuego extends PantallaBase {
 
     // Overlay de pausa
     private Texture texturaPausa;
+
 
     public PantallaJuego(NotHotlineMiami game, int ronda, int vidas, int score) {
         super(game);
@@ -80,6 +81,7 @@ public class PantallaJuego extends PantallaBase {
         asteroidManager = new AsteroidManager(cantAsteroides, velXAsteroides, velYAsteroides);
         bulletManager = new BulletManager();
         meleeManager = new MeleeManager();
+        laserManager = new LaserManager();
         //collisionManager = new CollisionManager(explosionSound, 10); // 10 pts por asteroide
         collisionManager = new CollisionManager(game);
         
@@ -99,10 +101,10 @@ public class PantallaJuego extends PantallaBase {
         //========================
         //Probar armas
         //========================
-        jugador.setArma(new HeavyMachineGun());
+        //jugador.setArma(new HeavyMachineGun());
         //jugador.setArma(new Shotgun());
-        //jugador.setArma(new Laser());
-        //jugador.setArma(new CanonLaser());
+        jugador.setArma(new Laser());
+        //jugador.setArma(new LaserCannon());
 
 
         // Crear textura overlay 1x1 para la pausa
@@ -127,12 +129,13 @@ public class PantallaJuego extends PantallaBase {
 
         // Munición arma (si aplica)
         //if (nave.getArma() == null || nave.getArma() instanceof Melee) return;
-        
+        game.getFont().draw(batch, "Arma: " + jugador.getArma().getNombre() ,
+                Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
         if (jugador.getArma() != null && !(jugador.getArma() instanceof Melee)) {
             int mun = jugador.getArma().getMunicion();
             int max = jugador.getArma().getMunicionMax();
             game.getFont().draw(batch, "Municion: " + mun + " / " + max,
-                    Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
+                    Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 60);
         }
     }
 
@@ -150,9 +153,10 @@ public class PantallaJuego extends PantallaBase {
         if (!paused && !jugador.estaHerido()) {
             bulletManager.update();
             meleeManager.update(delta);
+            laserManager.update(delta);
             asteroidManager.update();
 
-            int gained = collisionManager.handleCollisions(jugador, bulletManager, meleeManager, asteroidManager);
+            int gained = collisionManager.handleCollisions(jugador, bulletManager, meleeManager, laserManager, asteroidManager);
             if (gained > 0) score += gained;
 
             if (jugador.estaDestruido()) {
@@ -182,6 +186,7 @@ public class PantallaJuego extends PantallaBase {
 
         bulletManager.render(batch);
         meleeManager.render(batch);
+        laserManager.render(batch);
         jugador.draw(batch, this, paused, delta);
         asteroidManager.render(batch);
 
@@ -194,28 +199,28 @@ public class PantallaJuego extends PantallaBase {
         
         jugador.shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Solo contorno (Line) o Filled si quieres sólido
         jugador.shapeRenderer.rect(
-        	    jugador.hitBox.getX(),
-        	    jugador.hitBox.getY(),
-        	    jugador.hitBox.getOriginX(),
-        	    jugador.hitBox.getOriginY(),
-        	    jugador.hitBox.getWidth(),
-        	    jugador.hitBox.getHeight(),
+        	    jugador.getSpr().getX(),
+        	    jugador.getSpr().getY(),
+        	    jugador.getSpr().getOriginX(),
+        	    jugador.getSpr().getOriginY(),
+        	    jugador.getSpr().getWidth(),
+        	    jugador.getSpr().getHeight(),
         	    1, 1,
-        	    jugador.hitBox.getRotation()
+        	    jugador.getSpr().getRotation()
         	);
         jugador.shapeRenderer.end();
         
         for (BallHitbox b: asteroidManager.getAsteroids()) {
         	b.shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Solo contorno (Line) o Filled si quieres sólido
             b.shapeRenderer.rect(
-            	    b.spr.getX(),
-            	    b.spr.getY(),
-            	    b.spr.getOriginX(),
-            	    b.spr.getOriginY(),
-            	    b.spr.getWidth(),
-            	    b.spr.getHeight(),
+            	    b.getSpr().getX(),
+            	    b.getSpr().getY(),
+            	    b.getSpr().getOriginX(),
+            	    b.getSpr().getOriginY(),
+            	    b.getSpr().getWidth(),
+            	    b.getSpr().getHeight(),
             	    1, 1,
-            	    b.spr.getRotation()
+            	    b.getSpr().getRotation()
             	);
             b.shapeRenderer.end();
         }
@@ -223,21 +228,21 @@ public class PantallaJuego extends PantallaBase {
         for (Bullet bl: bulletManager.getBullets()) {
         	bl.shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Solo contorno (Line) o Filled si quieres sólido
             bl.shapeRenderer.rect(
-            	    bl.hitbox.spr.getX(),
-            	    bl.hitbox.spr.getY(),
-            	    bl.hitbox.spr.getOriginX(),
-            	    bl.hitbox.spr.getOriginY(),
-            	    bl.hitbox.spr.getWidth(),
-            	    bl.hitbox.spr.getHeight(),
+            	    bl.getHitbox().getSpr().getX(),
+            	    bl.getHitbox().getSpr().getY(),
+            	    bl.getHitbox().getSpr().getOriginX(),
+            	    bl.getHitbox().getSpr().getOriginY(),
+            	    bl.getHitbox().getSpr().getWidth(),
+            	    bl.getHitbox().getSpr().getHeight(),
             	    1, 1,
-            	    bl.hitbox.spr.getRotation()
+            	    bl.getHitbox().getSpr().getRotation()
             	);
             bl.shapeRenderer.end();
         }
         
         for (Swing s: meleeManager.getSwings()) {
-        	s.getHitbox().shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Solo contorno (Line) o Filled si quieres sólido
-            s.getHitbox().shapeRenderer.rect(
+        	s.shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Solo contorno (Line) o Filled si quieres sólido
+            s.shapeRenderer.rect(
             	    s.getHitbox().getSpr().getX(),
             	    s.getHitbox().getSpr().getY(),
             	    s.getHitbox().getSpr().getOriginX(),
@@ -247,7 +252,22 @@ public class PantallaJuego extends PantallaBase {
             	    1, 1,
             	    s.getHitbox().getSpr().getRotation()
             	);
-            s.getHitbox().shapeRenderer.end();
+            s.shapeRenderer.end();
+        }
+        
+        for (LaserBeam l: laserManager.getLasers()) {
+        	l.shapeRenderer.begin(ShapeRenderer.ShapeType.Line); // Solo contorno (Line) o Filled si quieres sólido
+            l.shapeRenderer.rect(
+            	    l.getHitbox().getSpr().getX(),
+            	    l.getHitbox().getSpr().getY(),
+            	    l.getHitbox().getSpr().getOriginX(),
+            	    l.getHitbox().getSpr().getOriginY(),
+            	    l.getHitbox().getSpr().getWidth(),
+            	    l.getHitbox().getSpr().getHeight(),
+            	    1, 1,
+            	    l.getHitbox().getSpr().getRotation()
+            	);
+            l.shapeRenderer.end();
         }
         
     }
@@ -297,8 +317,9 @@ public class PantallaJuego extends PantallaBase {
     }
 
     // Hooks para que Armas agreguen entidades a sus managers
-    public boolean agregarBala(Bullet b) { bulletManager.add(b); return true; }
+    public void agregarBala(Bullet b) { bulletManager.add(b); }
     public void agregarSwing(Swing s) { meleeManager.add(s); }
+    public void agregarLaser(LaserBeam l) { laserManager.add(l); }
 
     @Override public void show() { 
     	if (gameMusic != null) gameMusic.play(); 

@@ -1,9 +1,8 @@
 package armas.proyectiles;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.ArcHitbox;
-import hitboxes.BallHitbox;
 import logica.AssetsLoader;
 import personajes.Jugador;
 
@@ -17,10 +16,13 @@ public class Swing {
     private Jugador nave;
     private float rot;
     private float radio;
+    
+    //TODO borrar
+    public ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public Swing(float x, float y, Jugador nave){
     	
-    	this.radio = 40 + nave.spr.getHeight() / 2; 					// distancia del ataque
+    	this.radio = 20 + nave.getSpr().getHeight() / 2; 					// distancia del ataque
         this.hitbox = new ArcHitbox(
         		x, y,													// posicion del ataque
         		nave.getRotacion(),										// la rotacion con respecto de la nave
@@ -31,8 +33,8 @@ public class Swing {
 
     public void update(float delta) {
     	
-    	float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
-        float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;
+    	float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
+        float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;
     	
     	rot = nave.getRotacion();
     	
@@ -44,15 +46,6 @@ public class Swing {
         if (tiempoActivo > duracion) {
             destroyed = true;
         }
-    }
-
-    
-    public void draw(SpriteBatch batch) {
-        hitbox.draw(batch);
-    }
-
-    public boolean checkCollision(BallHitbox b2) {
-        return hitbox.checkCollision(b2);
     }
 
     public boolean isDestroyed() {

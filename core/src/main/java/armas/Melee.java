@@ -11,7 +11,8 @@ public class Melee extends Weapon {
     private Swing swingActual;	//usa un proyectil arqueado
 
     public Melee() {
-        super(0.8f,															// cadencia
+        super("Sword",
+        		0.8f,															// cadencia
         		9999,														// municion
         		AssetsLoader.getInstancia().getDisparoSound());	// sonido
     }
@@ -25,24 +26,25 @@ public class Melee extends Weapon {
         if (!puedeDisparar()) return;
 
         // Crear golpe (Swing)
-        crearSwing(nave, pantalla);
+        crearProyectil(nave, pantalla);
         reiniciarCooldown();
     }
     
     //crea el swing del arma con direccion respecto al jugador
-    private void crearSwing(Jugador jug, PantallaJuego juego) {
+    @Override
+    public void crearProyectil(Jugador jug, PantallaJuego juego) {
     	float radians = (float) Math.toRadians(jug.getRotacion() + 90);
 
-        float centerX = jug.spr.getX() + jug.spr.getWidth() / 2;
-        float centerY = jug.spr.getY() + jug.spr.getHeight() / 2;
+        float centerX = jug.getSpr().getX() + jug.getSpr().getWidth() / 2;
+        float centerY = jug.getSpr().getY() + jug.getSpr().getHeight() / 2;
         //float length = jug.spr.getHeight() / 2;
         
-        float length = jug.spr.getHeight() / 2 + 40; // distancia delante del jugador
+        float length = jug.getSpr().getHeight() / 2 + 20; // distancia delante del jugador
         
         float swingX = centerX + (float) Math.cos(radians) * length;
         float swingY = centerY + (float) Math.sin(radians) * length;
         
-        soundBala.play(0.1f);
+        getSoundBala().play(0.1f);
         swingActual = new Swing(swingX, swingY, jug);
         juego.agregarSwing(swingActual);
        

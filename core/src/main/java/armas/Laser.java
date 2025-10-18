@@ -7,62 +7,50 @@ import personajes.Jugador;
 
 
 public class Laser extends Weapon {
+    
+    // Parámetros del “pulso” (un disparo = un rayo breve)
+    private final float anchoLaser = 10f;     // grosor del rayo
+    private final float ttlPulso   = 0.12f;   // duración de cada pulso en segundos
 
-    private LaserBeam rayoActivo;
 
-    // Config
-    private final float anchoLaser = 10f;         // grosor del rayo
-    private final float consumoPorSegundo = 100f;  // munición/seg mientras está encendido
-
+    // misma idea que el metralleta (literal es igual en todos creo xd)
     public Laser() {
-        // cadencia solo como gate de reactivación
-        super(0.01f, 300, AssetsLoader.getInstancia().getLaserSound());
+        super("Laser Gun",
+        		0.08f,
+        		60,
+        		AssetsLoader.getInstancia().getLaserContSound());
     }
-
+    // Disparo “pulso” como dijo benjoid
     @Override
     public void disparar(Jugador nave, PantallaJuego pantalla, float delta) {
-        // Avanza cooldown base
-        actualizar(delta);
+    	// avanzar cooldown
+        this.actualizar(delta);
 
-        // Si ya hay rayo encendido, mantenerlo vivo y drenar munición por tiempo
-        if (rayoActivo != null && !rayoActivo.isDestroyed()) {
-            // Mantener vivo (si no se refresca por unos ms, se apagará solo)
-            rayoActivo.refrescarEncendido();
+        // mismas verificaciones que otras armas
+        if (!puedeDisparar()) return;
+        if (getMunicion() <= 0) return;
 
-            // Drenaje de munición por tiempo
-            rayoActivo.drenarMunicionPorTiempo(this, consumoPorSegundo, delta);
+        // consumir 1 unidad
+        restarMunicion(nave, pantalla, delta);
 
-            // Si se agotó, cortar
-            if (getMunicion() <= 0) {
-                rayoActivo.destroy();
-                rayoActivo = null;
-            }
-            return;
-        }
+        // crear el rayo y registrarlo como un “disparo” breve
+        crearProyectil(nave, pantalla);
 
-        // Si no hay rayo, crear uno si hay munición y cadencia lista
-        if (!puedeDisparar() || getMunicion() <= 0) return;
-
-        rayoActivo = new LaserBeam(nave, anchoLaser, AssetsLoader.getInstancia().getLaserContTexture(), 1);
-        pantalla.agregarSwing(rayoActivo); // se gestiona vía MeleeManager
-        rayoActivo.refrescarEncendido();        // arranca vivo
-
-        if (soundBala != null) soundBala.play(0.1f);
-
+        // sonido y reinicio de cadencia
+        getSoundBala().play(0.35f);
+        
         reiniciarCooldown();
     }
 
-    // Opcional si hay hook de key-up; si no, el TTL lo apagará al no recibir ping
-    public void soltarDisparo() {
-        if (rayoActivo != null) {
-            rayoActivo.destroy();
-            rayoActivo = null;
-        }
+    //Construcción del proyectil, similar a crearBala() de metralla (ashprita si benjoid, ojala sirva u_u)
+    @Override
+    public void crearProyectil(Jugador nave, PantallaJuego juego) {    	
+        LaserBeam pulso = new LaserBeam(nave, anchoLaser, AssetsLoader.getInstancia().getLaserContTexture(), 1);
+        pulso.configurarPulso(ttlPulso); // se apaga solo al vencer el TTL
+        
+        juego.agregarLaser(pulso); //TODO revisar esto
+        
     }
 
-    // Exponer setter para consumo desde el rayo sin tocar Arma
-    public void consumirUnidadMunicion(int unidades) {
-        municion = Math.max(0, municion - unidades);
-    }
 
 }

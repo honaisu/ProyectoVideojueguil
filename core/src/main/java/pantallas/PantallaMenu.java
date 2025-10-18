@@ -99,7 +99,7 @@ public class PantallaMenu extends PantallaBase {
 	        	game.getPantallaManager().cambiarPantalla(TipoPantalla.CONFIGURACION);
 	        	break;
 	        case TUTORIAL: 
-	        	/* abrirTutorial(); */ 
+	        	game.getPantallaManager().cambiarPantalla(TipoPantalla.TUTORIAL); 
 	        	break;
 	        case SALIR: 
 	        	Gdx.app.exit(); 

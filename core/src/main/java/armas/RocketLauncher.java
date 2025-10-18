@@ -1,17 +1,17 @@
 package armas;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
 import logica.AssetsLoader;
 import pantallas.PantallaJuego;
 import personajes.Jugador;
 
-public class Flamethrower extends Weapon {
 
+public class RocketLauncher extends Weapon {
 
-	public Flamethrower(int daño, float cadencia, int municion, Sprite spr) {
-		super("Flamethrower", cadencia, municion, AssetsLoader.getInstancia().getDisparoSound());
-		// TODO Auto-generated constructor stub
+	public RocketLauncher() {
+		super("Rocket Launcher",
+				0.3f,
+				4,
+				AssetsLoader.getInstancia().getDisparoSound());
 	}
 
 	@Override
@@ -25,5 +25,4 @@ public class Flamethrower extends Weapon {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

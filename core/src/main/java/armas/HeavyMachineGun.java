@@ -10,9 +10,10 @@ import personajes.Jugador;
 public class HeavyMachineGun extends Weapon {
 
     public HeavyMachineGun() {
-        super(0.2f,															// cadencia
-        		30, 														// municion
-        		AssetsLoader.getInstancia().getDisparoSound()); 	// sonido
+        super("Heavy Machine Gun",
+        		0.2f,												// cadencia
+        		30, 											// municion
+        		AssetsLoader.getInstancia().getDisparoSound()); // sonido
     }
     
   //clase sobrescrita
@@ -21,37 +22,33 @@ public class HeavyMachineGun extends Weapon {
         actualizar(delta);
         
         //sin balas
-        if (municion <= 0) return;
+        if (getMunicion() <= 0) return;
         
-        //cadencia
-    	tiempoDesdeUltimoDisparo += delta;
-        if (tiempoDesdeUltimoDisparo >= cadencia) {
-            crearBala(nave, pantalla);
-            municion--; 
-            tiempoDesdeUltimoDisparo = 0;
-        }
+        //restar municion por cadencia
+        restarMunicion(nave, pantalla, delta);
+        getSoundBala().play(0.1f);
         
         if (puedeDisparar()) reiniciarCooldown();
     }
     
     //crea la bala de la metralleta con direccion respecto al jugador
-    private void crearBala(Jugador nave, PantallaJuego juego) {
+    @Override
+    public void crearProyectil(Jugador nave, PantallaJuego juego) {
         float radians = (float) Math.toRadians(nave.getRotacion() + 90);
-        float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
-        float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;
-        float length = nave.spr.getHeight() / 2;
+        float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
+        float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;
+        float length = nave.getSpr().getHeight() / 2;
 
         float bulletX = centerX + (float) Math.cos(radians) * length;
         float bulletY = centerY + (float) Math.sin(radians) * length;
 
         Bullet bala = new Bullet(
-        		bulletX, bulletY,									// posicion de la bala
-        		nave.getRotacion(),									// dirección de la bala
-        		0.1f,												// velocidad levemente aleatoria
+        		bulletX, bulletY,								// posicion de la bala
+        		nave.getRotacion(),								// dirección de la bala
+        		10f,											// velocidad levemente aleatoria
         		AssetsLoader.getInstancia().getBalaTexture());	// textura de la bala
         
         juego.agregarBala(bala);
-        soundBala.play(0.1f);
     }
 
 }

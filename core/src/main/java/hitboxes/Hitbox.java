@@ -1,11 +1,14 @@
 package hitboxes;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 
 public abstract class Hitbox {
 	private float x;
 	private float y;
+	private Sprite sprite;
 	
 	public Hitbox(float x, float y) {
 		this.x = x;
@@ -17,10 +20,16 @@ public abstract class Hitbox {
 	 * @param BallHitbox -> puede ser un asteroide
 	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
 	 */
-	public abstract boolean checkCollision(BallHitbox b2);
+	public boolean checkCollision(BallHitbox b2) {
+		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(b2.getSpr()));
+	}
+	
+	public void draw(SpriteBatch batch) {
+        this.sprite.draw(batch);
+    }
 	
 	/**
-	 * Hace un poligono auxiliar para que la Hitbox al rotarce cumpla con su tamaño
+	 * Hace un poligono auxiliar para que la Hitbox al rotar cumpla con su tamaño
 	 * @param Sprite del objeto
 	 * @return
 	 */
@@ -44,5 +53,8 @@ public abstract class Hitbox {
 	
 	public float getY() { return y;	}
 	public void setY(float y) {	this.y = y;	}
+
+	public Sprite getSpr() { return sprite; }
+	public void setSpr(Sprite spr) { this.sprite = spr; }
 	
 }

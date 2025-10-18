@@ -10,16 +10,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
 
 import armas.*;
 import hitboxes.BallHitbox;
+import hitboxes.Hitbox;
 import logica.AnimationManager;
 import pantallas.PantallaJuego;
 
-public class Jugador {
+public class Jugador extends Hitbox {
 	// Estado básico 
 	private boolean destruida = false;
 	private int vidas = 3;
@@ -29,7 +28,7 @@ public class Jugador {
 	// Visual y audio
 	public ShapeRenderer shapeRenderer = new ShapeRenderer();;
 	public Sprite hitBox;
-	public Sprite spr;
+	//public Sprite spr;
 	private Sound sonidoHerido = null /*TODO*/;
 	
 	// ENCARGADOS DE ANIMACIÓN
@@ -49,21 +48,23 @@ public class Jugador {
 
 
 	public Jugador(int x, int y, float rotacion, Weapon armaActual, SkinJugador skin) {
+		super(x,y);
 
 	    this.armaActual = armaActual;
 	    this.rotacion = rotacion;
 	    
 	    // Sprite del jugador
-	    spr = skin.crearSprite();
-	    spr.setBounds(x, y, 40, 40);
-	    spr.scale(3f);
-	    spr.setPosition(x, y);
-	    spr.setOriginCenter();
+	    setSpr(skin.crearSprite());
+	    //spr = skin.crearSprite();
+	    getSpr().setBounds(x, y, 40, 40);
+	    getSpr().scale(1f);
+	    getSpr().setPosition(x, y);
+	    getSpr().setOriginCenter();
 	    
-	    hitBox = new Sprite();
-	    hitBox.setBounds(x, y, 40, 40);
-	    hitBox.setPosition(x, y);
-	    hitBox.setOriginCenter();
+	    //setSpr(new Sprite());
+	    //getSpr().setBounds(x, y, 40, 40);
+	    //getSpr().setPosition(x, y);
+	    //getSpr().setOriginCenter();
 
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
@@ -73,8 +74,8 @@ public class Jugador {
 
 	// Dibuja y actualiza; si paused, no procesa input, físicas ni disparo
 	public void draw(SpriteBatch batch, PantallaJuego juego, boolean paused, float delta) {
-	    float x = spr.getX();
-	    float y = spr.getY();
+	    float x = getSpr().getX();
+	    float y = getSpr().getY();
 	    
 	    // NECESARIOS PARA ANIMACION
  		TextureRegion currentFrame;
@@ -95,15 +96,15 @@ public class Jugador {
 	    // Estado herido: parpadeo/temblor y contador
 	    if (herido) {
 	        if (!paused) {
-	            spr.setX(spr.getX() + MathUtils.random(-2, 2));
-	            spr.setX(x);
+	            getSpr().setX(getSpr().getX() + MathUtils.random(-2, 2));
+	            getSpr().setX(x);
 	            
-	            hitBox.setX(hitBox.getX() + MathUtils.random(-2, 2));
-	            hitBox.setX(x);
+	            getSpr().setX(getSpr().getX() + MathUtils.random(-2, 2));
+	            getSpr().setX(x);
 	            tiempoHerido--;
 	            if (tiempoHerido <= 0) herido = false;
 	        }
-	        spr.draw(batch);
+	        getSpr().draw(batch);
 	        return;
 	    }
 
@@ -111,8 +112,8 @@ public class Jugador {
 	        // Rotación (LEFT/RIGHT) para el Jugador
 	        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  rotacion += 5f;
 	        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
-	        spr.setRotation(rotacion);
-	        hitBox.setRotation(rotacion);
+	        getSpr().setRotation(rotacion);
+	        //getSpr().setRotation(rotacion);
 
 	        // Acelerar (UP) y freno (DOWN) + fricción 0.9
 	        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
@@ -134,21 +135,21 @@ public class Jugador {
 	        if (yVel < -10.0f) yVel = -10.0f;
 
 	        // Rebote en bordes
-	        if (x + xVel < 0 || x + xVel + spr.getWidth() > Gdx.graphics.getWidth())  xVel *= -1;
-	        if (y + yVel < 0 || y + yVel + spr.getHeight() > Gdx.graphics.getHeight()) yVel *= -1;
+	        if (x + xVel < 0 || x + xVel + getSpr().getWidth() > Gdx.graphics.getWidth())  xVel *= -1;
+	        if (y + yVel < 0 || y + yVel + getSpr().getHeight() > Gdx.graphics.getHeight()) yVel *= -1;
 
-	        spr.setPosition(x + xVel, y + yVel);
-	        hitBox.setPosition(x + xVel, y + yVel);
+	        getSpr().setPosition(x + xVel, y + yVel);
+	        //getSpr().setPosition(x + xVel, y + yVel);
 	        
 	        
 	        // ENCARGADO DE MOSTRAR LA ANIMACIÓN
 	        batch.draw(
 	        		currentFrame, 						// Fotograma 
-	                spr.getX(), spr.getY(), 			// Posición
-	                spr.getOriginX(), spr.getOriginY(), // Punto de origen
-	                spr.getWidth(), spr.getHeight(), 	// Dimensiones
-	                spr.getScaleX(), spr.getScaleY(), 	// Escala
-	                spr.getRotation()); 				// Rotación
+	                getSpr().getX(), getSpr().getY(), 			// Posición
+	                getSpr().getOriginX(), getSpr().getOriginY(), // Punto de origen
+	                getSpr().getWidth(), getSpr().getHeight(), 	// Dimensiones
+	                getSpr().getScaleX(), getSpr().getScaleY(), 	// Escala
+	                getSpr().getRotation()); 				// Rotación
 	        
 	        
 	        
@@ -166,53 +167,39 @@ public class Jugador {
                 armaActual.disparar(this, juego, dt);
             }
 	    }
-
-	    // ENCARGADO DE MOSTRAR LA ANIMACIÓN
-	    /*
-        batch.draw(currentFrame, 					// Fotograma 
-                spr.getX(), spr.getY(), 			// Posición
-                spr.getOriginX(), spr.getOriginY(), // Punto de origen
-                spr.getWidth(), spr.getHeight(), 	// Dimensiones
-                spr.getScaleX(), spr.getScaleY(), 	// Escala
-                spr.getRotation()); 				// Rotación
-        */
 	}
 
 	// Colisión con asteroide (rebotes + estados/sonido)
-	public boolean checkCollision(BallHitbox b, float sfxVolume) {
-		if (herido) return false;
-		
-		boolean colision = Intersector.overlapConvexPolygons(getRotatedPolygon(spr), getRotatedPolygon(b.spr));;
-		if (!colision) return false;
-		
-		// Rebote X
-        if (xVel == 0) xVel += b.getXSpeed() / 2f;
-        if (b.getXSpeed() == 0) b.setXSpeed(b.getXSpeed() + (int) (xVel / 2f));
-        xVel = -xVel;
-        b.setXSpeed(-b.getXSpeed());
+	public void reaccion(BallHitbox b) {
+		if (checkCollision(b)) {
+			// Rebote X
+	        if (xVel == 0) xVel += b.getXSpeed() / 2f;
+	        if (b.getXSpeed() == 0) b.setXSpeed(b.getXSpeed() + (int) (xVel / 2f));
+	        xVel = -xVel;
+	        b.setXSpeed(-b.getXSpeed());
 
-        // Rebote Y
-        if (yVel == 0) yVel += b.getySpeed() / 2f;
-        if (b.getySpeed() == 0) b.setySpeed(b.getySpeed() + (int) (yVel / 2f));
-        yVel = -yVel;
-        b.setySpeed(-b.getySpeed());
-		
-        // Separación mínima para evitar solape
-        int cont = 0;
-        while (cont < Math.abs(xVel)) {
-        	hitBox.setX(hitBox.getX() + Math.signum(xVel));
-            cont++;
-        }
+	        // Rebote Y
+	        if (yVel == 0) yVel += b.getySpeed() / 2f;
+	        if (b.getySpeed() == 0) b.setySpeed(b.getySpeed() + (int) (yVel / 2f));
+	        yVel = -yVel;
+	        b.setySpeed(-b.getySpeed());
+			
+	        // Separación mínima para evitar solape
+	        int cont = 0;
+	        while (cont < Math.abs(xVel)) {
+	        	//getSpr().setX(getSpr().getX() + Math.signum(xVel));
+	            cont++;
+	        }
 
-        // Herida/vidas y sonido con volúmenes globales
-        vidas--;
-        herido = true;
-        tiempoHerido = tiempoHeridoMax;
+	        // Herida/vidas y sonido con volúmenes globales
+	        vidas--;
+	        herido = true;
+	        tiempoHerido = tiempoHeridoMax;
 
-        if (sonidoHerido != null) sonidoHerido.play(sfxVolume);
+	        //if (sonidoHerido != null) sonidoHerido.play(sfxVolume);
 
-        if (vidas <= 0) destruida = true;
-        return true;
+	        if (vidas <= 0) destruida = true;
+		}
 	}
 
 	// Getters y Setters 
@@ -237,45 +224,23 @@ public class Jugador {
 
 	public void setRotacion(float rotacion) {
 	    this.rotacion = rotacion;
-	    spr.setRotation(rotacion);
+	    getSpr().setRotation(rotacion);
 	}
 
-	public Sprite getSpr() { return spr; }
+	public float getCenterX() { return getSpr().getX() + getSpr().getWidth() / 2f; }
 
-	public float getCenterX() { return spr.getX() + spr.getWidth() / 2f; }
-
-	public float getCenterY() { return spr.getY() + spr.getHeight() / 2f; }
-
-	public int getX() { return (int) spr.getX(); }
-
-	public int getY() { return (int) spr.getY(); }
+	public float getCenterY() { return getSpr().getY() + getSpr().getHeight() / 2f; }
 
 	public Weapon getArma() { return armaActual; }
 
 	public void setArma(Weapon arma) { this.armaActual = arma; }
 
 	public void setTexture(Texture nueva) {
-	    float x = spr.getX(), y = spr.getY();
-	    float w = spr.getWidth(), h = spr.getHeight();
-	    spr.setTexture(nueva);
-	    spr.setBounds(x, y, w, h);
-	    spr.setOriginCenter();
-	    spr.setRotation(rotacion);
-	}
-	
-	
-	public Polygon getRotatedPolygon(Sprite spr) {
-	    float[] vertices = new float[]{
-	        0, 0,
-	        spr.getWidth(), 0,
-	        spr.getWidth(), spr.getHeight(),
-	        0, spr.getHeight()
-	    };
-
-	    Polygon p = new Polygon(vertices);
-	    p.setOrigin(spr.getOriginX(), spr.getOriginY());
-	    p.setPosition(spr.getX(), spr.getY());
-	    p.setRotation(spr.getRotation());
-	    return p;
+	    float x = getSpr().getX(), y = getSpr().getY();
+	    float w = getSpr().getWidth(), h = getSpr().getHeight();
+	    getSpr().setTexture(nueva);
+	    getSpr().setBounds(x, y, w, h);
+	    getSpr().setOriginCenter();
+	    getSpr().setRotation(rotacion);
 	}
 }

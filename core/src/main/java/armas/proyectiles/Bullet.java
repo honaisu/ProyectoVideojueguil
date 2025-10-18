@@ -17,7 +17,7 @@ public class Bullet {
 	private float ySpeed;					// velocidad de la bala eje y
 	private boolean destroyed = false;		// ver si la bala esta destruida
 	
-	
+	//TODO borrar
 	public ShapeRenderer shapeRenderer = new ShapeRenderer();;
 	    
     public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
@@ -34,19 +34,6 @@ public class Bullet {
         // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
         this.xSpeed = (float) Math.cos(radians) * speed;
         this.ySpeed = (float) Math.sin(radians) * speed;
-    	
-    	/*
-    	spr = new Sprite(tx);
-    	spr.setPosition(x, y);
-    	spr.setRotation(rotacion);
-    	
-    	// Convertir rotación a radianes
-        float radians = (float) Math.toRadians(rotacion+90);
-
-        // Calcular velocidad en X e Y según el ángulo
-        this.xSpeed = (float) Math.cos(radians) * speed;
-        this.ySpeed = (float) Math.sin(radians) * speed;
-        */
     }
 	
     //movimiento de la bala y colision con el borde de la ventana
@@ -60,15 +47,6 @@ public class Bullet {
             spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
             destroyed = true;
         }
-    	/*
-        spr.setPosition(spr.getX()+xSpeed, spr.getY()+ySpeed);
-        if (spr.getX() < 0 || spr.getX()+spr.getWidth() > Gdx.graphics.getWidth()) {
-            destroyed = true;
-        }
-        if (spr.getY() < 0 || spr.getY()+spr.getHeight() > Gdx.graphics.getHeight()) {
-        	destroyed = true;
-        }
-        */
     }
     
     public void draw(SpriteBatch batch) {
@@ -82,16 +60,6 @@ public class Bullet {
             return true;
         }
         return false;
-        
-    	/*
-        if(spr.getBoundingRectangle().overlaps(b2.getArea())){
-        	// Se destruyen ambos
-            this.destroyed = true;
-            return true;
-
-        }
-        return false;
-        */
     }
     
     public boolean isDestroyed() { return destroyed; }

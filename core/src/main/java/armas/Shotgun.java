@@ -2,9 +2,6 @@ package armas;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
 import armas.proyectiles.Bullet;
 import logica.AssetsLoader;
 import pantallas.PantallaJuego;
@@ -13,8 +10,9 @@ import personajes.Jugador;
 public class Shotgun extends Weapon {
 
 	public Shotgun() {
-		super(3f, 															// cadencia
-				8, 															// municion
+		super("Shotgun",
+				3f, 											// cadencia
+				8, 												// municion
 				AssetsLoader.getInstancia().getDisparoSound());	// sonido
 	}
 
@@ -23,25 +21,21 @@ public class Shotgun extends Weapon {
 		actualizar(delta);
         
 		// sin balas
-        if (this.getMunicion() <= 0) return;
+        if (getMunicion() <= 0) return;
         
-        // cadencia
-    	tiempoDesdeUltimoDisparo += delta;
-        if (tiempoDesdeUltimoDisparo >= cadencia) {
-            crearBala(nave, juego);
-            municion--; 
-            tiempoDesdeUltimoDisparo = 0;
-        }
+        // restar municion por cadencia
+        restarMunicion(nave, juego, delta);
         
         if (puedeDisparar()) reiniciarCooldown();
 	}
 	
 	//crea la dispersion de las balas de la escopeta con direccion respecto al jugador
-	private void crearBala(Jugador nave, PantallaJuego juego) {
+	@Override
+	public void crearProyectil(Jugador nave, PantallaJuego juego) {
         float radians = (float) Math.toRadians(nave.getRotacion() + 90);
-        float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
-        float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;
-        float length = nave.spr.getHeight() / 2;
+        float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
+        float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;
+        float length = nave.getSpr().getHeight() / 2;
 
         float bulletX = centerX + (float) Math.cos(radians) * length;
         float bulletY = centerY + (float) Math.sin(radians) * length;
@@ -64,6 +58,6 @@ public class Shotgun extends Weapon {
             );
             juego.agregarBala(bala);
         }
-        soundBala.play(0.1f);
+        getSoundBala().play(0.1f);
     }
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.audio.Sound;
 
 import armas.proyectiles.Bullet;
+import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Swing;
 import hitboxes.BallHitbox;
 import logica.AssetsLoader;
@@ -35,7 +36,7 @@ public class CollisionManager {
     /**
      * Resuelve colisiones y devuelve la cantidad total de puntos ganados en esta invocación.
      */
-    public int handleCollisions(Jugador nave, BulletManager bm, MeleeManager mm, AsteroidManager am) {
+    public int handleCollisions(Jugador nave, BulletManager bm, MeleeManager mm, LaserManager lm, AsteroidManager am) {
         int totalScore = 0;
 
         ArrayList<Bullet> bullets = bm.getBullets();
@@ -74,7 +75,8 @@ public class CollisionManager {
         // Si nave está herida o destruida, la nave misma maneja su estado, aquí solo removemos asteroides que colisionen
         for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
             BallHitbox a = asteroids.get(ai);
-            if (nave.checkCollision(a, game.getSfxVolume())) {
+            if (nave.checkCollision(a)) {
+            	nave.reaccion(a);
                 am.removeAsteroid(ai);
             }
         }
@@ -83,7 +85,18 @@ public class CollisionManager {
         for (Swing s : mm.getSwings()) {
             for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
                 BallHitbox a = asteroids.get(ai);
-                if (s.checkCollision(a)) {
+                if (s.getHitbox().checkCollision(a)) {
+                    am.removeAsteroid(ai);
+                    if (explosionSound != null) explosionSound.play(game.getSfxVolume());
+                    totalScore += scorePerAsteroid;
+                }
+            }
+        }
+     // 3) Melee (Swings) vs Asteroides
+        for (LaserBeam l : lm.getLasers()) {
+            for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
+                BallHitbox a = asteroids.get(ai);
+                if (l.getHitbox().checkCollision(a)) {
                     am.removeAsteroid(ai);
                     if (explosionSound != null) explosionSound.play(game.getSfxVolume());
                     totalScore += scorePerAsteroid;

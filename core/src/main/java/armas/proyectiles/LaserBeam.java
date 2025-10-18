@@ -2,39 +2,39 @@ package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.RayHitbox;
-import hitboxes.BallHitbox;
 import personajes.Jugador;
-import armas.Laser;
 
-public class LaserBeam extends Swing {
+
+public class LaserBeam {
 
     private final Jugador nave;
-    private final RayHitbox rayo;
+    private final RayHitbox hitbox;
     private boolean destroyed = false;
 
     // Control de encendido por tecla mantenida (Z)
     private float tiempoRestanteEncendido = 0f;     // si llega a 0, se apaga
     private final float tiempoRefrescoEncendido = 0.12f; // margen entre frames para mantener encendido
-
-    // Consumo de munición por tiempo
-    private float acumuladorMunicion = 0f; // acumula fracciones hasta consumir unidades enteras
+    
+    //TODO borrar
+    public ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public LaserBeam(Jugador nave, float ancho, Texture textura, int num) {
-        super(0f, 0f, 0f, nave); // no usamos ArcHitbox del Swing base
         this.nave = nave;
 
         float ang = nave.getRotacion() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
 
-        this.rayo = new RayHitbox(muzzle[0], muzzle[1], 1f, ancho, ang, textura, num);
+        this.hitbox = new RayHitbox(muzzle[0], muzzle[1], 1f, ancho, ang, textura, num);
     }
-
+    
+    //TODO revisar para reutilizar este metodo para otras armas
     private static float[] calcularMuzzle(Jugador nave, float ang) {
-        float cx = nave.spr.getX() + nave.spr.getWidth() / 2f;
-        float cy = nave.spr.getY() + nave.spr.getHeight() / 2f;
-        float length = nave.spr.getHeight() / 2f;
+        float cx = nave.getSpr().getX() + nave.getSpr().getWidth() / 2f;
+        float cy = nave.getSpr().getY() + nave.getSpr().getHeight() / 2f;
+        float length = nave.getSpr().getHeight() / 2f;
         float rad = (float) Math.toRadians(ang);
         float mx = cx + (float) Math.cos(rad) * length;
         float my = cy + (float) Math.sin(rad) * length;
@@ -45,21 +45,7 @@ public class LaserBeam extends Swing {
     public void refrescarEncendido() {
         tiempoRestanteEncendido = tiempoRefrescoEncendido;
     }
-
-    // Drenar munición con base en consumoPorSegundo y delta
-    public void drenarMunicionPorTiempo(Laser arma, float consumoPorSegundo, float delta) {
-        if (destroyed) return;
-        acumuladorMunicion += consumoPorSegundo * delta;
-        while (acumuladorMunicion >= 1f && arma.getMunicion() > 0) {
-            arma.consumirUnidadMunicion(1);
-            acumuladorMunicion -= 1f;
-        }
-        if (arma.getMunicion() <= 0) {
-            destroy();
-        }
-    }
-    
-    
+        
     //Esto sirve para el Cañon laser
     public void configurarPulso(float duracionSegundos) {
         // Usamos el temporizador interno como TTL del pulso
@@ -67,14 +53,14 @@ public class LaserBeam extends Swing {
         // No se llama a refrescarEncendido desde CanonLaser, por lo que se apagará solo al vencer
     }
     
-    @Override
+    
     public void update(float delta) {
         if (destroyed) return;
 
         // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
         float ang = nave.getRotacion() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
-        rayo.setTransform(muzzle[0], muzzle[1], ang);
+        hitbox.setTransform(muzzle[0], muzzle[1], ang);
 
         // Apagar si no se refrescó (la tecla se soltó)
         tiempoRestanteEncendido -= delta;
@@ -83,23 +69,18 @@ public class LaserBeam extends Swing {
         }
     }
 
-    @Override
     public void draw(SpriteBatch batch) {
-        if (!destroyed) rayo.draw(batch);
-    }
-
-    @Override
-    public boolean checkCollision(BallHitbox b2) {
-        return !destroyed && rayo.colisionaCon(b2);
+        if (!destroyed) hitbox.draw(batch);
     }
 
     public void destroy() {
         destroyed = true;
-        rayo.setActivo(false);
+        hitbox.setActivo(false);
     }
 
-    @Override
     public boolean isDestroyed() {
         return destroyed;
     }
+
+	public RayHitbox getHitbox() { return hitbox; }
 }

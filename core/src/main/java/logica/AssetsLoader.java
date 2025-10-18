@@ -35,11 +35,11 @@ public class AssetsLoader {
     private Sound hurtSound;
     private Sound disparoSound;
     private Sound muerteSound;
-    private Sound laserSound;
+    private Sound laserGunSound;
+    private Sound laserContSound;
 
     private Music gameMusic;
-
-
+    private Music musicaTutorial;
 
     
     private AssetsLoader() {}
@@ -69,9 +69,11 @@ public class AssetsLoader {
         // sonidos
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("audios/explosionSound.ogg"));
         disparoSound = Gdx.audio.newSound(Gdx.files.internal("audios/popSound.mp3"));
-        laserSound = Gdx.audio.newSound(Gdx.files.internal("audios/laserSound.mp3"));
+        laserContSound = Gdx.audio.newSound(Gdx.files.internal("audios/laserSound.mp3"));
+        laserGunSound = Gdx.audio.newSound(Gdx.files.internal("audios/canonLaserSound.mp3"));
         hurtSound = Gdx.audio.newSound(Gdx.files.internal("audios/danoSound.mp3"));
         muerteSound = Gdx.audio.newSound(Gdx.files.internal("audios/muerteSound.mp3"));
+        musicaTutorial =  Gdx.audio.newMusic(Gdx.files.internal("audios/tutorial.mp3"));
         
         // musica
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/musicaDoom.mp3"));
@@ -122,8 +124,11 @@ public class AssetsLoader {
 	public Sound getExplosionSound() { return explosionSound; }
 	public Sound getHurtSound() 	{ return hurtSound; }
 	public Sound getDisparoSound() 	{ return disparoSound; }
+	public Sound getLaserContSound() 	{ return laserContSound; }
+	public Sound getLaserGunSound() { return laserGunSound; }
 	public Sound getMuerteSound() { return muerteSound;}
-	public Sound getLaserSound() { return laserSound; }
+	public Music getTutorialSound() {return musicaTutorial;}
+
 
 	// Música
 	public Music getGameMusic() { return gameMusic; }
