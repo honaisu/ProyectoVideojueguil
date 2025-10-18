@@ -3,68 +3,60 @@ package hitboxes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
-
-public class BallHitbox {
-	private int x;
-    private int y;
+public class BallHitbox extends Hitbox{
     private int xSpeed;
     private int ySpeed;
-    private Sprite spr;
+    
+	public ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    public BallHitbox(int x, int y, int size, int xSpeed, int ySpeed, Texture tx) {
-    	spr = new Sprite(tx);
-    	spr.setScale(2f);
-    	this.x = x; 
- 	
-        //validar que borde de esfera no quede fuera
-    	if (x-size < 0) this.x = x+size;
-    	if (x+size > Gdx.graphics.getWidth())this.x = x-size;
-         
-        this.y = y;
-        //validar que borde de esfera no quede fuera
-    	if (y-size < 0) this.y = y+size;
-    	if (y+size > Gdx.graphics.getHeight())this.y = y-size;
+    public BallHitbox(float x, float y, int size, int xSpeed, int ySpeed, Texture tx) {
+    	super(x,y);
     	
-        spr.setPosition(x, y);
+    	setSpr(new Sprite(tx));
+    	getSpr().setBounds(x, y, size * 2, size * 2);
+    	getSpr().setOriginCenter();
+
+    	// Ajusta la posición para asegurar que no se salga de la pantalla al iniciar
+        if (getSpr().getX() < 0) getSpr().setX(0);
+        if (getSpr().getX() + getSpr().getWidth() > Gdx.graphics.getWidth()) getSpr().setX(Gdx.graphics.getWidth() - getSpr().getWidth());
+        if (getSpr().getY() < 0) getSpr().setY(0);
+        if (getSpr().getY() + getSpr().getHeight() > Gdx.graphics.getHeight()) getSpr().setY(Gdx.graphics.getHeight() - getSpr().getHeight());
+
         this.setXSpeed(xSpeed);
         this.setySpeed(ySpeed);
+
     }
     
     public void update() {
-        x += getXSpeed();
-        y += getySpeed();
+        getSpr().setPosition(getSpr().getX() + getXSpeed(), getSpr().getY() + getySpeed());
 
-        if (x+getXSpeed() < 0 || x+getXSpeed()+spr.getWidth() > Gdx.graphics.getWidth())
+        if (getSpr().getX()+getXSpeed() < 0 || getSpr().getX()+getXSpeed()+getSpr().getWidth() > Gdx.graphics.getWidth())
         	setXSpeed(getXSpeed() * -1);
-        if (y+getySpeed() < 0 || y+getySpeed()+spr.getHeight() > Gdx.graphics.getHeight())
+        if (getSpr().getY()+getySpeed() < 0 || getSpr().getY()+getySpeed()+getSpr().getHeight() > Gdx.graphics.getHeight())
         	setySpeed(getySpeed() * -1);
-        spr.setPosition(x, y);
     }
     
     public Rectangle getArea() {
-    	return spr.getBoundingRectangle();
-    }
-    public void draw(SpriteBatch batch) {
-    	spr.draw(batch);
+    	return getSpr().getBoundingRectangle();
     }
     
-    public void checkCollision(BallHitbox b2) {
-        if(spr.getBoundingRectangle().overlaps(b2.spr.getBoundingRectangle())){
-        	// rebote
-            if (getXSpeed() ==0) setXSpeed(getXSpeed() + b2.getXSpeed()/2);
-            if (b2.getXSpeed() ==0) b2.setXSpeed(b2.getXSpeed() + getXSpeed()/2);
-        	setXSpeed(- getXSpeed());
-            b2.setXSpeed(-b2.getXSpeed());
+    public void rebote(BallHitbox b2) {
+        if(checkCollision(b2)){
+        	// Lógica de rebote simple
+            int tempXSpeed = this.getXSpeed();
+            int tempYSpeed = this.getySpeed();
             
-            if (getySpeed() ==0) setySpeed(getySpeed() + b2.getySpeed()/2);
-            if (b2.getySpeed() ==0) b2.setySpeed(b2.getySpeed() + getySpeed()/2);
-            setySpeed(- getySpeed());
-            b2.setySpeed(- b2.getySpeed()); 
+            this.setXSpeed(b2.getXSpeed());
+            this.setySpeed(b2.getySpeed());
+            
+            b2.setXSpeed(tempXSpeed);
+            b2.setySpeed(tempYSpeed);
         }
     }
+    
 	public int getXSpeed() {
 		return xSpeed;
 	}

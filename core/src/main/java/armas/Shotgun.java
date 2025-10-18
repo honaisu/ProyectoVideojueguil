@@ -4,41 +4,40 @@ import java.util.Random;
 
 import armas.proyectiles.Bullet;
 import logica.assets.AssetManager;
+import pantallas.juego.GameScreen;
 import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
+import personajes.Player;
 
-public class Escopeta extends Arma {
+public class Shotgun extends Weapon {
 
-	public Escopeta() {
-		super(3f, 															// cadencia
-				8, 															// municion
+	public Shotgun() {
+		super("Shotgun",
+				3f, 											// cadencia
+				8, 												// municion
 				AssetManager.getInstancia().getDisparoSound());	// sonido
 	}
 
 	@Override
-	public void disparar(Jugador nave, PantallaJuego juego, float delta) {
+	public void disparar(Player nave, GameScreen juego, float delta) {
 		actualizar(delta);
         
 		// sin balas
-        if (this.getMunicion() <= 0) return;
+        if (getMunicion() <= 0) return;
         
-        // cadencia
-    	tiempoDesdeUltimoDisparo += delta;
-        if (tiempoDesdeUltimoDisparo >= cadencia) {
-            crearBala(nave, juego);
-            municion--; 
-            tiempoDesdeUltimoDisparo = 0;
-        }
+        // restar municion por cadencia
+        restarMunicion(nave, juego, delta);
         
         if (puedeDisparar()) reiniciarCooldown();
 	}
 	
 	//crea la dispersion de las balas de la escopeta con direccion respecto al jugador
-	private void crearBala(Jugador nave, PantallaJuego juego) {
-        float radians = (float) Math.toRadians(nave.getRotacion() + 90);
-        float centerX = nave.spr.getX() + nave.spr.getWidth() / 2;
-        float centerY = nave.spr.getY() + nave.spr.getHeight() / 2;
-        float length = nave.spr.getHeight() / 2;
+	@Override
+	public void crearProyectil(Player nave, GameScreen juego) {
+        float radians = (float) Math.toRadians(nave.getRotation() + 90);
+        float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
+        float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;
+        float length = nave.getSpr().getHeight() / 2;
 
         float bulletX = centerX + (float) Math.cos(radians) * length;
         float bulletY = centerY + (float) Math.sin(radians) * length;
@@ -51,7 +50,7 @@ public class Escopeta extends Arma {
 
         for (int i = 0; i < pellets; i++) {
             // Ángulo con desviación aleatoria
-            float angle = nave.getRotacion() + (r.nextFloat() * spread * 2 - spread); // -15 a +15 grados
+            float angle = nave.getRotation() + (r.nextFloat() * spread * 2 - spread); // -15 a +15 grados
 
             Bullet bala = new Bullet(
                 bulletX, bulletY,								// posicion de la bala
@@ -59,8 +58,10 @@ public class Escopeta extends Arma {
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
                 AssetManager.getInstancia().getBalaTexture()	// textura de la bala
             );
-            juego.agregarBala(bala);
+            
+            // TODO Agregar Bala...
+            //juego.agregarBala(bala);
         }
-        soundBala.play(0.1f);
+        getSoundBala().play(0.1f);
     }
 }

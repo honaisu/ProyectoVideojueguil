@@ -3,24 +3,28 @@ package personajes;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
+import hitboxes.Hitbox;
 import logica.AnimationFactory;
 import logica.assets.AssetManager;
 import logica.assets.SkinJugador;
 
-public class Player extends Entity {
+public class Player extends Hitbox {
 	private final float MAX_VELOCITY = 10.0f;
 	// Estado básico 
 	private int score = 0;
     private int round = 1;
+    
+    protected int hits;
+	protected float xVel;
+	protected float yVel;
+	protected float rotation;
 
 	// Visual y audio
-	public Sprite spr;
 	private Sound hurtSound = AssetManager.getInstancia().getHurtSound();
 	
 	// ENCARGADOS DE ANIMACIÓN
@@ -33,19 +37,22 @@ public class Player extends Entity {
 	private int hurtTime;
 	
 	// Armas
-	private Arma weapon = new Melee();
+	private Weapon weapon = new HeavyMachineGun();
 	
-	public Player() {
-		super();
-	    // Sprite del jugador
-	    spr = SkinJugador.JUGADOR_ORIGINAL.crearSprite();
+	public Player(float x, float y) {
+		super(x, y, SkinJugador.JUGADOR_ORIGINAL.crearSprite());
+		
+		this.hits = 3;
+		this.xVel = 0f;
+		this.yVel = 0f;
+		this.rotation = 0f;
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
     	this.animation = AnimationFactory.createJugadorAnimation(SkinJugador.JUGADOR_ORIGINAL);
     	
-    	spr.scale(1f);
-    	spr.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-    	spr.setOriginCenter();
+    	getSpr().scale(1f);
+    	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+    	getSpr().setOriginCenter();
 	}
 	
 	public void update(float delta) {
@@ -62,15 +69,16 @@ public class Player extends Entity {
         yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
 
         // Rebote en bordes
-        float positionX = spr.getX() + xVel;
-    	float positionY = spr.getY() + yVel;
+        float positionX = getSpr().getX() + xVel;
+    	float positionY = getSpr().getY() + yVel;
         this.borderBounce(positionX, positionY);
 
         // Aplicar velocidad a la posición
-        spr.setPosition(positionX, positionY);
-        spr.setRotation(rotation);
+        getSpr().setPosition(positionX, positionY);
+        getSpr().setRotation(rotation);
 
         // Actualizar el arma
+        if (weapon.getMunicion() == 0) weapon = new Melee();
         weapon.actualizar(delta);
     }
 	
@@ -94,11 +102,11 @@ public class Player extends Entity {
         }
 
 	    batch.draw(currentFrame,
-                spr.getX(), spr.getY(),
-                spr.getOriginX(), spr.getOriginY(),
-                spr.getWidth(), spr.getHeight(),
-                spr.getScaleX(), spr.getScaleY(),
-                spr.getRotation());
+	    		getSpr().getX(), getSpr().getY(),
+	    		getSpr().getOriginX(), getSpr().getOriginY(),
+	    		getSpr().getWidth(), getSpr().getHeight(),
+	    		getSpr().getScaleX(), getSpr().getScaleY(),
+	    		getSpr().getRotation());
 	}
 	
 	public void rotate(float amount) {
@@ -123,12 +131,20 @@ public class Player extends Entity {
     
     private void borderBounce(float positionX, float positionY) {
     	if ((positionX) < 0 || 
-    		(positionX + spr.getWidth()) > Gdx.graphics.getWidth()) {
+    		(positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
     		xVel *= -1;
     	}
         if ((positionY) < 0 || 
-        	(positionY + spr.getHeight()) > Gdx.graphics.getHeight()) {
+        	(positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
         	yVel *= -1;
         }
     }
+
+	public float getRotation() {
+		return rotation;
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
 }

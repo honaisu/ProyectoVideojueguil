@@ -28,7 +28,7 @@ public class GameScreen extends BaseScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		world.getPlayer().draw(batch);
-		//world.getGameManager().render(batch);
+		world.getGameManager().render(batch);
 		batch.end();
 	}
 

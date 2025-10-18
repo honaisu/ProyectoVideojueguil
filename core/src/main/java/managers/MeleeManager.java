@@ -29,7 +29,7 @@ public class MeleeManager {
 
     public void render(SpriteBatch batch) {
         for (Swing s : swings) {
-            s.draw(batch);
+            s.getHitbox().draw(batch);
         }
     }
 
@@ -40,4 +40,6 @@ public class MeleeManager {
     public void clear() {
         swings.clear();
     }
+    
+    //public void agregarSwing(Swing s) { add(s); }
 }

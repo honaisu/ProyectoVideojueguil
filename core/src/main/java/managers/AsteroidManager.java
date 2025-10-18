@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hitboxes.BallHitbox;
+import logica.assets.AssetManager;
 
 //Calse encargada de crear los asteroides
 public class AsteroidManager {
-	
 	private ArrayList<BallHitbox> asteroids;	// Para el sprite de los asteroides
 	private ArrayList<BallHitbox> auxColliders;	// Para la colision de los asteroides
 	
@@ -23,25 +22,21 @@ public class AsteroidManager {
 	
 	// TODO Poner algo génerico o similar
 	public AsteroidManager() {
-		//spawnAsteroids(5, 0, 0);
+		asteroids = new ArrayList<BallHitbox>();
+		auxColliders = new ArrayList<BallHitbox>();
+		spawnAsteroids(5, 0, 0);
 	}
 
 	// Genera los asteroides con atributos levemente aleatorios
 	private void spawnAsteroids(int cant, int velX, int velY) {
 		Random r = new Random();
 		for (int i = 0; i < cant; i++) {
-			
-			//asteroides con movimiento
-	        /*Ball2 bb = new Ball2(r.nextInt((int)Gdx.graphics.getWidth()),
-	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
-	  	            20+r.nextInt(10), velX+r.nextInt(4), velY+r.nextInt(4), 
-	  	            new Texture(Gdx.files.internal("aGreyMedium4.png")));*/   
-	        
 			//asteroides sin movimiento
-			BallHitbox bb = new BallHitbox(r.nextInt((int)Gdx.graphics.getWidth()),
+			BallHitbox bb = new BallHitbox(
+					r.nextInt((int)Gdx.graphics.getWidth()),
 	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
-	  	            20+r.nextInt(10), 0, 0, 
-	  	            new Texture(Gdx.files.internal("Mono.png")));	
+	  	            50+r.nextInt(10), velX, velY, 
+	  	            AssetManager.getInstancia().getAsteroideTexture());	
 	        asteroids.add(bb);
 	        auxColliders.add(bb);
 	  	}
@@ -68,7 +63,7 @@ public class AsteroidManager {
             for (int j = 0; j < auxColliders.size(); j++) {
                 BallHitbox ball2 = auxColliders.get(j);
                 if (i < j) {
-                    ball1.checkCollision(ball2);
+                    ball1.rebote(ball2);
                 }
             }
         }

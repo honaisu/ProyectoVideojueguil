@@ -16,16 +16,18 @@ import com.badlogic.gdx.graphics.Texture;
 public class AssetManager {
 	private static AssetManager instancia;
 	
-	// Texturas
 	// Jugador
 	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
     private Map<SkinJugador, Texture> skinJugadorTextures;
     
     // TODO Considerar crear TextureManager? (Extensible?)
     // Enemigos
-    private Texture balaTexture;
     private Texture enemigoTexture;
+    // Proyectiles
+    private Texture balaTexture;
     private Texture swingHitboxTexture;
+    private Texture laserContTexture;
+    private Texture laserGunTexture;
     
     // TODO Considerar crear SoundMusicManager? (Extensible?)
     // Sonidos y Música
@@ -33,7 +35,12 @@ public class AssetManager {
     private Sound hurtSound;
     private Sound disparoSound;
     private Sound muerteSound;
+    private Sound laserGunSound;
+    private Sound laserContSound;
+
     private Music gameMusic;
+    private Music musicaTutorial;
+
     
     private AssetManager() {}
     
@@ -52,15 +59,25 @@ public class AssetManager {
     public void load() {
         this.loadTexturesJugador();
         
+        // texturas
         balaTexture = new Texture(Gdx.files.internal("Bala.png"));
         enemigoTexture = new Texture(Gdx.files.internal("Mono.png"));
         swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
 
+        swingHitboxTexture = new Texture(Gdx.files.internal("semicirculo.png"));
+        laserContTexture = new Texture(Gdx.files.internal("laserCont.png"));
+        laserGunTexture = new Texture(Gdx.files.internal("laserGun.png"));
+        
+        // sonidos
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("audios/explosionSound.ogg"));
         disparoSound = Gdx.audio.newSound(Gdx.files.internal("audios/popSound.mp3"));
+        laserContSound = Gdx.audio.newSound(Gdx.files.internal("audios/laserSound.mp3"));
+        laserGunSound = Gdx.audio.newSound(Gdx.files.internal("audios/canonLaserSound.mp3"));
         hurtSound = Gdx.audio.newSound(Gdx.files.internal("audios/danoSound.mp3"));
         muerteSound = Gdx.audio.newSound(Gdx.files.internal("audios/muerteSound.mp3"));
+        musicaTutorial =  Gdx.audio.newMusic(Gdx.files.internal("audios/tutorial.mp3"));
         
+        // musica
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/musicaDoom.mp3"));
         gameMusic.setLooping(true);
     }
@@ -95,17 +112,27 @@ public class AssetManager {
 		return skinJugadorTextures.get(skin);
 	}
 	
+	// Pnemigos
+	public Texture getAsteroideTexture() { return enemigoTexture; }
+	
 	// Proyectiles
 	public Texture getBalaTexture() { return balaTexture; }
-	public Texture getAsteroideTexture() { return enemigoTexture; }
 	public Texture getSwingHitboxTexture() { return swingHitboxTexture; }
+	public Texture getLaserContTexture() { return laserContTexture;	}
+	public Texture getLaserGunTexture() { return laserGunTexture; }
 	
 	// Sonidos
 	public Sound getExplosionSound() { return explosionSound; }
 	public Sound getHurtSound() 	{ return hurtSound; }
 	public Sound getDisparoSound() 	{ return disparoSound; }
+	public Sound getLaserContSound() 	{ return laserContSound; }
+	public Sound getLaserGunSound() { return laserGunSound; }
 	public Sound getMuerteSound() { return muerteSound;}
+	public Music getTutorialSound() {return musicaTutorial;}
+
 
 	// Música
 	public Music getGameMusic() { return gameMusic; }
+
+
 }

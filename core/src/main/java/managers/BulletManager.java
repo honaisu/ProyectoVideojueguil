@@ -40,4 +40,6 @@ public class BulletManager {
     public void clear() {
         bullets.clear();
     }
+    
+    //public boolean agregarBala(Bullet b) { add(b); return true; }
 }
