@@ -1,4 +1,4 @@
-package pantallas;
+package interfaces;
 
 import managers.ScreenManager;
 
