@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import logica.AssetsLoader;
 import logica.MainGame;
+import logica.assets.AssetManager;
 import pantallas.BaseScreen;
 import pantallas.ScreenType;
 
@@ -18,7 +18,7 @@ import pantallas.ScreenType;
  */
 public class GameOverScreen extends BaseScreen {
 	// Efecto de muerte al entrar en Game Over
-	private Sound sonidoMuerte = AssetsLoader.getInstancia().getMuerteSound();
+	private Sound sonidoMuerte = AssetManager.getInstancia().getMuerteSound();
 	private boolean played = false;
 
 	public GameOverScreen(MainGame game) {
@@ -37,7 +37,7 @@ public class GameOverScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			game.getPantallaManager().cambiarPantalla(ScreenType.JUEGO);
+			getGame().getPantallaManager().cambiarPantalla(ScreenType.JUEGO);
 		}
 	}
 

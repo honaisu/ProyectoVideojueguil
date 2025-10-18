@@ -1,14 +1,11 @@
-package pantallas;
+package logica;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
 
-import pantallas.menus.Navigation;
-import pantallas.opciones.NavigableOption;
+import interfaces.NavigableOption;
+import interfaces.Navigation;
 
 public class OptionNavigator implements Navigation {
 	private final NavigableOption[] opciones;
@@ -28,14 +25,14 @@ public class OptionNavigator implements Navigation {
 	}
 	
 	// TODO arreglar lógica
-	public void move(float delta, int up, int down) {
+	public void move(float delta, int siguiente, int anterior) {
 		keyCooldown -= delta;
 	    if (keyCooldown <= 0f) {
 	    	int largo = opciones.length;
 	    	
-	        if (Gdx.input.isKeyPressed(up))
+	        if (Gdx.input.isKeyPressed(siguiente))
 	        	indiceActual = navegar(true, indiceActual, largo);
-	        else if (Gdx.input.isKeyPressed(down)) 
+	        else if (Gdx.input.isKeyPressed(anterior)) 
 	        	indiceActual = navegar(false, indiceActual, largo);
 	        
 	        keyCooldown = delay;
@@ -43,6 +40,7 @@ public class OptionNavigator implements Navigation {
 	}
 	
 	public void drawOptions(SpriteBatch batch, BitmapFont font) {
+        int x = 360, y = 300;
 	    for (NavigableOption opcion : opciones) {
 	        boolean seleccionada = opciones[indiceActual].equals(opcion);
 	        float alpha = seleccionada ? 1f : 0.7f;
@@ -52,7 +50,7 @@ public class OptionNavigator implements Navigation {
             String value = "";
             
             String textoCompleto = (seleccionada ? "> " : "  ") + label + (value.isEmpty() ? "" : ": " + value) + (seleccionada ? " <" : "");
-            font.draw(batch, textoCompleto, cx - 140, y - opcion.ordinal() * 60);
+            font.draw(batch, textoCompleto, x - 140, y - opcion.ordinal() * 60);
 	    }
     }
 	

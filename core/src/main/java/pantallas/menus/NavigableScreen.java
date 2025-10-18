@@ -1,20 +1,19 @@
 package pantallas.menus;
 
+import interfaces.NavigableOption;
 import logica.MainGame;
+import logica.OptionNavigator;
 import pantallas.BaseScreen;
-import pantallas.OptionNavigator;
-import pantallas.opciones.NavigableOption;
 
 public abstract class NavigableScreen extends BaseScreen {
+	// TODO Cambiar a private
+	// Listado de Opciones que muestra el menú
+	protected final OptionNavigator navegador;
+	
 	public NavigableScreen(MainGame game, NavigableOption[] opciones) {
 		super(game);
 		this.navegador = new OptionNavigator(opciones);
-		
 	}
-
-	// Listado de Opciones que muestra el menú
-	// TODO Cambiar a private
-	protected final OptionNavigator navegador;
 	
 	public OptionNavigator getNavegador() {
 		return navegador;

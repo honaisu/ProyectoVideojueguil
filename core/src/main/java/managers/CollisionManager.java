@@ -7,8 +7,8 @@ import com.badlogic.gdx.audio.Sound;
 import armas.proyectiles.Bullet;
 import armas.proyectiles.Swing;
 import hitboxes.BallHitbox;
-import logica.AssetsLoader;
 import logica.MainGame;
+import logica.assets.AssetManager;
 import personajes.Jugador;
 
 public class CollisionManager {
@@ -25,7 +25,7 @@ public class CollisionManager {
     }
     
     public CollisionManager() {
-        this.explosionSound = AssetsLoader.getInstancia().getExplosionSound();
+        this.explosionSound = AssetManager.getInstancia().getExplosionSound();
         this.scorePerAsteroid = 10; // TODO los asteroides probablemente manejen sus propios puntajes
     }
 

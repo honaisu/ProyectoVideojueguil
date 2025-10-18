@@ -11,7 +11,9 @@ import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
 import hitboxes.BallHitbox;
-import logica.AnimationManager;
+import logica.AnimationFactory;
+import logica.assets.AssetManager;
+import logica.assets.SkinJugador;
 import pantallas.juego.PantallaJuego;
 
 public class Jugador {
@@ -26,7 +28,7 @@ public class Jugador {
 
 	// Visual y audio
 	public Sprite spr;
-	private Sound sonidoHerido = null /*TODO*/;
+	private Sound sonidoHerido = AssetManager.getInstancia().getHurtSound();
 	
 	// ENCARGADOS DE ANIMACIÓN
 	private Animation<TextureRegion> animacion;
@@ -37,7 +39,7 @@ public class Jugador {
 	private int tiempoHeridoMax = 50;
 	private int tiempoHerido;
 	
-	private final float V_LIMITE = 10.0f;
+	private final float V_LIMITE = 5.0f;
 
 	// Rotación Jugador
 	private float rotacion = 0f;
@@ -45,16 +47,21 @@ public class Jugador {
 	// Armas
 	private Arma armaActual = new Melee();
 	
-	public Jugador(int x, int y) {
+	public Jugador() {
 	    // Sprite del jugador
 	    spr = SkinJugador.JUGADOR_ORIGINAL.crearSprite();
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animacion = AnimationManager.createJugadorAnimation(SkinJugador.JUGADOR_ORIGINAL);
+    	this.animacion = AnimationFactory.createJugadorAnimation(SkinJugador.JUGADOR_ORIGINAL);
     	
     	spr.scale(1f);
-    	spr.setPosition(x, y);
+    	spr.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	spr.setOriginCenter();
+	}
+	
+	public Jugador(int x, int y) {
+		super();
+		spr.setPosition(x, y);
 	}
 	
 	public Jugador(int x, int y, Arma armaActual) {
@@ -70,7 +77,7 @@ public class Jugador {
 	    spr = skin.crearSprite();
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animacion = AnimationManager.createJugadorAnimation(skin);
+    	this.animacion = AnimationFactory.createJugadorAnimation(skin);
 	    
     	spr.scale(1f);
     	
@@ -86,7 +93,7 @@ public class Jugador {
 	    spr = skin.crearSprite();
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animacion = AnimationManager.createJugadorAnimation(skin);
+    	this.animacion = AnimationFactory.createJugadorAnimation(skin);
 	    
     	spr.scale(1f);
     	spr.rotate90(false);
@@ -133,35 +140,39 @@ public class Jugador {
 	    }
 
         // Rotación (LEFT/RIGHT) para el Jugador
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  rotacion += 5f;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 5f;
-        spr.setRotation(rotacion);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))  rotacion += 3f;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) rotacion -= 3f;
 
         // Acelerar (UP) y freno (DOWN) + fricción 0.9
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             xVel -= (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
             yVel += (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
-        } else {
-            xVel *= 0.9f;
-            yVel *= 0.9f;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } 
+        else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             xVel += (float) Math.sin(Math.toRadians(rotacion)) * 0.2f;
             yVel -= (float) Math.cos(Math.toRadians(rotacion)) * 0.2f;
         }
+        else {
+            xVel *= 0.9f;
+            yVel *= 0.9f;
+        }
+        
 
         // Límites de velocidad para el Jugador
-        if (Math.abs(xVel) > V_LIMITE) xVel = V_LIMITE;
-        if (Math.abs(yVel) > V_LIMITE) yVel = V_LIMITE;
-
+        if (xVel > V_LIMITE) xVel = V_LIMITE;
+        else if (xVel < -V_LIMITE) xVel = -V_LIMITE;
+        if (yVel > V_LIMITE) yVel = V_LIMITE;
+        else if (yVel < -V_LIMITE) yVel = -V_LIMITE;
+        
         // Rebote en bordes
         if (x + xVel < 0 || x + xVel + spr.getWidth() > Gdx.graphics.getWidth())  xVel *= -1;
         if (y + yVel < 0 || y + yVel + spr.getHeight() > Gdx.graphics.getHeight()) yVel *= -1;
 
         spr.setPosition(x + xVel, y + yVel);
+        spr.setRotation(rotacion);
         
         // Arma sin municion automaticamente cambia a ataque Melee
-        if (armaActual.getMunicion() == 0) this.setArma(new Melee());
+        //if (armaActual.getMunicion() == 0) this.setArma(new Melee());
         
         // Disparo del arma actual (Z).
         armaActual.actualizar(delta);
@@ -218,57 +229,38 @@ public class Jugador {
 	}
 
 	// Getters y Setters 
-	
 	public boolean estaDestruido() { return (!herido && destruida); }
-
 	public boolean estaHerido() { return herido; }
-
 	public int getVidas() { return vidas; }
-
-	public void setVidas(int v) { this.vidas = v; }
-
 	public float getxVel() { return xVel; }
-
-	public void setxVel(float xVel) { this.xVel = xVel; }
-
 	public float getyVel() { return yVel; }
-
-	public void setYVel(float yVel) { this.yVel = yVel; }
-
 	public float getRotacion() { return rotacion; }
-
+	public Sprite getSpr() { return spr; }
+	public float getCenterX() { return spr.getX() + spr.getWidth() / 2f; }
+	public float getCenterY() { return spr.getY() + spr.getHeight() / 2f; }
+	public int getX() { return (int) spr.getX(); }
+	public int getY() { return (int) spr.getY(); }
+	public Arma getArma() { return armaActual; }
+	public int getRonda() { return ronda; }
+	public int getScore() { return score; }
+	
+	public void setVidas(int v) { this.vidas = v; }
+	public void setxVel(float xVel) { this.xVel = xVel; }
+	public void setYVel(float yVel) { this.yVel = yVel; }
 	public void setRotacion(float rotacion) {
-	    this.rotacion = rotacion;
-	    spr.setRotation(rotacion);
+		this.rotacion = rotacion;
+		spr.setRotation(rotacion);
+	}
+	public void setScore(int i) {
+		score = i;
 	}
 
-	public Sprite getSpr() { return spr; }
-
-	public float getCenterX() { return spr.getX() + spr.getWidth() / 2f; }
-
-	public float getCenterY() { return spr.getY() + spr.getHeight() / 2f; }
-
-	public int getX() { return (int) spr.getX(); }
-
-	public int getY() { return (int) spr.getY(); }
-
-	public Arma getArma() { return armaActual; }
 
 	public void setArma(Arma arma) { this.armaActual = arma; }
-	
-	public int getScore() {
-		return score;
-	}
-
-	public int getRonda() {
-		return ronda;
-	}
 	
 	public void aumentarScore(int cantidad) {
 		score += cantidad;
 	}
 
-	public void setScore(int i) {
-		score = i;
-	}
+	
 }

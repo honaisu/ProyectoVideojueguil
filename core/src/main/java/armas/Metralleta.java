@@ -1,7 +1,7 @@
 package armas;
 
 import armas.proyectiles.Bullet;
-import logica.AssetsLoader;
+import logica.assets.AssetManager;
 import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
@@ -10,7 +10,7 @@ public class Metralleta extends Arma {
     public Metralleta() {
         super(0.2f,												// cadencia
         		30, 											// municion
-        		AssetsLoader.getInstancia().getDisparoSound()); // sonido
+        		AssetManager.getInstancia().getDisparoSound()); // sonido
     }
     
   //clase sobrescrita
@@ -46,7 +46,7 @@ public class Metralleta extends Arma {
         		bulletX, bulletY,									// posicion de la bala
         		nave.getRotacion(),									// dirección de la bala
         		10f,												// velocidad levemente aleatoria
-        		AssetsLoader.getInstancia().getBalaTexture());	// textura de la bala
+        		AssetManager.getInstancia().getBalaTexture());	// textura de la bala
         
         juego.agregarBala(bala);
         soundBala.play(0.1f);

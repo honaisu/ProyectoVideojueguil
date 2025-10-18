@@ -3,7 +3,7 @@ package armas;
 import java.util.Random;
 
 import armas.proyectiles.Bullet;
-import logica.AssetsLoader;
+import logica.assets.AssetManager;
 import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
 
@@ -12,7 +12,7 @@ public class Escopeta extends Arma {
 	public Escopeta() {
 		super(3f, 															// cadencia
 				8, 															// municion
-				AssetsLoader.getInstancia().getDisparoSound());	// sonido
+				AssetManager.getInstancia().getDisparoSound());	// sonido
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class Escopeta extends Arma {
                 bulletX, bulletY,								// posicion de la bala
                 angle,                     						// dirección de la bala
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
-                AssetsLoader.getInstancia().getBalaTexture()	// textura de la bala
+                AssetManager.getInstancia().getBalaTexture()	// textura de la bala
             );
             juego.agregarBala(bala);
         }

@@ -8,22 +8,19 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import armas.*;
-import logica.AssetsLoader;
 import logica.MainGame;
-
+import logica.assets.AssetManager;
 import managers.GameManager;
 import pantallas.BaseScreen;
 import pantallas.ScreenType;
-import personajes.Jugador;
 
 public class PantallaJuego extends BaseScreen {
-    private Sound explosionSound = AssetsLoader.getInstancia().getExplosionSound();
-    private Music gameMusic = AssetsLoader.getInstancia().getGameMusic();
+    private Sound explosionSound = AssetManager.getInstancia().getExplosionSound();
+    private Music gameMusic = AssetManager.getInstancia().getGameMusic();
 
     // Managers
     private GameManager gameManager;
-
+    
     // Pausa
     private boolean paused = false;
     private float pauseToggleCooldown = 0f;
@@ -37,24 +34,9 @@ public class PantallaJuego extends BaseScreen {
     public PantallaJuego(MainGame game, int ronda, int vidas, int score) {
     	super(game);
 
-        explosionSound = AssetsLoader.getInstancia().getExplosionSound();
-        gameMusic = AssetsLoader.getInstancia().getGameMusic();
         gameMusic.setLooping(true);
         gameMusic.setVolume(game.getVolumen().getMusicVolume());
         gameMusic.play();
-        
-        //Crear Jugador
-        /*
-        jugador = new Jugador(
-            Gdx.graphics.getWidth() / 2, 	// X
-            Gdx.graphics.getHeight() / 2,	// Y
-            0f,								// ROTACION
-            new Melee(),					// ARMA PRINCIPAL
-            game.getSkinSelected()			// SKIN
-        );*/
-        
-        //jugador.setVidas(vidas);
-        //jugador.setArma(new Escopeta());
     }
 
     @Override public void show() { 
@@ -70,7 +52,7 @@ public class PantallaJuego extends BaseScreen {
     @Override
     public void resume() {
         paused = false;
-        gameMusic.setVolume(game.getVolumen().getMusicVolume());
+        gameMusic.setVolume(getGame().getVolumen().getMusicVolume());
     }
 
     @Override
@@ -89,25 +71,28 @@ public class PantallaJuego extends BaseScreen {
             if (!paused) pause();
             else resume();
         }
+        
+        
 
         // Update si no está en pausa ni herido
-        if (!paused && !jugador.estaHerido()) {
+        /*
+        if (!paused && !game.getPlayer().estaHerido()) {
             gameManager.update(delta);
 
-            int gained = gameManager.getCollisionManager().handleCollisions(jugador, 
+            int gained = gameManager.getCollisionManager().handleCollisions(game.getPlayer(), 
             		gameManager.getBulletManager(), 
             		gameManager.getMeleeManager(), 
             		gameManager.getAsteroidManager());
-            if (gained > 0) jugador.aumentarScore(gained);
+            if (gained > 0) game.getPlayer().aumentarScore(gained);
 
-            if (jugador.estaDestruido()) {
-                if (jugador.getScore() > game.getHighScore()) game.setHighScore(jugador.getScore());
+            if (game.getPlayer().estaDestruido()) {
+                if (game.getPlayer().getScore() > game.getHighScore()) game.setHighScore(game.getPlayer().getScore());
                 game.getPantallaManager().cambiarPantalla(ScreenType.GAME_OVER);
                 return;
             }
             
             // TODO si AsteroidManager está vacío (?)
-        }
+        }*/
 	}
 
 	@Override
@@ -115,11 +100,10 @@ public class PantallaJuego extends BaseScreen {
 		// Render
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        gameManager.render(batch);
-        jugador.draw(batch, this, paused, 0);
+        //gameManager.render(batch);
+        //getGame().getPlayer().draw(batch);
         // TODO reemplazarlo con HUD screen o algo similar
-        if (paused) game.getPantallaManager().cambiarPantalla(ScreenType.PAUSA);
-        dibujaEncabezado();
+        if (paused) getGame().getPantallaManager().cambiarPantalla(ScreenType.PAUSA);
         batch.end();
 	}
 }

@@ -2,10 +2,12 @@ package pantallas.opciones;
 
 import com.badlogic.gdx.Gdx;
 
-import pantallas.ScreenAction;
+import interfaces.NavigableOption;
+import interfaces.ScreenAction;
+import logica.MainGame;
 import pantallas.ScreenType;
 
-public enum MenuOption implements NavigableOption {
+public enum MainMenuOption implements NavigableOption {
 	INICIAR("Iniciar Juego", (manager) -> {
 		manager.cambiarPantalla(ScreenType.JUEGO);
 	}),
@@ -23,7 +25,7 @@ public enum MenuOption implements NavigableOption {
 	private final String nombre;
 	private final ScreenAction accion;
 	
-	MenuOption(String nombre, ScreenAction accion) {
+	MainMenuOption(String nombre, ScreenAction accion) {
 		this.nombre = nombre;
 		this.accion = accion;
 	}
@@ -34,4 +36,9 @@ public enum MenuOption implements NavigableOption {
     public String getNombre() {
     	return nombre;
     }
+
+	@Override
+	public void ejecutar(MainGame game) {
+		this.accion.ejecutar(game.getPantallaManager());
+	}
 }

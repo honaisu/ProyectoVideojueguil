@@ -1,22 +1,29 @@
 package pantallas.menus;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import interfaces.NavigableOption;
 import logica.MainGame;
-import pantallas.opciones.MenuOption;
+import pantallas.opciones.MainMenuOption;
 
 public class MainMenuScreen extends NavigableScreen {
 	public MainMenuScreen(MainGame game) {
-	    super(game, MenuOption.values());
+	    super(game, MainMenuOption.values());
 	}
 
 	@Override
 	protected void update(float delta) {
-		// TODO Auto-generated method stub
+		navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
+		NavigableOption opcionActual = navegador.getCurrentSelection();
 		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+			opcionActual.ejecutar(getGame());
+	    }
 	}
 
 	@Override
@@ -33,9 +40,8 @@ public class MainMenuScreen extends NavigableScreen {
 
 	    // Menú
 	    font.getData().setScale(2.5f);
-	    float cx = 600f, y = 480f;
 	    
-	    navegador.draw(batch, font);
+	    navegador.drawOptions(batch, font);
 
 	    // Hint de controles
 	    font.getData().setScale(1.0f);

@@ -6,7 +6,7 @@ import java.util.Map;
 import logica.MainGame;
 import pantallas.*;
 import pantallas.juego.GameOverScreen;
-import pantallas.juego.PantallaJuego;
+import pantallas.juego.GameScreen;
 import pantallas.menus.ConfigurationScreen;
 import pantallas.menus.CustomizationScreen;
 import pantallas.menus.MainMenuScreen;
@@ -33,18 +33,17 @@ public class ScreenManager {
     
     public void cambiarPantalla(ScreenType tipoPantalla) {
         if (tipoPantalla.equals(ScreenType.JUEGO)) {
-            // Desecha la pantalla de juego anterior si existe
-            BaseScreen antiguaPantalla = pantallas.get(ScreenType.JUEGO);
+            // Se desecha la pantalla antigua
+        	BaseScreen antiguaPantalla = pantallas.get(ScreenType.JUEGO);
             if (antiguaPantalla != null) antiguaPantalla.dispose();
             
-            // Crea y establece la nueva pantalla de juego
-            PantallaJuego nuevaPantallaJuego = new PantallaJuego(game);
+            // Se reemplaza por una nueva pantalla de juego
+            GameScreen nuevaPantallaJuego = new GameScreen(game);
             pantallas.put(ScreenType.JUEGO, nuevaPantallaJuego);
             game.setScreen(nuevaPantallaJuego);
             return;
         }
 
-        // Para otras pantallas como Menú o Game Over, podemos reutilizar la misma instancia
         BaseScreen screen = pantallas.get(tipoPantalla);
         if (screen != null) {
             game.setScreen(screen);

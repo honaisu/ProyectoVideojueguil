@@ -1,4 +1,4 @@
-package logica;
+package logica.assets;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -8,29 +8,26 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import personajes.SkinJugador;
-
 /**
  * Clase encargada de poder tener todas las texturas, sonidos y música del juego.
- * TODO por seguridad cambiar los parámetros a private en vez de public
  * <p>
  * Esta clase es un <b>SINGLETON</b>.
  */
-public class AssetsLoader {
-	private static AssetsLoader instancia;
+public class AssetManager {
+	private static AssetManager instancia;
 	
 	// Texturas
 	// Jugador
 	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
     private Map<SkinJugador, Texture> skinJugadorTextures;
     
-    // TODO TextureManager?
+    // TODO Considerar crear TextureManager? (Extensible?)
     // Enemigos
     private Texture balaTexture;
     private Texture enemigoTexture;
     private Texture swingHitboxTexture;
     
-    // TODO SoundMusicManager?
+    // TODO Considerar crear SoundMusicManager? (Extensible?)
     // Sonidos y Música
     private Sound explosionSound;
     private Sound hurtSound;
@@ -38,14 +35,14 @@ public class AssetsLoader {
     private Sound muerteSound;
     private Music gameMusic;
     
-    private AssetsLoader() {}
+    private AssetManager() {}
     
     /**
      * Método que consigue AL AssetsLoader
      * @return AssetsLoader
      */
-    public static AssetsLoader getInstancia() {
-        if (instancia == null) instancia = new AssetsLoader();
+    public static AssetManager getInstancia() {
+        if (instancia == null) instancia = new AssetManager();
         return instancia;
     }
 
@@ -73,7 +70,7 @@ public class AssetsLoader {
         // Se itera sobre todos los valores de Skin
         for (SkinJugador skin : SkinJugador.values()) {
             // Se crea la textura en base a la ruta de la skin :3
-            Texture textura = new Texture(Gdx.files.internal(skin.getRutaTextura()));
+            Texture textura = new Texture(Gdx.files.internal(skin.getRuta()));
             // Se guarda en el mapa de enums
             skinJugadorTextures.put(skin, textura);
         }

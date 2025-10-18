@@ -1,5 +1,7 @@
 package pantallas.opciones;
 
+import interfaces.NavigableOption;
+
 public enum ConfigurationOption implements NavigableOption {
 	VOLUMEN_GENERAL("Volumen General"),
 	VOLUMEN_MUSICA("Volumen Música"),

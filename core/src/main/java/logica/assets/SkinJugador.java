@@ -1,31 +1,32 @@
-package personajes;
+package logica.assets;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import logica.AssetsLoader;
-import pantallas.opciones.NavigableOption;
+import interfaces.AssetRoute;
+import interfaces.NavigableOption;
 
-public enum SkinJugador implements NavigableOption {
+public enum SkinJugador implements NavigableOption, AssetRoute {
 	JUGADOR_ORIGINAL("Skin Original", "JugadorOriginal.png"),
 	JUGADOR_ALT_1("Skin Alt 1", "JugadorAlt1.png"),
 	JUGADOR_ALT_2("Skin Alt 2", "JugadorAlt2.png");
 	
 	private final String nombre;
-	private final String rutaTextura;
+	private final String ruta;
 	
-	SkinJugador(String nombre, String rutaTextura) {
+	SkinJugador(String nombre, String ruta) {
 		this.nombre = nombre;
-		this.rutaTextura = rutaTextura;
-	}
-	
-	public String getRutaTextura()  {
-		return rutaTextura;
+		this.ruta = ruta;
 	}
 	
 	public Sprite crearSprite() {
-        Texture textura = AssetsLoader.getInstancia().getSkinTexture(this);
-        return new Sprite(textura, 64, 64);
+		Texture textura = AssetManager.getInstancia().getSkinTexture(this);
+		return new Sprite(textura, 64, 64);
+	}
+	
+	@Override
+	public String getRuta()  {
+		return ruta;
 	}
 	
 	@Override

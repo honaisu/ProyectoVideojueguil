@@ -1,4 +1,4 @@
-package pantallas;
+package logica;
 
 import pantallas.opciones.ConfigurationOption;
 
@@ -42,8 +42,8 @@ public class Volumen {
     
     public static void aplicarCambios(Volumen destino, Volumen source) {
         destino.setMasterVolume(source.getMasterVolume());
-        destino.setMusicVolume(source.getMusicVolume());
-        destino.setSfxVolume(source.getSfxVolume());
+        destino.setMusicVolume(source.getRawMusicVolume());
+        destino.setSfxVolume(source.getRawSfxVolume());
     }
     
     private static float clamp01(float v) {

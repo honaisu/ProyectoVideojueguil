@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import hitboxes.ArcHitbox;
 import hitboxes.BallHitbox;
-import logica.AnimationManager;
-import logica.AssetsLoader;
+import logica.AnimationFactory;
+import logica.assets.AssetManager;
 import personajes.Jugador;
 
 public class Swing {
@@ -20,20 +20,15 @@ public class Swing {
     private float xVel;
     private float yVel;
     private float rot;
-    
-    // ANIMACION
-    private Animation<TextureRegion> animacion;
-    private float stateTime = 0f;
 
     public Swing(float x, float y, float radio, Jugador nave){
         this.hitbox = new ArcHitbox(
         		x, y,													// posicion del ataque
         		radio,													// radio del ataque
         		nave.getRotacion(),										// la rotacion con respecto de la nave
-        		AssetsLoader.getInstancia().getSwingHitboxTexture()); 	// textura del ataqque
+        		AssetManager.getInstancia().getSwingHitboxTexture()); 	// textura del ataqque
         
         this.jugador = nave;
-        this.animacion = AnimationManager.createAtaqueMeleeAnimation();
     }
 
     public void update(float delta) {

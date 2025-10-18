@@ -17,7 +17,6 @@ public class MeleeManager {
         if (s != null) swings.add(s);
     }
     
-    
     public void update(float delta) {
         for (int i = swings.size() - 1; i >= 0; i--) {
             Swing s = swings.get(i);

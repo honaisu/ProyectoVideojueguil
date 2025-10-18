@@ -1,6 +1,8 @@
 package pantallas.opciones;
 
-public enum PauseOption {
+import interfaces.NavigableOption;
+
+public enum PauseOption implements NavigableOption {
 	CONTINUAR("Continuar"),
 	MENU("Menú Principal");
 	
@@ -10,6 +12,7 @@ public enum PauseOption {
 		this.nombre = nombre;
 	}
 	
+	@Override
 	public String getNombre() {
 		return nombre;
 	}

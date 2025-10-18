@@ -23,7 +23,7 @@ public class AsteroidManager {
 	
 	// TODO Poner algo génerico o similar
 	public AsteroidManager() {
-		spawnAsteroids(5, 0, 0);
+		//spawnAsteroids(5, 0, 0);
 	}
 
 	// Genera los asteroides con atributos levemente aleatorios

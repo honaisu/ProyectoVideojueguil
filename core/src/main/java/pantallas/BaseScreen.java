@@ -15,7 +15,7 @@ import logica.MainGame;
  */
 public abstract class BaseScreen implements Screen {
     // TODO Cambiar parámetro a private para usar el getGame
-	protected MainGame game;
+	private MainGame game;
 	
     /**
      * Constructor que toma el juego.

@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import interfaces.NavigableOption;
 import logica.MainGame;
+import logica.Volumen;
 import pantallas.ScreenType;
-import pantallas.Volumen;
 import pantallas.opciones.ConfigurationOption;
-import pantallas.opciones.NavigableOption;
 
 public class ConfigurationScreen extends NavigableScreen {
 	private Volumen volumenTemporal = new Volumen();
@@ -21,15 +21,10 @@ public class ConfigurationScreen extends NavigableScreen {
     }
     
     @Override
-    public void render(float delta) {
-    	this.update(delta);
-    	this.draw(game.getBatch(), game.getFont());
-    }
-    
-    @Override
     protected void update(float delta) {
         // Navegación vertical
     	// TODO arreglar método ajustarValorSonido (evitar castings)
+    	navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
         NavigableOption opcionActual = navegador.getCurrentSelection();
         
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) 
@@ -42,17 +37,17 @@ public class ConfigurationScreen extends NavigableScreen {
         	// TODO evitar hacer castings
         	switch ((ConfigurationOption) opcionActual) {
         	case GUARDAR:
-        		Volumen.aplicarCambios(game.getVolumen(), volumenTemporal);
+        		Volumen.aplicarCambios(getGame().getVolumen(), volumenTemporal);
         		break;
         	case VOLVER:
-        		game.getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        		getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
         		break;
         	default: break;
         	}
         }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-        	game.getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        	getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
             return;
         }
     }
@@ -66,16 +61,9 @@ public class ConfigurationScreen extends NavigableScreen {
 
         font.getData().setScale(2.5f);
         font.setColor(Color.WHITE);
-        font.draw(game.getBatch(), "OPCIONES", 480, 640);
+        font.draw(batch, "OPCIONES", 480, 640);
 
         font.getData().setScale(1.5f);
-        float x = 400f;
-        float y = 520f;
-        
-        String label;
-        String value;
-        String textoCompleto;
-        
         
         /*
         for (ConfigurationOption opcion : opciones) {
@@ -103,10 +91,10 @@ public class ConfigurationScreen extends NavigableScreen {
             font.draw(batch, textoCompleto, x, y - opcion.ordinal() * 60);
         }*/
         
-        navegador.draw(batch, font);
+        navegador.drawOptions(batch, font);
         
         font.setColor(Color.WHITE);
-        font.draw(game.getBatch(), "LEFT/RIGHT para ajustar | ENTER para confirmar | ESC para volver", 220, 160);
+        font.draw(batch, "LEFT/RIGHT para ajustar | ENTER para confirmar | ESC para volver", 220, 160);
 
         batch.end();
     }

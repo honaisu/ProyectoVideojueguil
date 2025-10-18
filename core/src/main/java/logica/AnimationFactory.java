@@ -3,12 +3,13 @@ package logica;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+
+import logica.assets.AssetManager;
+import logica.assets.SkinJugador;
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import personajes.SkinJugador;
-
-// TODO Creo que cuenta más como factory
-public class AnimationManager {
+public class AnimationFactory {
 	private static Animation<TextureRegion> createAnimation(Texture textura, int filas, int columnas, float duracionFrame) {
 		// Parte encargada de la textura para la animación
     	// Toma de forma temporal la textura y la divide en cuadrantes
@@ -33,7 +34,7 @@ public class AnimationManager {
 	}
 	
 	public static Animation<TextureRegion> createJugadorAnimation(SkinJugador skin) {
-		Texture jugadorSheet = AssetsLoader.getInstancia().getSkinTexture(skin);
+		Texture jugadorSheet = AssetManager.getInstancia().getSkinTexture(skin);
 		int filas = 1;
 		int columnas = 4;
 		float duracionFrames = 0.2f;
@@ -43,7 +44,7 @@ public class AnimationManager {
 	}
 	
 	public static Animation<TextureRegion> createAtaqueMeleeAnimation() {
-		Texture ataqueSheet = AssetsLoader.getInstancia().getSwingHitboxTexture();
+		Texture ataqueSheet = AssetManager.getInstancia().getSwingHitboxTexture();
 		int filas = 1;
 		int columnas = 8;
 		float duracionFrames = 0.25f;

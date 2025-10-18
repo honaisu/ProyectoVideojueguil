@@ -7,18 +7,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import logica.assets.AssetManager;
 import managers.ScreenManager;
 import pantallas.ScreenType;
-import pantallas.Volumen;
 import personajes.Jugador;
+import personajes.Player;
 
 public class MainGame extends Game {	
 	private SpriteBatch batch;
 	private BitmapFont font;
 	private Viewport viewport;
 	private int highScore;
-	
-	private Jugador jugador;
 	
     // Volúmenes globales (0.0f a 1.0f)
 	private Volumen volumen;
@@ -38,7 +37,7 @@ public class MainGame extends Game {
 		volumen = new Volumen();
 		viewport = new FitViewport(1200, 800, new OrthographicCamera());
 		// ESTE ES UN SINGLETON!! carga los assets :D
-		AssetsLoader.getInstancia().load();
+		AssetManager.getInstancia().load();
 		
         pantallaManager = new ScreenManager(this);
         pantallaManager.cambiarPantalla(ScreenType.MENU);
@@ -70,9 +69,5 @@ public class MainGame extends Game {
 	
 	public ScreenManager getPantallaManager() {
 		return pantallaManager;
-	}
-	
-	public Jugador getPlayer() {
-		return jugador;
 	}
 }

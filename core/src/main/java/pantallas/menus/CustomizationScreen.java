@@ -7,20 +7,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import interfaces.NavigableOption;
 import logica.MainGame;
+import logica.assets.SkinJugador;
 import pantallas.ScreenType;
-import pantallas.opciones.NavigableOption;
-import personajes.SkinJugador;
 
 public class CustomizationScreen extends NavigableScreen {
     public CustomizationScreen(MainGame game) {
         super(game, SkinJugador.values());
-    }
-
-    @Override
-    public void render(float delta) {
-        this.update(delta);
-        this.draw(game.getBatch(), game.getFont());
     }
 
 	@Override
@@ -31,13 +25,13 @@ public class CustomizationScreen extends NavigableScreen {
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
         	// TODO Volver a poner el poder elegir skin
-            game.getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        	getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
             return;
         }
 
         // Volver sin cambios
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        	getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
             return;
         }
 	}
