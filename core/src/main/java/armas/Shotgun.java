@@ -56,7 +56,8 @@ public class Shotgun extends Weapon {
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
                 AssetsLoader.getInstancia().getBalaTexture()	// textura de la bala
             );
-            juego.agregarBala(bala);
+            juego.getBulletManager().add(bala);
+            
         }
         getSoundBala().play(0.1f);
     }
