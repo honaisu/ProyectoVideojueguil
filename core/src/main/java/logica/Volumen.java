@@ -25,7 +25,7 @@ public class Volumen {
     	this.sfx 	= sfx;
     }
     
-    public void ajustarValorSonido(ConfigurationOption opcion, float cambio) {
+    public void adjustSoundValue(ConfigurationOption opcion, float cambio) {
         switch (opcion) {
             case VOLUMEN_GENERAL:
                 master = clamp01(master + cambio);
@@ -40,12 +40,13 @@ public class Volumen {
         }
     }
     
-    public static void aplicarCambios(Volumen destino, Volumen source) {
+    public static void applyChanges(Volumen destino, Volumen source) {
         destino.setMasterVolume(source.getMasterVolume());
         destino.setMusicVolume(source.getRawMusicVolume());
         destino.setSfxVolume(source.getRawSfxVolume());
     }
     
+    // No sé bien que hace pero sin duda sirve para redondear xd
     private static float clamp01(float v) {
         return Math.max(0f, Math.min(1f, v));
     }

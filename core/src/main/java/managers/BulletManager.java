@@ -1,14 +1,16 @@
 package managers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.proyectiles.Bullet;
+import interfaces.MomentaneumManager;
 
 // Clase encargada del manejo de las balas  
-public class BulletManager {
-	private final ArrayList<Bullet> bullets = new ArrayList<>();
+public class BulletManager implements MomentaneumManager {
+	private final List<Bullet> bullets = new ArrayList<>();
     
     // Agregar una bala a la pantalla del juego
     public void add(Bullet b) {
@@ -16,7 +18,8 @@ public class BulletManager {
     }
 
     // Actualiza cada bala y elimina las destruidas
-    public void update() {
+    @Override
+    public void update(float delta) {
         for (int i = bullets.size() - 1; i >= 0; i--) {
             Bullet b = bullets.get(i);
             b.update();
@@ -27,6 +30,7 @@ public class BulletManager {
     }
     
     // Dibuja las balas
+    @Override
     public void render(SpriteBatch batch) {
         for (Bullet b : bullets) {
             b.draw(batch);
@@ -34,7 +38,7 @@ public class BulletManager {
     }
 
     public ArrayList<Bullet> getBullets() {
-        return bullets;
+        return (ArrayList<Bullet>) bullets;
     }
 
     public void clear() {

@@ -1,6 +1,7 @@
 package managers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.audio.Sound;
 
@@ -8,9 +9,6 @@ import armas.proyectiles.Bullet;
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Swing;
 import hitboxes.BallHitbox;
-import logica.MainGame;
-import logica.assets.AssetManager;
-import personajes.Jugador;
 import personajes.Player;
 
 public class CollisionManager {
@@ -38,7 +36,7 @@ public class CollisionManager {
         int totalScore = 0;
 
         ArrayList<Bullet> bullets = bm.getBullets();
-        ArrayList<BallHitbox> asteroids = am.getAsteroids();
+        List<BallHitbox> asteroids = am.getAsteroids();
 
         // 1) Balas vs Asteroides
         // Iteramos hacia atrás para permitir remociones seguras

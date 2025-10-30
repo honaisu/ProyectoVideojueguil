@@ -1,14 +1,13 @@
 package armas.proyectiles;
 
-import logica.assets.AssetManager;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.ArcHitbox;
+import interfaces.Proyectil;
+import managers.AssetManager;
 import personajes.Player;
 
-public class Swing {
+public class Swing implements Proyectil {
     private ArcHitbox hitbox;			// la colision es de tipo arqueada
     
     private float duracion = 0.25f;     // tiempo que dura activo el golpe
@@ -18,9 +17,6 @@ public class Swing {
     private Player player;
     private float rot;
     private float radio;
-    
-    //TODO borrar
-    public ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     public Swing(float x, float y, Player player){
     	
@@ -33,6 +29,7 @@ public class Swing {
         this.player = player;
     }
 
+    @Override
     public void update(float delta) {
     	float centerX = player.getSpr().getX() + player.getSpr().getWidth() / 2;
         float centerY = player.getSpr().getY() + player.getSpr().getHeight() / 2;
@@ -51,6 +48,7 @@ public class Swing {
         }
     }
     
+    @Override
     public void draw(SpriteBatch batch) {
         /*
     	TextureRegion currentFrame = animacion.getKeyFrame(stateTime, false);
@@ -62,6 +60,7 @@ public class Swing {
             );*/
     }
 
+    @Override
     public boolean isDestroyed() {
         return destroyed;
     }

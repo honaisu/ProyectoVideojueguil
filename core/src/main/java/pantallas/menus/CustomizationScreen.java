@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.ScreenType;
+import enumeradores.SkinJugador;
 import interfaces.NavigableOption;
 import logica.MainGame;
-import logica.assets.SkinJugador;
-import pantallas.ScreenType;
 
 public class CustomizationScreen extends NavigableScreen {
     public CustomizationScreen(MainGame game) {

@@ -1,8 +1,9 @@
 package armas;
 
 import armas.proyectiles.LaserBeam;
+import enumeradores.NameManager;
 import logica.GameWorld;
-import logica.assets.AssetManager;
+import managers.AssetManager;
 import personajes.Player;
 
 public class Laser extends Weapon {
@@ -47,6 +48,6 @@ public class Laser extends Weapon {
         LaserBeam pulso = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), 1);
         pulso.configurarPulso(ttlPulso); // se apaga solo al vencer el TTL
         
-        juego.getGameManager().getLaserManager().add(pulso);
+        juego.getGameManager().getManager(NameManager.LASER).add(pulso);
     }
 }

@@ -2,7 +2,7 @@ package armas;
 
 import armas.proyectiles.Bullet;
 import logica.GameWorld;
-import logica.assets.AssetManager;
+import managers.AssetManager;
 import pantallas.juego.GameScreen;
 import personajes.Player;
 

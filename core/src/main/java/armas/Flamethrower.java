@@ -2,8 +2,8 @@ package armas;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import logica.assets.AssetManager;
-import pantallas.juego.GameScreen;
+import logica.GameWorld;
+import managers.AssetManager;
 import personajes.Player;
 
 public class Flamethrower extends Weapon {
@@ -13,13 +13,13 @@ public class Flamethrower extends Weapon {
 	}
 
 	@Override
-	public void disparar(Player nave, GameScreen juego, float delta) {
+	public void disparar(Player nave, GameWorld juego, float delta) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void crearProyectil(Player nave, GameScreen juego) {
+	public void crearProyectil(Player nave, GameWorld juego) {
 		// TODO Auto-generated method stub
 		
 	}

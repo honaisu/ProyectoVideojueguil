@@ -8,21 +8,21 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
+import enumeradores.SkinJugador;
 import hitboxes.Hitbox;
 import logica.AnimationFactory;
-import logica.assets.AssetManager;
-import logica.assets.SkinJugador;
+import managers.AssetManager;
 
 public class Player extends Hitbox {
 	private final float MAX_VELOCITY = 10.0f;
 	// Estado básico 
 	private int score = 0;
     private int round = 1;
+    private int life; // ANTES: lives
     
-    protected int hits;
-	protected float xVel;
-	protected float yVel;
-	protected float rotation;
+	private float xVel;
+	private float yVel;
+	private float rotation;
 
 	// Visual y audio
 	private Sound hurtSound = AssetManager.getInstancia().getHurtSound();
@@ -33,16 +33,15 @@ public class Player extends Hitbox {
     
 	// Herido
 	private boolean hurted = false;
-	private int maxHurtTime = 50;
 	private int hurtTime;
 	
 	// Armas
-	private Weapon weapon = new HeavyMachineGun();
+	private Weapon weapon = new Melee();
 	
 	public Player(float x, float y) {
 		super(x, y, SkinJugador.JUGADOR_ORIGINAL.crearSprite());
 		
-		this.hits = 3;
+		this.life = 3;
 		this.xVel = 0f;
 		this.yVel = 0f;
 		this.rotation = 0f;
@@ -78,7 +77,6 @@ public class Player extends Hitbox {
         getSpr().setRotation(rotation);
 
         // Actualizar el arma
-        if (weapon.getMunicion() == 0) weapon = new Melee();
         weapon.actualizar(delta);
     }
 	
@@ -97,7 +95,7 @@ public class Player extends Hitbox {
         	hurtSound.play();
             // Lógica simple de parpadeo
             if (hurtTime % 10 < 5) {
-                return; // No dibujar en algunos frames para crear parpadeo
+                return;
             }
         }
 
@@ -146,5 +144,17 @@ public class Player extends Hitbox {
 
 	public Weapon getWeapon() {
 		return weapon;
+	}
+	
+	public int getRound() {
+		return round;
+	}
+	
+	public int getScore() {
+		return score;
+	}
+	
+	public int getLife() {
+		return life;
 	}
 }

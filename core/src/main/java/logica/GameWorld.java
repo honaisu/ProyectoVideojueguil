@@ -3,7 +3,8 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import managers.GameManager;
+import enumeradores.NameManager;
+import managers.*;
 import personajes.Player;
 
 public class GameWorld {
@@ -25,8 +26,12 @@ public class GameWorld {
 		player.update(delta);
 		gameManager.update(delta);
 		gameManager.getCollisionManager().handleCollisions(
-				player, gameManager.getBulletManager(), gameManager.getMeleeManager(), 
-				gameManager.getLaserManager(), gameManager.getAsteroidManager());
+				player,
+				// TODO Arreglar para solo pedir un manager o algo. Tarea de benjoid xd
+				(BulletManager)gameManager.getManager(NameManager.BULLET), 
+				(MeleeManager)gameManager.getManager(NameManager.MELEE), 
+				(LaserManager)gameManager.getManager(NameManager.LASER), 
+				(AsteroidManager)gameManager.getManager(NameManager.ASTEROID));
 	}
 
 	private void handleInput(float delta) {

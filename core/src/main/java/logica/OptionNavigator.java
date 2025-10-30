@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import interfaces.NavigableOption;
 import interfaces.Navigation;
 
+/**
+ * Clase encargada de poder navegar cierto catalogo de opciones dado.
+ * <p>
+ * Esto, en resumen, permite poder recorrer un arreglo de manera dinámica sin que el usuario sepa
+ * la implementación que hay detrás. :)
+ */
 public class OptionNavigator implements Navigation {
 	private final NavigableOption[] opciones;
 	private int indiceActual;
@@ -24,7 +30,13 @@ public class OptionNavigator implements Navigation {
 		this.delay = delay;
 	}
 	
-	// TODO arreglar lógica
+	// TODO arreglar lógica...? Aunque creo que ya se ve bonito
+	/**
+	 * Método encargado de moverse entre las opciones
+	 * @param delta Parámetro delta.
+	 * @param siguiente Se mueve a la opción siguiente
+	 * @param anterior Se mueve a la opción anterior
+	 */
 	public void move(float delta, int siguiente, int anterior) {
 		keyCooldown -= delta;
 	    if (keyCooldown <= 0f) {
@@ -39,6 +51,11 @@ public class OptionNavigator implements Navigation {
 	    }
 	}
 	
+	/**
+	 * Método encargado de dibujar las opciones que existan en el arreglo.
+	 * @param batch "Canvas" donde se quiere dibujar
+	 * @param font Fuente. :D
+	 */
 	public void drawOptions(SpriteBatch batch, BitmapFont font) {
         int x = 360, y = 300;
 	    for (NavigableOption opcion : opciones) {

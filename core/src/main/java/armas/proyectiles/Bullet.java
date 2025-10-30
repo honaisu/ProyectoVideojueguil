@@ -7,10 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.BallHitbox;
+import interfaces.Proyectil;
 
 //Clase que representa una balla dentro del juego
 
-public class Bullet {
+public class Bullet implements Proyectil {
 	private BallHitbox hitbox;
 	
 	private float xSpeed;					// velocidad de la bala eje x
@@ -18,7 +19,7 @@ public class Bullet {
 	private boolean destroyed = false;		// ver si la bala esta destruida
 	
 	//TODO borrar
-	public ShapeRenderer shapeRenderer = new ShapeRenderer();;
+	public ShapeRenderer shapeRenderer = new ShapeRenderer();
 	    
     public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
     	

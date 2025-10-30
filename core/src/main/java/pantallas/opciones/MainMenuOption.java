@@ -2,10 +2,10 @@ package pantallas.opciones;
 
 import com.badlogic.gdx.Gdx;
 
+import enumeradores.ScreenType;
 import interfaces.NavigableOption;
 import interfaces.ScreenAction;
 import logica.MainGame;
-import pantallas.ScreenType;
 
 public enum MainMenuOption implements NavigableOption {
 	INICIAR("Iniciar Juego", (manager) -> {

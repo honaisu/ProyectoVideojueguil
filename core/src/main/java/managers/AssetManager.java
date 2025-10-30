@@ -1,4 +1,4 @@
-package logica.assets;
+package managers;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
+import enumeradores.SkinJugador;
+
 /**
  * Clase encargada de poder tener todas las texturas, sonidos y música del juego.
  * <p>
@@ -15,7 +17,6 @@ import com.badlogic.gdx.graphics.Texture;
  */
 public class AssetManager {
 	private static AssetManager instancia;
-	
 	// Jugador
 	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
     private Map<SkinJugador, Texture> skinJugadorTextures;
@@ -97,14 +98,12 @@ public class AssetManager {
      *  Método para liberar todos los recursos de la memoria
      */
     public void dispose() {
-    	/*
-        jugadorTextureOriginal.dispose();
         balaTexture.dispose();
         enemigoTexture.dispose();
         explosionSound.dispose();
         hurtSound.dispose();
         disparoSound.dispose();
-        gameMusic.dispose();*/
+        gameMusic.dispose();
     }
 
     // Jugador
@@ -130,9 +129,6 @@ public class AssetManager {
 	public Sound getMuerteSound() { return muerteSound;}
 	public Music getTutorialSound() {return musicaTutorial;}
 
-
 	// Música
 	public Music getGameMusic() { return gameMusic; }
-
-
 }

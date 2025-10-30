@@ -3,14 +3,15 @@ package managers;
 import java.util.EnumMap;
 import java.util.Map;
 
+import enumeradores.ScreenType;
 import logica.MainGame;
 import pantallas.*;
 import pantallas.juego.GameOverScreen;
 import pantallas.juego.GameScreen;
+import pantallas.juego.PauseScreen;
 import pantallas.menus.ConfigurationScreen;
 import pantallas.menus.CustomizationScreen;
 import pantallas.menus.MainMenuScreen;
-import pantallas.menus.PauseScreen;
 
 public class ScreenManager {
 	private final MainGame game;
@@ -24,11 +25,13 @@ public class ScreenManager {
     
     private void iniciarPantallas() {
         // Crea una instancia de cada pantalla y la guarda en el mapa
+    	// TODO Implementar lógica cambiada de esto para no hacerlo como está ahora :)
     	pantallas.put(ScreenType.MENU,			new MainMenuScreen(game));
         pantallas.put(ScreenType.GAME_OVER, 		new GameOverScreen(game));
         pantallas.put(ScreenType.PERSONALIZACION, new CustomizationScreen(game));
         pantallas.put(ScreenType.CONFIGURACION, 	new ConfigurationScreen(game));
         pantallas.put(ScreenType.PAUSA, new PauseScreen(game));
+        pantallas.put(ScreenType.TUTORIAL, new TutorialScreen(game));
     }
     
     public void cambiarPantalla(ScreenType tipoPantalla) {

@@ -1,10 +1,11 @@
-package logica.assets;
+package enumeradores;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import interfaces.AssetRoute;
 import interfaces.NavigableOption;
+import managers.AssetManager;
 
 public enum SkinJugador implements NavigableOption, AssetRoute {
 	JUGADOR_ORIGINAL("Skin Original", "JugadorOriginal.png"),
@@ -13,6 +14,7 @@ public enum SkinJugador implements NavigableOption, AssetRoute {
 	
 	private final String nombre;
 	private final String ruta;
+	private Sprite sprite;
 	
 	SkinJugador(String nombre, String ruta) {
 		this.nombre = nombre;
@@ -20,8 +22,11 @@ public enum SkinJugador implements NavigableOption, AssetRoute {
 	}
 	
 	public Sprite crearSprite() {
-		Texture textura = AssetManager.getInstancia().getSkinTexture(this);
-		return new Sprite(textura, 64, 64);
+		if (sprite == null) {
+				Texture textura = AssetManager.getInstancia().getSkinTexture(this);				
+				this.sprite = new Sprite(textura, 64, 64); 
+		}
+		return sprite;
 	}
 	
 	@Override

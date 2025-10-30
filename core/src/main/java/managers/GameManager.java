@@ -1,61 +1,43 @@
 package managers;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import enumeradores.NameManager;
+import interfaces.MomentaneumManager;
+
 public class GameManager {
-	//private final Map<ManagersName, Managers> managers;
-	
-	private final AsteroidManager asteroidManager;
-    private final BulletManager bulletManager;
+	private final Map<NameManager, MomentaneumManager> managers;
     private final CollisionManager collisionManager;
-    private final MeleeManager meleeManager;
-    private final LaserManager laserManager;
     
     public GameManager() {
-    	asteroidManager 	= new AsteroidManager();
-        bulletManager 		= new BulletManager();
-        meleeManager 		= new MeleeManager();
-        collisionManager 	= new CollisionManager();
-        laserManager 		= new LaserManager();
+    	this.collisionManager = new CollisionManager();
+    	
+    	this.managers = new EnumMap<>(NameManager.class);
+    	for (NameManager manager : NameManager.values()) {
+    		this.managers.put(manager, manager.getManager());
+    	}
     }
 
 	public void update(float delta) {
-		asteroidManager.update();
-    	bulletManager.update();
-    	// TODO Handle el Collision Manager... 
-    	meleeManager.update(delta);
-        laserManager.update(delta);
+		for (MomentaneumManager manager : managers.values()) {
+			manager.update(delta);
+		}
     }
 	
 	public void render(SpriteBatch batch) {
-		bulletManager.render(batch);
-        meleeManager.render(batch);
-        asteroidManager.render(batch);
-        laserManager.render(batch);
+		for (MomentaneumManager manager : managers.values()) {
+			manager.render(batch);
+		}
 	}
     
-    public AsteroidManager getAsteroidManager() {
-		return asteroidManager;
+    public MomentaneumManager getManager(NameManager name) {
+		return managers.get(name);
 	}
-
-	public BulletManager getBulletManager() {
-		return bulletManager;
-	}
-
-	public CollisionManager getCollisionManager() {
-		return collisionManager;
-	}
-
-	public MeleeManager getMeleeManager() {
-		return meleeManager;
-	}
-
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public LaserManager getLaserManager() {
-		return laserManager;
-	}
+    
+    public CollisionManager getCollisionManager() {
+    	return collisionManager;
+    }
 }

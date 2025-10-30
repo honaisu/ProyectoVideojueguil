@@ -1,4 +1,4 @@
-package pantallas.menus;
+package pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,9 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import enumeradores.ScreenType;
 import interfaces.NavigableOption;
 import logica.MainGame;
-import pantallas.ScreenType;
+import pantallas.menus.NavigableScreen;
 import pantallas.opciones.PauseOption;
 
 public class PauseScreen extends NavigableScreen {
@@ -63,10 +64,9 @@ public class PauseScreen extends NavigableScreen {
         // Texto
         font.getData().setScale(2.0f);
         font.draw(batch, "PAUSA", px + 190, py + 200);
-        font.getData().setScale(1.6f);
+        navegador.drawOptions(batch, font);
 
         batch.end();
-        navegador.drawOptions(batch, font);
 	}
 
 }

@@ -1,6 +1,6 @@
 package armas;
 
-import logica.assets.AssetManager;
+import managers.AssetManager;
 import pantallas.juego.GameScreen;
 import personajes.Player;
 

@@ -5,10 +5,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.RayHitbox;
+import interfaces.Proyectil;
 import personajes.Player;
 
-
-public class LaserBeam {
+public class LaserBeam implements Proyectil {
     private final Player nave;
     private final RayHitbox hitbox;
     private boolean destroyed = false;

@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
-import logica.assets.AssetManager;
-import logica.assets.SkinJugador;
+import enumeradores.SkinJugador;
+import managers.AssetManager;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 

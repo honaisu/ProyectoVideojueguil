@@ -1,8 +1,9 @@
 package armas;
 
 import armas.proyectiles.Swing;
+import enumeradores.NameManager;
 import logica.GameWorld;
-import logica.assets.AssetManager;
+import managers.AssetManager;
 import personajes.Player;
 
 //Clase para el arma cuerpo a cuerpo
@@ -31,22 +32,22 @@ public class Melee extends Weapon {
     
     //crea el swing del arma con direccion respecto al jugador
     @Override
-    public void crearProyectil(Player jug, GameWorld juego) {
-    	float radians = (float) Math.toRadians(jug.getRotation() + 90);
+    public void crearProyectil(Player player, GameWorld juego) {
+    	float radians = (float) Math.toRadians(player.getRotation() + 90);
 
-        float centerX = jug.getSpr().getX() + jug.getSpr().getWidth() / 2;
-        float centerY = jug.getSpr().getY() + jug.getSpr().getHeight() / 2;
+        float centerX = player.getSpr().getX() + player.getSpr().getWidth() / 2;
+        float centerY = player.getSpr().getY() + player.getSpr().getHeight() / 2;
         //float length = jug.spr.getHeight() / 2;
         
-        float length = jug.getSpr().getHeight() / 2 + 20; // distancia delante del jugador
+        float length = player.getSpr().getHeight() / 2 + 20; // distancia delante del jugador
         
         float swingX = centerX + (float) Math.cos(radians) * length;
         float swingY = centerY + (float) Math.sin(radians) * length;
         
         getSoundBala().play(0.1f);
-        swingActual = new Swing(swingX, swingY, jug);
+        swingActual = new Swing(swingX, swingY, player);
         // TODO Agregar Swing...
-        juego.getGameManager().getMeleeManager().add(swingActual);
+        juego.getGameManager().getManager(NameManager.MELEE); // add Swing
     }
 
     public Swing getSwingActual() {

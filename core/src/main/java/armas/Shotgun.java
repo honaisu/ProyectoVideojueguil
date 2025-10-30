@@ -3,7 +3,8 @@ package armas;
 import java.util.Random;
 
 import armas.proyectiles.Bullet;
-import logica.assets.AssetManager;
+import logica.GameWorld;
+import managers.AssetManager;
 import pantallas.juego.GameScreen;
 import pantallas.juego.PantallaJuego;
 import personajes.Jugador;
@@ -19,7 +20,7 @@ public class Shotgun extends Weapon {
 	}
 
 	@Override
-	public void disparar(Player nave, GameScreen juego, float delta) {
+	public void disparar(Player nave, GameWorld juego, float delta) {
 		actualizar(delta);
         
 		// sin balas
@@ -33,7 +34,7 @@ public class Shotgun extends Weapon {
 	
 	//crea la dispersion de las balas de la escopeta con direccion respecto al jugador
 	@Override
-	public void crearProyectil(Player nave, GameScreen juego) {
+	public void crearProyectil(Player nave, GameWorld juego) {
         float radians = (float) Math.toRadians(nave.getRotation() + 90);
         float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
         float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;

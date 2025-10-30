@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.ScreenType;
 import logica.MainGame;
-import logica.assets.AssetManager;
+import managers.AssetManager;
 import pantallas.BaseScreen;
-import pantallas.ScreenType;
 
 /**ra la pantalla de game over:)
  * Clase que muest

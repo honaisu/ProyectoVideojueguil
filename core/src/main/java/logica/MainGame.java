@@ -1,17 +1,17 @@
 package logica;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import logica.assets.AssetManager;
+import enumeradores.ScreenType;
+import managers.AssetManager;
 import managers.ScreenManager;
-import pantallas.ScreenType;
-import personajes.Jugador;
-import personajes.Player;
 
 public class MainGame extends Game {	
 	private SpriteBatch batch;
@@ -48,10 +48,14 @@ public class MainGame extends Game {
 		batch.dispose();
 		font.dispose();
 		pantallaManager.dispose();
+		// Cuando lo probé daba error de lo que recuerdo xd
 		//assets.dispose();
 	}
 
-    @Override public void render() { super.render(); }
+    @Override 
+    public void render() { 
+    	super.render();
+    }
     
     public SpriteBatch getBatch() { return batch; }
     public BitmapFont getFont() { return font; }

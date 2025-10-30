@@ -1,4 +1,4 @@
-package pantallas;
+package enumeradores;
 
 public enum ScreenType {
 	MENU,
