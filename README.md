@@ -21,6 +21,8 @@ _Not Hotline Miami_ es un videojuego desarrollado con [libGDX](https://libgdx.co
 ## Cómo ejecutar
 
 1. **Requisitos**: Java 8+ y Gradle (o usar el wrapper incluido).
-2. **Compilar y ejecutar**:
+2. **Instalación**: Para instalarlo se puede clonar el repositorio a través de las opciones provistas por GitHub.
+3. **Compilar y ejecutar**: Dentro de la carpeta del proyecto, ejecutar el siguiente comando.
    ```sh
    ./gradlew lwjgl3:run
+   ```
