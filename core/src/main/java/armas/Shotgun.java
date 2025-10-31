@@ -3,9 +3,9 @@ package armas;
 import java.util.Random;
 
 import armas.proyectiles.Bullet;
-import logica.AssetsLoader;
-import pantallas.PantallaJuego;
-import personajes.Jugador;
+import logica.GameWorld;
+import logica.assets.AssetManager;
+import personajes.Player;
 
 public class Shotgun extends Weapon {
 
@@ -13,11 +13,11 @@ public class Shotgun extends Weapon {
 		super("Shotgun",
 				3f, 											// cadencia
 				8, 												// municion
-				AssetsLoader.getInstancia().getDisparoSound());	// sonido
+				AssetManager.getInstancia().getDisparoSound());	// sonido
 	}
 
 	@Override
-	public void disparar(Jugador nave, PantallaJuego juego, float delta) {
+	public void disparar(Player nave, GameWorld juego, float delta) {
 		actualizar(delta);
         
 		// sin balas
@@ -31,8 +31,8 @@ public class Shotgun extends Weapon {
 	
 	//crea la dispersion de las balas de la escopeta con direccion respecto al jugador
 	@Override
-	public void crearProyectil(Jugador nave, PantallaJuego juego) {
-        float radians = (float) Math.toRadians(nave.getRotacion() + 90);
+	public void crearProyectil(Player nave, GameWorld juego) {
+        float radians = (float) Math.toRadians(nave.getRotation() + 90);
         float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
         float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;
         float length = nave.getSpr().getHeight() / 2;
@@ -48,16 +48,17 @@ public class Shotgun extends Weapon {
 
         for (int i = 0; i < pellets; i++) {
             // Ángulo con desviación aleatoria
-            float angle = nave.getRotacion() + (r.nextFloat() * spread * 2 - spread); // -15 a +15 grados
+            float angle = nave.getRotation() + (r.nextFloat() * spread * 2 - spread); // -15 a +15 grados
 
             Bullet bala = new Bullet(
                 bulletX, bulletY,								// posicion de la bala
                 angle,                     						// dirección de la bala
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
-                AssetsLoader.getInstancia().getBalaTexture()	// textura de la bala
+                AssetManager.getInstancia().getBalaTexture()	// textura de la bala
             );
-            juego.getBulletManager().add(bala);
-            
+
+            juego.getGameManager().getBulletManager().add(bala);
+      
         }
         getSoundBala().play(0.1f);
     }

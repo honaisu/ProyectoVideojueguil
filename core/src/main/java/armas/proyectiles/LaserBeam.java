@@ -5,12 +5,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.RayHitbox;
-import personajes.Jugador;
+import personajes.Player;
 
 
 public class LaserBeam {
-
-    private final Jugador nave;
+    private final Player nave;
     private final RayHitbox hitbox;
     private boolean destroyed = false;
 
@@ -21,17 +20,17 @@ public class LaserBeam {
     //TODO borrar
     public ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    public LaserBeam(Jugador nave, float ancho, Texture textura, int num) {
+    public LaserBeam(Player nave, float ancho, Texture textura, int num) {
         this.nave = nave;
 
-        float ang = nave.getRotacion() + 90f;
+        float ang = nave.getRotation() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
 
         this.hitbox = new RayHitbox(muzzle[0], muzzle[1], 1f, ancho, ang, textura, num);
     }
     
     //TODO revisar para reutilizar este metodo para otras armas
-    private static float[] calcularMuzzle(Jugador nave, float ang) {
+    private static float[] calcularMuzzle(Player nave, float ang) {
         float cx = nave.getSpr().getX() + nave.getSpr().getWidth() / 2f;
         float cy = nave.getSpr().getY() + nave.getSpr().getHeight() / 2f;
         float length = nave.getSpr().getHeight() / 2f;
@@ -58,7 +57,7 @@ public class LaserBeam {
         if (destroyed) return;
 
         // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
-        float ang = nave.getRotacion() + 90f;
+        float ang = nave.getRotation() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
         hitbox.setTransform(muzzle[0], muzzle[1], ang);
 

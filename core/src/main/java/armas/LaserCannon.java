@@ -1,9 +1,9 @@
 package armas;
 
 import armas.proyectiles.LaserBeam;
-import logica.AssetsLoader;
-import pantallas.PantallaJuego;
-import personajes.Jugador;
+import logica.GameWorld;
+import logica.assets.AssetManager;
+import personajes.Player;
 
 public class LaserCannon extends Weapon {
 
@@ -17,11 +17,11 @@ public class LaserCannon extends Weapon {
         super("Laser Cannon",
         		1.8f,
         		15,
-        		AssetsLoader.getInstancia().getLaserGunSound());
+        		AssetManager.getInstancia().getLaserGunSound());
     }
 
     @Override
-    public void disparar(Jugador nave, PantallaJuego pantalla, float delta) {
+    public void disparar(Player nave, GameWorld pantalla, float delta) {
         // avanza cooldown base
         actualizar(delta);
 
@@ -37,13 +37,11 @@ public class LaserCannon extends Weapon {
     }
 
 	@Override
-	public void crearProyectil(Jugador nave, PantallaJuego juego) {
-		LaserBeam rayo = new LaserBeam(nave, anchoLaser, AssetsLoader.getInstancia().getLaserContTexture(), estiloRayo);
+	public void crearProyectil(Player nave, GameWorld juego) {
+		LaserBeam rayo = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), estiloRayo);
 		
 		rayo.configurarPulso(duracionPulso); // fija TTL del pulso
-		juego.agregarLaser(rayo);
 		
+		juego.getGameManager().getLaserManager().add(rayo);
 	}
-    
-    
 }

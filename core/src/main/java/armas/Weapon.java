@@ -2,8 +2,9 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 
-import pantallas.PantallaJuego;
-import personajes.Jugador;
+import logica.GameWorld;
+import pantallas.juego.GameScreen;
+import personajes.Player;
 
 //Clase Abstracta Arma generica
 public abstract class Weapon {
@@ -21,18 +22,17 @@ public abstract class Weapon {
         this.municionMax = municionMax;
         this.municion = municionMax;
         this.soundBala = soundBala;
-        
         this.tiempoUltDisp = cadencia; //para que dispare instantaneamente el primer disparo
     }
     
     // metodo abstracto para disparar un arma
-    public abstract void disparar(Jugador nave, PantallaJuego juego, float delta);
+    public abstract void disparar(Player nave, GameWorld juego, float delta);
     
     // metodo abstracto para crear el proyectil para cada arma
-    public abstract void crearProyectil(Jugador nave, PantallaJuego juego);
+    public abstract void crearProyectil(Player nave, GameWorld juego);
     
     
-    public void restarMunicion(Jugador nave, PantallaJuego juego, float delta) {
+    public void restarMunicion(Player nave, GameWorld juego, float delta) {
     	tiempoUltDisp += delta;
         if (tiempoUltDisp >= cadencia) {
             crearProyectil(nave, juego);

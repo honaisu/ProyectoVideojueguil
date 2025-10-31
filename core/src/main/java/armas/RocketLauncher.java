@@ -1,8 +1,8 @@
 package armas;
 
-import logica.AssetsLoader;
-import pantallas.PantallaJuego;
-import personajes.Jugador;
+import logica.GameWorld;
+import logica.assets.AssetManager;
+import personajes.Player;
 
 
 public class RocketLauncher extends Weapon {
@@ -11,17 +11,17 @@ public class RocketLauncher extends Weapon {
 		super("Rocket Launcher",
 				0.3f,
 				4,
-				AssetsLoader.getInstancia().getDisparoSound());
+				AssetManager.getInstancia().getDisparoSound());
 	}
 
 	@Override
-	public void disparar(Jugador nave, PantallaJuego juego, float delta) {
+	public void disparar(Player nave, GameWorld juego, float delta) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void crearProyectil(Jugador nave, PantallaJuego juego) {
+	public void crearProyectil(Player nave, GameWorld juego) {
 		// TODO Auto-generated method stub
 		
 	}

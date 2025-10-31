@@ -1,10 +1,9 @@
 package armas;
 
 import armas.proyectiles.LaserBeam;
-import logica.AssetsLoader;
-import pantallas.PantallaJuego;
-import personajes.Jugador;
-
+import logica.GameWorld;
+import logica.assets.AssetManager;
+import personajes.Player;
 
 public class Laser extends Weapon {
     
@@ -18,11 +17,11 @@ public class Laser extends Weapon {
         super("Laser Gun",
         		0.08f,
         		60,
-        		AssetsLoader.getInstancia().getLaserContSound());
+        		AssetManager.getInstancia().getLaserContSound());
     }
     // Disparo “pulso” como dijo benjoid
     @Override
-    public void disparar(Jugador nave, PantallaJuego pantalla, float delta) {
+    public void disparar(Player nave, GameWorld juego, float delta) {
     	// avanzar cooldown
         this.actualizar(delta);
 
@@ -31,10 +30,10 @@ public class Laser extends Weapon {
         if (getMunicion() <= 0) return;
 
         // consumir 1 unidad
-        restarMunicion(nave, pantalla, delta);
+        restarMunicion(nave, juego, delta);
 
         // crear el rayo y registrarlo como un “disparo” breve
-        crearProyectil(nave, pantalla);
+        crearProyectil(nave, juego);
 
         // sonido y reinicio de cadencia
         getSoundBala().play(0.35f);
@@ -44,13 +43,10 @@ public class Laser extends Weapon {
 
     //Construcción del proyectil, similar a crearBala() de metralla (ashprita si benjoid, ojala sirva u_u)
     @Override
-    public void crearProyectil(Jugador nave, PantallaJuego juego) {    	
-        LaserBeam pulso = new LaserBeam(nave, anchoLaser, AssetsLoader.getInstancia().getLaserContTexture(), 1);
+    public void crearProyectil(Player nave, GameWorld juego) {    	
+        LaserBeam pulso = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), 1);
         pulso.configurarPulso(ttlPulso); // se apaga solo al vencer el TTL
         
-        juego.agregarLaser(pulso); //TODO revisar esto
-        
+        juego.getGameManager().getLaserManager().add(pulso);
     }
-
-
 }

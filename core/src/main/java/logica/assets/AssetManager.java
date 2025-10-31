@@ -1,4 +1,4 @@
-package logica;
+package logica.assets;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -8,20 +8,19 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import personajes.SkinJugador;
-
 /**
  * Clase encargada de poder tener todas las texturas, sonidos y música del juego.
- * TODO por seguridad cambiar los parámetros a private en vez de public
  * <p>
  * Esta clase es un <b>SINGLETON</b>.
  */
-public class AssetsLoader {
-	private static AssetsLoader instancia;
+public class AssetManager {
+	private static AssetManager instancia;
 	
 	// Jugador
-    private Map<SkinJugador, Texture> skinJugadorTextures;	
+	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
+    private Map<SkinJugador, Texture> skinJugadorTextures;
     
+    // TODO Considerar crear TextureManager? (Extensible?)
     // Enemigos
     private Texture enemigoTexture;
     // Proyectiles
@@ -30,6 +29,7 @@ public class AssetsLoader {
     private Texture laserContTexture;
     private Texture laserGunTexture;
     
+    // TODO Considerar crear SoundMusicManager? (Extensible?)
     // Sonidos y Música
     private Sound explosionSound;
     private Sound hurtSound;
@@ -42,14 +42,14 @@ public class AssetsLoader {
     private Music musicaTutorial;
 
     
-    private AssetsLoader() {}
+    private AssetManager() {}
     
     /**
      * Método que consigue AL AssetsLoader
      * @return AssetsLoader
      */
-    public static AssetsLoader getInstancia() {
-        if (instancia == null) instancia = new AssetsLoader();
+    public static AssetManager getInstancia() {
+        if (instancia == null) instancia = new AssetManager();
         return instancia;
     }
 
@@ -62,6 +62,8 @@ public class AssetsLoader {
         // texturas
         balaTexture = new Texture(Gdx.files.internal("Bala.png"));
         enemigoTexture = new Texture(Gdx.files.internal("Mono.png"));
+        swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
+
         swingHitboxTexture = new Texture(Gdx.files.internal("semicirculo.png"));
         laserContTexture = new Texture(Gdx.files.internal("laserCont.png"));
         laserGunTexture = new Texture(Gdx.files.internal("laserGun.png"));
@@ -78,15 +80,14 @@ public class AssetsLoader {
         // musica
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/musicaDoom.mp3"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(0.03f);
     }
     
-    public void loadTexturesJugador() {
+    private void loadTexturesJugador() {
     	skinJugadorTextures = new EnumMap<>(SkinJugador.class);
         // Se itera sobre todos los valores de Skin
         for (SkinJugador skin : SkinJugador.values()) {
             // Se crea la textura en base a la ruta de la skin :3
-            Texture textura = new Texture(Gdx.files.internal(skin.getRutaTextura()));
+            Texture textura = new Texture(Gdx.files.internal(skin.getRuta()));
             // Se guarda en el mapa de enums
             skinJugadorTextures.put(skin, textura);
         }

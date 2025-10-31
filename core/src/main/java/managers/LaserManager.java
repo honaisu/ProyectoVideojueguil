@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import armas.proyectiles.LaserBeam;
 
 public class LaserManager {
-private final ArrayList<LaserBeam> lasers = new ArrayList<>();
+	private final ArrayList<LaserBeam> lasers = new ArrayList<>();
     
     // Agrega un nuevo swing
     public void add(LaserBeam s) {

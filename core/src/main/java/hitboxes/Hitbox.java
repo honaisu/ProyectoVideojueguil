@@ -15,6 +15,11 @@ public abstract class Hitbox {
 		this.y = y;
 	}
 	
+	public Hitbox(float x, float y, Sprite sprite) {
+		this(x, y);
+		this.sprite = sprite;
+	}
+	
 	/**
 	 * Verifica la colision de un objeto de tipo BallHitbox
 	 * @param BallHitbox -> puede ser un asteroide
@@ -56,5 +61,4 @@ public abstract class Hitbox {
 
 	public Sprite getSpr() { return sprite; }
 	public void setSpr(Sprite spr) { this.sprite = spr; }
-	
 }

@@ -8,15 +8,14 @@ import armas.proyectiles.Bullet;
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Swing;
 import hitboxes.BallHitbox;
-import logica.AssetsLoader;
-import logica.NotHotlineMiami;
+import logica.MainGame;
+import logica.assets.AssetManager;
 import personajes.Jugador;
+import personajes.Player;
 
 public class CollisionManager {
 	private final Sound explosionSound;
     private final int scorePerAsteroid;
-    
-    private NotHotlineMiami game;
 
     /**
      * @param explosionSound sonido que se reproduce al destruir asteroide (puede ser null)
@@ -27,16 +26,15 @@ public class CollisionManager {
         this.scorePerAsteroid = scorePerAsteroid;
     }
     
-    public CollisionManager(NotHotlineMiami game) {
-    	this.game = game;
-        this.explosionSound = AssetsLoader.getInstancia().getExplosionSound();
+    public CollisionManager() {
+        this.explosionSound = AssetManager.getInstancia().getExplosionSound();
         this.scorePerAsteroid = 10; // TODO los asteroides probablemente manejen sus propios puntajes
     }
 
     /**
      * Resuelve colisiones y devuelve la cantidad total de puntos ganados en esta invocación.
      */
-    public int handleCollisions(Jugador nave, BulletManager bm, MeleeManager mm, LaserManager lm, AsteroidManager am) {
+    public int handleCollisions(Player nave, BulletManager bm, MeleeManager mm, LaserManager lm, AsteroidManager am) {
         int totalScore = 0;
 
         ArrayList<Bullet> bullets = bm.getBullets();
@@ -76,7 +74,7 @@ public class CollisionManager {
         for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
             BallHitbox a = asteroids.get(ai);
             if (nave.checkCollision(a)) {
-            	nave.reaccion(a);
+            	//nave.bounce(a);
                 am.removeAsteroid(ai);
             }
         }
@@ -87,18 +85,18 @@ public class CollisionManager {
                 BallHitbox a = asteroids.get(ai);
                 if (s.getHitbox().checkCollision(a)) {
                     am.removeAsteroid(ai);
-                    if (explosionSound != null) explosionSound.play(game.getSfxVolume());
+                    if (explosionSound != null) explosionSound.play();
                     totalScore += scorePerAsteroid;
                 }
             }
         }
-     // 3) Melee (Swings) vs Asteroides
+        // 3) Melee (Swings) vs Asteroides
         for (LaserBeam l : lm.getLasers()) {
             for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
                 BallHitbox a = asteroids.get(ai);
                 if (l.getHitbox().checkCollision(a)) {
                     am.removeAsteroid(ai);
-                    if (explosionSound != null) explosionSound.play(game.getSfxVolume());
+                    if (explosionSound != null) explosionSound.play();
                     totalScore += scorePerAsteroid;
                 }
             }

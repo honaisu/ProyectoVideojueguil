@@ -1,18 +1,21 @@
 package pantallas.opciones;
 
-public enum OpcionConfiguracion {
+import interfaces.NavigableOption;
+
+public enum ConfigurationOption implements NavigableOption {
 	VOLUMEN_GENERAL("Volumen General"),
 	VOLUMEN_MUSICA("Volumen Música"),
 	VOLUMEN_EFECTOS("Volumen Efectos"),
 	GUARDAR("Guardar"),
 	VOLVER("Volver");
 	
-	private String nombre;
+	private final String nombre;
 	
-	OpcionConfiguracion(String nombre) {
+	ConfigurationOption(String nombre) {
 		this.nombre = nombre;
 	}
 	
+	@Override
 	public String getNombre() {
 		return nombre;
 	}
