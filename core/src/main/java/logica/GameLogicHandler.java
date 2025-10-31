@@ -1,9 +1,13 @@
-package managers;
+package logica;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
+import managers.EnemyManager;
+import managers.CollisionManager;
+import managers.ProjectileManager;
+import personajes.Player;
 
 /**
  * Clase encargada de mantener instancias de otros managers encargados de la lógica del juego.
@@ -13,18 +17,18 @@ public class GameLogicHandler {
     // TODO cambiar a EnemyManager o algo (yo creo)
     // Pensaba que pertenecía a los otros managers y nada que ver
     // Son los enemigos xD
-    private final AsteroidManager asteroidManager;
+    private final EnemyManager enemyManager;
     // No es un strategy :c
     private final ProjectileManager proyectilManager;
     
     public GameLogicHandler() {
-    	this.asteroidManager = new AsteroidManager();
+    	this.enemyManager = new EnemyManager();
     	this.collisionManager = new CollisionManager();
     	this.proyectilManager = new ProjectileManager();
     }
     
-    public AsteroidManager getAsteroidManager() {
-    	return asteroidManager;
+    public EnemyManager getAsteroidManager() {
+    	return enemyManager;
     }
 	
 	public ProjectileManager getProyectilManager() {
@@ -36,16 +40,19 @@ public class GameLogicHandler {
     }
 
 	public void render(SpriteBatch batch) {
-		asteroidManager.render(batch);
+		enemyManager.render(batch);
 		proyectilManager.draw(batch);
 	}
 	
 	public void update(float delta, Rectangle r, float rotation) {
 		proyectilManager.update(delta, r, rotation);
+		enemyManager.update(delta);
 	}
 
-	public void handleCollisions() {
-		//collisionManager.handleCollisions(proyectilManager, asteroidManager);
+	public void handleCollisions(Player player) {
+		// TODO Eliminar listas. O ver alternativas para manejar las colisiones
+		// (No se me ocurre ninguna por el momento)
+		collisionManager.handleCollisions(player, proyectilManager.getProjectiles(), enemyManager.getEnemies());
 	}
 
 	public void addProjectile(Projectile projectile) {

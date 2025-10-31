@@ -22,12 +22,17 @@ public class ProjectileManager {
 		return proyectiles.remove(proyectil);
 	}
 	
+	public Projectile removeActual() {
+		return proyectiles.remove(0);
+	}
+	
 	public Projectile getActual() {
 		if (proyectiles.isEmpty()) return null;
 		return proyectiles.get(0);
 	}
 	
 	public void update(float delta, Rectangle r, float rotation) {
+		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
 		Iterator<Projectile> iterator = proyectiles.iterator();
 
 	    while (iterator.hasNext()) {
@@ -56,4 +61,8 @@ public class ProjectileManager {
 	public boolean isEmpty() {
 		return proyectiles.isEmpty();
 	}
+	
+	public List<Projectile> getProjectiles() {
+        return proyectiles;
+    }
 }

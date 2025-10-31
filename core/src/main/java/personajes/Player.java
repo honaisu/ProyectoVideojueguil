@@ -127,7 +127,7 @@ public class Player extends Hitbox {
     public Projectile shoot(float delta) {
     	if (hurted) return null;
     	
-    	return weapon.disparar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f);
+    	return weapon.atacar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f);
     }
     
     private void borderBounce(float positionX, float positionY) {
