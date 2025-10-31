@@ -1,9 +1,7 @@
 package hitboxes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
 import managers.AssetManager;
@@ -11,11 +9,11 @@ import managers.AssetManager;
 public class RayHitbox extends Hitbox {
     private float largo;
     private float ancho;
-    private float angulo;
+    private float angle;
 
-    private boolean visible = true;
     private boolean activo = true;
 
+    	/*
     public RayHitbox(float x, float y, float largo, float ancho, float angulo, Texture tx, int num) {
     	super(x,y, new Sprite(AssetManager.getInstancia().getLaserContTexture()));
     	
@@ -32,24 +30,25 @@ public class RayHitbox extends Hitbox {
         if (num == 1) getSpr().scale(3f); //culpa benjoid
         if (num == 2) getSpr().scale(10); 
         setToScreenEnd();
-    }
+    }*/
     
     public RayHitbox(Rectangle r, float angle, boolean isThin) {
     	super(r.getX(), r.getY(), new Sprite(AssetManager.getInstancia().getLaserContTexture()));
     	this.ancho = r.getWidth();
     	this.largo = r.getHeight();
-    	this.angulo = angle;
+    	this.angle = angle;
     	
     	if (isThin) getSpr().scale(3f);
     	else getSpr().scale(10f);
+    	
     	this.setToScreenEnd();
     }
 
     // Recalcula el largo hasta el borde de la pantalla en la dirección actual
-    public void setToScreenEnd() {
-        float radianes = (float) Math.toRadians(angulo);
-        float dx = (float) Math.cos(radianes);
-        float dy = (float) Math.sin(radianes);
+    private void setToScreenEnd() {
+        float radians = (float) Math.toRadians(angle);
+        float dx = (float) Math.cos(radians);
+        float dy = (float) Math.sin(radians);
 
         float W = Gdx.graphics.getWidth();
         float H = Gdx.graphics.getHeight();
@@ -72,7 +71,7 @@ public class RayHitbox extends Hitbox {
     public void setTransform(float x, float y, float angulo) {
         setX(x);
         setY(y);
-        this.angulo = angulo;
+        this.angle = angulo;
 
         // Posición básica
         getSpr().setRotation(angulo);
@@ -83,12 +82,11 @@ public class RayHitbox extends Hitbox {
     }
     
     // Control básico
-    public void setVisible(boolean visible) { this.visible = visible; }
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
 
     // Accesores
-    public float getAnguloDeg() { return angulo; }
+    public float getAnguloDeg() { return angle; }
     public float getLargo() { return largo; }
     public float getAncho() { return ancho; }
 }

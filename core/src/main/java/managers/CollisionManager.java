@@ -1,9 +1,14 @@
 package managers;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.badlogic.gdx.audio.Sound;
 
 import armas.proyectiles.Projectile;
-import hitboxes.Hitbox;
+import hitboxes.BallHitbox;
+import personajes.Enemy;
+import personajes.Player;
 
 public class CollisionManager {
 	private final Sound explosionSound;
@@ -97,21 +102,32 @@ public class CollisionManager {
         return totalScore;
     }*/
     
-    public int handleCollisions(ProjectileManager proyectilManager, AsteroidManager enemyManager) {
+    public int handleCollisions(Player player, List<Projectile> projectiles, List<Enemy> enemies) {
     	int totalScore = 0;
     	
-    	while (!proyectilManager.isEmpty()) {
-    		Projectile proyectil = proyectilManager.getActual();
-    		// TODO Remover completamente las listas. Muy mala práctica
-    		for (Hitbox enemy : enemyManager.getAsteroids()) {    			
-    			if (proyectil.getHitbox().checkCollision(enemy)) {
-    				enemyManager.remove(enemy);
-    				if (explosionSound != null) explosionSound.play();
-    				totalScore += scorePerAsteroid;
-    			}
-    		}
-    	}
-    	
-    	return totalScore;
+        // Los iteradores se utilizan para poder... iterar...
+        Iterator<Projectile> projectileIterator = projectiles.iterator();
+        while (projectileIterator.hasNext()) {
+            Projectile projectile = projectileIterator.next();
+            
+            Iterator<Enemy> enemyIterator = enemies.iterator();
+            while (enemyIterator.hasNext()) {
+                BallHitbox asteroid = enemyIterator.next();
+                
+                // Comprobamos la colisión
+                if (!projectile.getHitbox().checkCollision(asteroid)) continue;
+                
+                if (explosionSound != null) explosionSound.play(0.1f);
+                totalScore += scorePerAsteroid;
+                
+                enemyIterator.remove();
+                projectileIterator.remove();
+                
+                // Rompemos el bucle porque el proyectil ya fue destruido
+                break; 
+            }
+        }
+        
+        return totalScore;
     }
 }

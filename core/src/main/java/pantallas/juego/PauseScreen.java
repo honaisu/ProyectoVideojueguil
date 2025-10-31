@@ -37,7 +37,7 @@ public class PauseScreen extends NavigableScreen {
 		INavigableOption opcionActual = navegador.getCurrentSelection();
 		
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-        	if (opcionActual.equals(EPauseOption.CONTINUAR)) {        		
+        	if (opcionActual.ordinal() == EPauseOption.CONTINUAR.ordinal()) {	
         		this.resume();
         	} else {
         		getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);

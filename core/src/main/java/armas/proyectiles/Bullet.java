@@ -1,7 +1,6 @@
 package armas.proyectiles;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -27,9 +26,9 @@ public class Bullet extends Projectile {
         this.xSpeed = (float) Math.cos(radians) * speed;
         this.ySpeed = (float) Math.sin(radians) * speed;
 	}
-	
+	/*
     public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
-    	super(new BallHitbox(x, y, (int) (tx.getWidth() / 2)));
+    	super(new BallHitbox(x, y, tx.getWidth() / 2, rotacion));
 
     	// Ajusta el origen y la rotación del sprite dentro del hitbox
         this.getHitbox().getSpr().setOriginCenter();
@@ -41,7 +40,7 @@ public class Bullet extends Projectile {
         // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
         this.xSpeed = (float) Math.cos(radians) * speed;
         this.ySpeed = (float) Math.sin(radians) * speed;
-    }
+    }*/
 
     //movimiento de la bala y colision con el borde de la ventana
     public void update(float delta, float x, float y, float rotation) {
