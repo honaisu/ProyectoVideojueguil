@@ -5,6 +5,7 @@ package interfaces;
  * Interfaz de navegación. Provee direcciones hacia las que se puede mover una selección
  * junto con un método default para navegar.
  */
+@Deprecated
 public interface INavigation {
 	/**
 	 * Método encargado de navegar menús de manera fácil e intuitiva.
