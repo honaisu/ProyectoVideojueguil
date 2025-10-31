@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
-import enumeradores.SkinJugador;
+import armas.proyectiles.Projectile;
+import enumeradores.ESkinJugador;
 import hitboxes.Hitbox;
 import logica.AnimationFactory;
 import managers.AssetManager;
@@ -39,7 +40,7 @@ public class Player extends Hitbox {
 	private Weapon weapon = new Melee();
 	
 	public Player(float x, float y) {
-		super(x, y, SkinJugador.JUGADOR_ORIGINAL.crearSprite());
+		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
 		
 		this.life = 3;
 		this.xVel = 0f;
@@ -47,9 +48,8 @@ public class Player extends Hitbox {
 		this.rotation = 0f;
 	    
 		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animation = AnimationFactory.createJugadorAnimation(SkinJugador.JUGADOR_ORIGINAL);
+    	this.animation = AnimationFactory.createJugadorAnimation(ESkinJugador.JUGADOR_ORIGINAL);
     	
-    	getSpr().scale(1f);
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	getSpr().setOriginCenter();
 	}
@@ -123,8 +123,10 @@ public class Player extends Hitbox {
         yVel *= friction;
     }
     
-    public void shoot(float delta) {
-    	if (hurted) return;
+    public Projectile shoot(float delta) {
+    	if (hurted) return null;
+    	
+    	return weapon.disparar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f);
     }
     
     private void borderBounce(float positionX, float positionY) {
@@ -156,5 +158,10 @@ public class Player extends Hitbox {
 	
 	public int getLife() {
 		return life;
+	}
+
+	public boolean hasWeapon() {
+		if (weapon.getMunicion() > 0) return true;
+		return false;
 	}
 }

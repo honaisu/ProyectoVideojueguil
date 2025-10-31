@@ -4,8 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 
-public class RayHitbox extends Hitbox{
+import managers.AssetManager;
+
+public class RayHitbox extends Hitbox {
     private float largo;
     private float ancho;
     private float angulo;
@@ -14,23 +17,32 @@ public class RayHitbox extends Hitbox{
     private boolean activo = true;
 
     public RayHitbox(float x, float y, float largo, float ancho, float angulo, Texture tx, int num) {
-    	super(x,y);
+    	super(x,y, new Sprite(AssetManager.getInstancia().getLaserContTexture()));
     	
         this.largo = largo;
         this.ancho = ancho;
         this.angulo = angulo;
 
-        setSpr(new Sprite(tx));
-        getSpr().setSize(largo, ancho);
-        
+        getSpr().setSize(largo, ancho);        
         getSpr().setOrigin(0, ancho /2f );
         getSpr().setRotation(angulo);
         getSpr().setPosition(x, y - ancho /2f );
         
         //idea de que si es 1, es el rayo delgado, si es 2, es el rayo grueso.
-        if(num == 1) {getSpr().scale(3f);}//culpa benjoid
-        if(num == 2) {getSpr().scale(10);}//
+        if (num == 1) getSpr().scale(3f); //culpa benjoid
+        if (num == 2) getSpr().scale(10); 
         setToScreenEnd();
+    }
+    
+    public RayHitbox(Rectangle r, float angle, boolean isThin) {
+    	super(r.getX(), r.getY(), new Sprite(AssetManager.getInstancia().getLaserContTexture()));
+    	this.ancho = r.getWidth();
+    	this.largo = r.getHeight();
+    	this.angulo = angle;
+    	
+    	if (isThin) getSpr().scale(3f);
+    	else getSpr().scale(10f);
+    	this.setToScreenEnd();
     }
 
     // Recalcula el largo hasta el borde de la pantalla en la dirección actual
@@ -54,7 +66,6 @@ public class RayHitbox extends Hitbox{
         
         // Actualizar sprite
         getSpr().setSize(largo, ancho);
-        
     }
 
     // Sin tiempo de vida: solo sincroniza posición/ángulo y recalcula hasta el borde

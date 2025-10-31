@@ -8,7 +8,7 @@ import logica.MainGame;
  * A su vez, provee un método opcional encargado de poder ejecutar alguna acción dentro del juego.
  * (Casos como, por ejemplo, cambiar la pantalla actual).
  */
-public interface NavigableOption {
+public interface INavigableOption {
 	public String getNombre();
 	public int ordinal();
 	

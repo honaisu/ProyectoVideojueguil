@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;               
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import enumeradores.ScreenType;
+import enumeradores.EScreenType;
 import logica.MainGame;
 import managers.AssetManager;
 
@@ -92,7 +92,7 @@ public class TutorialScreen extends BaseScreen {
             case FIN:
                 if (keyCooldown <= 0f &&
                         (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-                    getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+                    getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
                     musicaTutorial.stop();
                 }
                 break;

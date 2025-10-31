@@ -4,30 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import hitboxes.BallHitbox;
-import interfaces.Proyectil;
+import hitboxes.Hitbox;
 
 //Clase que representa una balla dentro del juego
 
-public class Bullet implements Proyectil {
-	private BallHitbox hitbox;
-	
+public class Bullet extends Projectile {
 	private float xSpeed;					// velocidad de la bala eje x
 	private float ySpeed;					// velocidad de la bala eje y
 	private boolean destroyed = false;		// ver si la bala esta destruida
-	
-	//TODO borrar
-	public ShapeRenderer shapeRenderer = new ShapeRenderer();
 	    
     public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
-    	
-    	this.hitbox = new BallHitbox(x, y, (int) (tx.getWidth() / 2), 0, 0, tx);
+    	super(new BallHitbox(x, y, (int) (tx.getWidth() / 2)));
     	
     	// Ajusta el origen y la rotación del sprite dentro del hitbox
-        this.hitbox.getSpr().setOriginCenter();
-        this.hitbox.getSpr().setRotation(rotacion);
+        this.getHitbox().getSpr().setOriginCenter();
+        this.getHitbox().getSpr().setRotation(rotacion);
 
         // Convertir rotación a radianes para calcular la dirección del movimiento
         float radians = (float) Math.toRadians(rotacion + 90);
@@ -38,9 +31,10 @@ public class Bullet implements Proyectil {
     }
 	
     //movimiento de la bala y colision con el borde de la ventana
-    public void update() {
+    @Override
+    public void update(float delta, float x, float y, float rotation) {
     	// Mueve el sprite del hitbox
-        Sprite spr = hitbox.getSpr();
+        Sprite spr = getHitbox().getSpr();
         spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
 
         // Comprueba si la bala ha salido de los límites de la pantalla
@@ -50,13 +44,18 @@ public class Bullet implements Proyectil {
         }
     }
     
+    @Override
     public void draw(SpriteBatch batch) {
-    	hitbox.draw(batch);
+    	getHitbox().draw(batch);
+    }
+    
+    public void destroy() {
+        destroyed = true;
     }
     
     //colision con un asteroide
-    public boolean checkCollision(BallHitbox b2) {
-    	if (hitbox.checkCollision(b2)) {
+    public boolean checkCollision(Hitbox b2) {
+    	if (getHitbox().checkCollision(b2)) {
             this.destroyed = true; // La bala se destruye al colisionar
             return true;
         }
@@ -64,9 +63,4 @@ public class Bullet implements Proyectil {
     }
     
     public boolean isDestroyed() { return destroyed; }
-
-	public BallHitbox getHitbox() {
-		return hitbox;
-	}
-    
 }

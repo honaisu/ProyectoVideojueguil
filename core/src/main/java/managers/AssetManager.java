@@ -8,7 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import enumeradores.SkinJugador;
+import enumeradores.ESkinJugador;
 
 /**
  * Clase encargada de poder tener todas las texturas, sonidos y música del juego.
@@ -19,7 +19,7 @@ public class AssetManager {
 	private static AssetManager instancia;
 	// Jugador
 	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
-    private Map<SkinJugador, Texture> skinJugadorTextures;
+    private Map<ESkinJugador, Texture> skinJugadorTextures;
     
     // TODO Considerar crear TextureManager? (Extensible?)
     // Enemigos
@@ -63,7 +63,7 @@ public class AssetManager {
         // texturas
         balaTexture = new Texture(Gdx.files.internal("Bala.png"));
         enemigoTexture = new Texture(Gdx.files.internal("Mono.png"));
-        swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
+        //swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
 
         swingHitboxTexture = new Texture(Gdx.files.internal("semicirculo.png"));
         laserContTexture = new Texture(Gdx.files.internal("laserCont.png"));
@@ -84,9 +84,9 @@ public class AssetManager {
     }
     
     private void loadTexturesJugador() {
-    	skinJugadorTextures = new EnumMap<>(SkinJugador.class);
+    	skinJugadorTextures = new EnumMap<>(ESkinJugador.class);
         // Se itera sobre todos los valores de Skin
-        for (SkinJugador skin : SkinJugador.values()) {
+        for (ESkinJugador skin : ESkinJugador.values()) {
             // Se crea la textura en base a la ruta de la skin :3
             Texture textura = new Texture(Gdx.files.internal(skin.getRuta()));
             // Se guarda en el mapa de enums
@@ -107,7 +107,7 @@ public class AssetManager {
     }
 
     // Jugador
-	public Texture getSkinTexture(SkinJugador skin) {
+	public Texture getSkinTexture(ESkinJugador skin) {
 		return skinJugadorTextures.get(skin);
 	}
 	

@@ -7,19 +7,19 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import interfaces.NavigableOption;
+import interfaces.INavigableOption;
 import logica.MainGame;
-import pantallas.opciones.MainMenuOption;
+import pantallas.opciones.EMainMenuOption;
 
 public class MainMenuScreen extends NavigableScreen {
 	public MainMenuScreen(MainGame game) {
-	    super(game, MainMenuOption.values());
+	    super(game, EMainMenuOption.values());
 	}
 
 	@Override
 	protected void update(float delta) {
 		navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-		NavigableOption opcionActual = navegador.getCurrentSelection();
+		INavigableOption opcionActual = navegador.getCurrentSelection();
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 			opcionActual.ejecutar(getGame());

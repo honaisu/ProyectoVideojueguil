@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
-import enumeradores.SkinJugador;
+import enumeradores.ESkinJugador;
 import managers.AssetManager;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -33,7 +33,7 @@ public class AnimationFactory {
 		return animacion;
 	}
 	
-	public static Animation<TextureRegion> createJugadorAnimation(SkinJugador skin) {
+	public static Animation<TextureRegion> createJugadorAnimation(ESkinJugador skin) {
 		Texture jugadorSheet = AssetManager.getInstancia().getSkinTexture(skin);
 		int filas = 1;
 		int columnas = 4;

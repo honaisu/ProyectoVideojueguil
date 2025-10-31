@@ -1,8 +1,8 @@
 package enumeradores;
 
-import interfaces.AssetRoute;
+import interfaces.IAssetRoute;
 
-public enum GameSound implements AssetRoute {
+public enum EGameSound implements IAssetRoute {
 	EXPLOSION("audios/explosionSound.ogg"),
 	HURT("audios/popSound.mp3"),
 	SHOOT("audios/danoSound.mp3"),
@@ -10,7 +10,7 @@ public enum GameSound implements AssetRoute {
 	
 	private String ruta;
 	
-	GameSound(String ruta) {
+	EGameSound(String ruta) {
 		this.ruta = ruta;
 	}
 

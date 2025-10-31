@@ -1,26 +1,22 @@
 package pantallas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import logica.GameWorld;
-import logica.MainGame;
+import personajes.Player;
 
 public class HUDScreen {
-	public void draw(MainGame game, GameWorld world) {
-		game.getFont().getData().setScale(2f);
-        game.getFont().draw(game.getBatch(), "Vidas: " + world.getPlayer().getLife() + " Ronda: " + world.getPlayer().getRound(), 10, 30);
-        game.getFont().draw(game.getBatch(), "HighScore: " + game.getHighScore(), Gdx.graphics.getWidth() / 2 - 100, 30);
+	public void draw(SpriteBatch batch, BitmapFont font, Player player, int highScore) {
+		font.getData().setScale(2f);
+		font.draw(batch, "Vidas: " + player.getLife() + " Ronda: " + player.getRound(), 10, 30);
+        font.draw(batch, "HighScore: " + highScore, Gdx.graphics.getWidth() / 2 - 100, 30);
         
-        int municion = world.getPlayer().getWeapon().getMunicion();
-        int maxima = world.getPlayer().getWeapon().getMunicionMax();
-        game.getFont().draw(game.getBatch(), "Municion: " + municion + " / " + maxima,
-                Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
-        /* TODO FULL Modificar esto. Sobre todo con el 'instance of'.
-        if (player.getArma() != null && !(player.getArma() instanceof Melee)) {
-            int mun = player.getArma().getMunicion();
-            int max = player.getArma().getMunicionMax();
-            game.getFont().draw(batch, "Municion: " + mun + " / " + max,
-                    Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
-        }*/
+        if (player.hasWeapon()) {        	
+        	int municion = player.getWeapon().getMunicion();
+        	int maxima = player.getWeapon().getMunicionMax();
+        	font.draw(batch, "Municion: " + municion + " / " + maxima,
+        			Gdx.graphics.getWidth() - 300, Gdx.graphics.getHeight() - 20);
+        }
 	}
 }

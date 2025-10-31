@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import enumeradores.ScreenType;
+import enumeradores.EScreenType;
 import managers.AssetManager;
 import managers.ScreenManager;
 
@@ -40,7 +40,7 @@ public class MainGame extends Game {
 		AssetManager.getInstancia().load();
 		
         pantallaManager = new ScreenManager(this);
-        pantallaManager.cambiarPantalla(ScreenType.MENU);
+        pantallaManager.cambiarPantalla(EScreenType.MENU);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package logica;
 
-import pantallas.opciones.ConfigurationOption;
+import pantallas.opciones.EConfigurationOption;
 
 /**
  * Clase que sólo se encarga de manejar los valores del sonido.
@@ -25,7 +25,7 @@ public class Volumen {
     	this.sfx 	= sfx;
     }
     
-    public void adjustSoundValue(ConfigurationOption opcion, float cambio) {
+    public void adjustSoundValue(EConfigurationOption opcion, float cambio) {
         switch (opcion) {
             case VOLUMEN_GENERAL:
                 master = clamp01(master + cambio);

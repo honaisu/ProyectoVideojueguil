@@ -1,6 +1,9 @@
 package armas;
 
+import com.badlogic.gdx.math.Rectangle;
+
 import armas.proyectiles.Bullet;
+import armas.proyectiles.Projectile;
 import logica.GameWorld;
 import managers.AssetManager;
 import pantallas.juego.GameScreen;
@@ -9,15 +12,18 @@ import personajes.Player;
 //Clase para un arma escopeta
 
 public class HeavyMachineGun extends Weapon {
-
     public HeavyMachineGun() {
-        super("Heavy Machine Gun",
-        		0.2f,												// cadencia
-        		30, 											// municion
-        		AssetManager.getInstancia().getDisparoSound()); // sonido
+    	super(0.2f, 30);
+        super.setNombre("Heavy Machine Gun");
     }
     
-  //clase sobrescrita
+    public HeavyMachineGun(float cadencia, int municionMax) {
+    	super(cadencia, municionMax);
+    	super.setNombre("Heavy Machine Gun");
+    }
+    
+    //clase sobrescrita
+    /*
     @Override
     public void disparar(Player nave, GameWorld juego, float delta) {
         actualizar(delta);
@@ -26,30 +32,33 @@ public class HeavyMachineGun extends Weapon {
         if (getMunicion() <= 0) return;
         
         //restar municion por cadencia
-        restarMunicion(nave, juego, delta);
+        restarMunicion(nave);
         getSoundBala().play(0.1f);
         
         if (puedeDisparar()) reiniciarCooldown();
-    }
+    }*/
     
     //crea la bala de la metralleta con direccion respecto al jugador
     @Override
-    public void crearProyectil(Player nave, GameWorld juego) {
-        float radians = (float) Math.toRadians(nave.getRotation() + 90);
-        float centerX = nave.getSpr().getX() + nave.getSpr().getWidth() / 2;
-        float centerY = nave.getSpr().getY() + nave.getSpr().getHeight() / 2;
-        float length = nave.getSpr().getHeight() / 2;
+    public Projectile crearProyectil(Rectangle r, float rotation) {
+    	float radians = (float) Math.toRadians(rotation);
+        float centerX = r.getX() + r.getWidth() / 2;
+        float centerY = r.getY() + r.getHeight() / 2;
+        float length = r.getHeight() / 2;
 
         float bulletX = centerX + (float) Math.cos(radians) * length;
         float bulletY = centerY + (float) Math.sin(radians) * length;
 
         Bullet bala = new Bullet(
-        		bulletX, bulletY,								// posicion de la bala
-        		nave.getRotation(),								// dirección de la bala
-        		10f,											// velocidad levemente aleatoria
-        		AssetManager.getInstancia().getBalaTexture());	// textura de la bala
+        		// posicion de la bala
+        		bulletX, bulletY,								
+        		// dirección de la bala
+        		rotation,							
+        		// velocidad levemente aleatoria
+        		10f,											
+        		// textura de la bala
+        		AssetManager.getInstancia().getBalaTexture());	
         
-        juego.getGameManager().getBulletManager().add(bala);
+        return bala;
     }
-
 }

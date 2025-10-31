@@ -1,6 +1,6 @@
 package enumeradores;
 
-public enum ScreenType {
+public enum EScreenType {
 	MENU,
 	JUEGO,
 	PERSONALIZACION,

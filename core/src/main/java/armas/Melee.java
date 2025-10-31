@@ -1,23 +1,24 @@
 package armas;
 
+import com.badlogic.gdx.math.Rectangle;
+
+import armas.proyectiles.Projectile;
 import armas.proyectiles.Swing;
-import enumeradores.NameManager;
 import logica.GameWorld;
-import managers.AssetManager;
 import personajes.Player;
 
 //Clase para el arma cuerpo a cuerpo
 public class Melee extends Weapon {
-    private Swing swingActual;	//usa un proyectil arqueado
+	//usa un proyectil arqueado
+    private Swing swingActual;
 
     public Melee() {
-        super("Sword",
-        		0.8f,															// cadencia
-        		9999,														// municion
-        		AssetManager.getInstancia().getDisparoSound());	// sonido
+        super(0.8f, 9999);
+        super.setNombre("Melee");
     }
 
     //clase sobrescrita
+    /*
     @Override
     public void disparar(Player nave, GameWorld juego, float delta) {
         actualizar(delta);
@@ -37,21 +38,36 @@ public class Melee extends Weapon {
 
         float centerX = player.getSpr().getX() + player.getSpr().getWidth() / 2;
         float centerY = player.getSpr().getY() + player.getSpr().getHeight() / 2;
-        //float length = jug.spr.getHeight() / 2;
         
-        float length = player.getSpr().getHeight() / 2 + 20; // distancia delante del jugador
+        // distancia delante del jugador
+        float length = player.getSpr().getHeight() / 2 + 20; 
         
         float swingX = centerX + (float) Math.cos(radians) * length;
         float swingY = centerY + (float) Math.sin(radians) * length;
         
         getSoundBala().play(0.1f);
-        swingActual = new Swing(swingX, swingY, player);
+        float radio = 20 + player.getSpr().getHeight() / 2;
+        swingActual = new Swing(swingX, swingY, player.getRotation(), radio);
         // TODO Agregar Swing...
-        juego.getGameManager().getManager(NameManager.MELEE); // add Swing
-    }
+        // add Swing
+        juego.getGameManager().getProyectilManager().add(swingActual); 
+    }*/
 
     public Swing getSwingActual() {
         return swingActual;
     }
+
+	@Override
+	public Projectile crearProyectil(Rectangle r, float rotation) {
+		float radians = (float) Math.toRadians(rotation);
+		float centerX = r.getX() + r.getWidth() / 2;
+        float centerY = r.getY() + r.getHeight() / 2;
+        // distancia delante del jugador
+        float length = r.getHeight() / 2 + 20; 
+        float swingX = centerX + (float) Math.cos(radians) * length;
+        float swingY = centerY + (float) Math.sin(radians) * length;
+        swingActual = new Swing(swingX, swingY, rotation, length);
+		return swingActual;
+	}
 }
 

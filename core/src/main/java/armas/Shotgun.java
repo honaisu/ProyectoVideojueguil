@@ -2,16 +2,15 @@ package armas;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.Rectangle;
+
 import armas.proyectiles.Bullet;
+import armas.proyectiles.Projectile;
 import logica.GameWorld;
 import managers.AssetManager;
-import pantallas.juego.GameScreen;
-import pantallas.juego.PantallaJuego;
-import personajes.Jugador;
 import personajes.Player;
 
 public class Shotgun extends Weapon {
-
 	public Shotgun() {
 		super("Shotgun",
 				3f, 											// cadencia
@@ -19,6 +18,13 @@ public class Shotgun extends Weapon {
 				AssetManager.getInstancia().getDisparoSound());	// sonido
 	}
 
+	@Override
+	public Projectile crearProyectil(Rectangle r, float rotation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
 	@Override
 	public void disparar(Player nave, GameWorld juego, float delta) {
 		actualizar(delta);
@@ -61,8 +67,9 @@ public class Shotgun extends Weapon {
             );
             
             // TODO Agregar Bala...
-            //juego.agregarBala(bala);
+            juego.getGameManager().getProyectilManager().add(bala);
         }
         getSoundBala().play(0.1f);
-    }
+    }*/
+	
 }

@@ -1,20 +1,23 @@
 package armas;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.Rectangle;
 
-import logica.GameWorld;
-import pantallas.juego.GameScreen;
-import personajes.Player;
+import armas.proyectiles.Projectile;
+import managers.AssetManager;
 
 //Clase Abstracta Arma generica
 public abstract class Weapon {
 	private String nombre;
-	
-	private float cadencia;					//tiempo que dura un ataque despues de otro
-    private float tiempoUltDisp;	//contador para que se cumpla la cadencia
-    private int municion;						//municion actual que tiene un arma
-    private int municionMax;					//municion máxima que puede poseer un arma
-    private Sound soundBala;					//sonido de la bala
+	//tiempo que dura un ataque despues de otro
+	private float cadencia;
+	//contador para que se cumpla la cadencia
+    private float tiempoUltDisp;	
+    //municion actual que tiene un arma
+    private int municion;
+    //municion máxima que puede poseer un arma
+    private int municionMax;
+    private Sound soundBala;
     
     public Weapon(String nombre, float cadencia, int municionMax, Sound soundBala) {
     	this.nombre = nombre;
@@ -25,17 +28,35 @@ public abstract class Weapon {
         this.tiempoUltDisp = cadencia; //para que dispare instantaneamente el primer disparo
     }
     
+    public Weapon(float cadencia, int municionMax) {
+    	this.cadencia = cadencia;
+    	this.tiempoUltDisp = cadencia;
+    	this.municion = municionMax;
+    	this.municionMax = municionMax;
+    	
+    	this.nombre = "Weapon";
+    	this.soundBala = AssetManager.getInstancia().getDisparoSound();
+    }
+    
     // metodo abstracto para disparar un arma
-    public abstract void disparar(Player nave, GameWorld juego, float delta);
+    //public abstract void disparar(Player nave, GameWorld juego, float delta);
+    public Projectile disparar(float delta, Rectangle r, float rotation) {
+    	actualizar(delta);
+    	if (!puedeDisparar()) return null;
+        if (getMunicion() <= 0) return null;
+        
+        restarMunicion(delta);
+        if (puedeDisparar()) reiniciarCooldown();
+        return crearProyectil(r, rotation);
+    }
     
     // metodo abstracto para crear el proyectil para cada arma
-    public abstract void crearProyectil(Player nave, GameWorld juego);
+    //public abstract void crearProyectil(Player nave, GameWorld juego);
+    public abstract Projectile crearProyectil(Rectangle r, float rotation);
     
-    
-    public void restarMunicion(Player nave, GameWorld juego, float delta) {
+    public void restarMunicion(float delta) {
     	tiempoUltDisp += delta;
         if (tiempoUltDisp >= cadencia) {
-            crearProyectil(nave, juego);
             municion -= 1;
             tiempoUltDisp = 0;
         }
@@ -71,6 +92,10 @@ public abstract class Weapon {
 	public Sound getSoundBala() { return soundBala;	}
 
 	public String getNombre() {	return nombre; }
+	
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
 	public void setCadencia(float cadencia) { this.cadencia = cadencia;	}
 
@@ -89,6 +114,4 @@ public abstract class Weapon {
 	public void setSoundBala(Sound soundBala) {
 		this.soundBala = soundBala;
 	}
-
-	
 }

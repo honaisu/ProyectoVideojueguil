@@ -2,35 +2,35 @@ package pantallas.opciones;
 
 import com.badlogic.gdx.Gdx;
 
-import enumeradores.ScreenType;
-import interfaces.NavigableOption;
-import interfaces.ScreenAction;
+import enumeradores.EScreenType;
+import interfaces.INavigableOption;
+import interfaces.IScreenAction;
 import logica.MainGame;
 
-public enum MainMenuOption implements NavigableOption {
+public enum EMainMenuOption implements INavigableOption {
 	INICIAR("Iniciar Juego", (manager) -> {
-		manager.cambiarPantalla(ScreenType.JUEGO);
+		manager.cambiarPantalla(EScreenType.JUEGO);
 	}),
 	PERSONALIZAR("Personalizar Personaje", (manager) -> {
-		manager.cambiarPantalla(ScreenType.PERSONALIZACION);
+		manager.cambiarPantalla(EScreenType.PERSONALIZACION);
 	}),
 	OPCIONES("Configuración", (manager) -> {
-		manager.cambiarPantalla(ScreenType.CONFIGURACION);
+		manager.cambiarPantalla(EScreenType.CONFIGURACION);
 	}),
 	TUTORIAL("Tutorial", (manager) -> {
-		manager.cambiarPantalla(ScreenType.TUTORIAL);
+		manager.cambiarPantalla(EScreenType.TUTORIAL);
 	}),
 	SALIR("Salir del Juego", (manager) -> { Gdx.app.exit();});
 	
 	private final String nombre;
-	private final ScreenAction accion;
+	private final IScreenAction accion;
 	
-	MainMenuOption(String nombre, ScreenAction accion) {
+	EMainMenuOption(String nombre, IScreenAction accion) {
 		this.nombre = nombre;
 		this.accion = accion;
 	}
 		
-    public ScreenAction getAction() { return accion; }
+    public IScreenAction getAction() { return accion; }
     
     @Override
     public String getNombre() {

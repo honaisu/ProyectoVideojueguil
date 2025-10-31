@@ -3,35 +3,27 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import enumeradores.NameManager;
+import armas.proyectiles.Projectile;
 import managers.*;
 import personajes.Player;
 
 public class GameWorld {
 	private final Player player;
-	private final GameManager gameManager;
+	private final GameLogicHandler gameLogicHandler;
 	
 	private final float ROTATE_ANGLE = 3.0f;
 	private final float ACCELERATION = 0.2f;
 	
 	public GameWorld() {
 		this.player  = new Player(5, 5);
-		//this.gameManager = null;
-		this.gameManager = new GameManager();
+		this.gameLogicHandler = new GameLogicHandler();
 	}
 	
 	public void update(float delta) {
 		this.handleInput(delta);
 		
 		player.update(delta);
-		gameManager.update(delta);
-		gameManager.getCollisionManager().handleCollisions(
-				player,
-				// TODO Arreglar para solo pedir un manager o algo. Tarea de benjoid xd
-				(BulletManager)gameManager.getManager(NameManager.BULLET), 
-				(MeleeManager)gameManager.getManager(NameManager.MELEE), 
-				(LaserManager)gameManager.getManager(NameManager.LASER), 
-				(AsteroidManager)gameManager.getManager(NameManager.ASTEROID));
+		gameLogicHandler.handleCollisions();
 	}
 
 	private void handleInput(float delta) {
@@ -43,8 +35,8 @@ public class GameWorld {
 		else player.applyFriction(0.9f);
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			player.shoot(delta);
-			player.getWeapon().disparar(player, this, delta);
+			gameLogicHandler.addProjectile(player.shoot(delta));
+			//player.getWeapon().disparar(player, this, delta);
 		}
 	}
 	
@@ -52,7 +44,7 @@ public class GameWorld {
 		return player;
 	}
 	
-	public GameManager getGameManager() {
-		return gameManager;
+	public GameLogicHandler getGameLogicHandler() {
+		return gameLogicHandler;
 	}
 }

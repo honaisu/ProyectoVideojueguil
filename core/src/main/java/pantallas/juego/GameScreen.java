@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import enumeradores.ScreenType;
+import enumeradores.EScreenType;
 import logica.GameWorld;
 import logica.MainGame;
 import pantallas.BaseScreen;
@@ -27,9 +27,11 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
+		world.getGameLogicHandler().update(delta, world.getPlayer().getSpr().getBoundingRectangle(), world.getPlayer().getRotation());
 		
+		// Sistema de Pausa
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			getGame().getPantallaManager().cambiarPantalla(ScreenType.PAUSA);
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.PAUSA);
 		}
 	}
 
@@ -38,8 +40,8 @@ public class GameScreen extends BaseScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		world.getPlayer().draw(batch);
-		world.getGameManager().render(batch);
-		hud.draw(batch, font, world);
+		world.getGameLogicHandler().render(batch);
+		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore());
 		batch.end();
 	}
 }

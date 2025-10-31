@@ -8,12 +8,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import hitboxes.BallHitbox;
-import interfaces.MomentaneumManager;
+import hitboxes.Hitbox;
 
 //Calse encargada de crear los asteroides
-public class AsteroidManager implements MomentaneumManager {
-	private List<BallHitbox> asteroids;	// Para el sprite de los asteroides
-	private List<BallHitbox> auxColliders;	// Para la colision de los asteroides
+public class AsteroidManager {
+	// Para el sprite de los asteroides
+	private List<BallHitbox> asteroids;	
+	// Para la colision de los asteroides
+	private List<BallHitbox> auxColliders;
 	
 	public AsteroidManager(int cantAsteroides, int velXAsteroides, int velYAsteroides) {
 		asteroids = new ArrayList<BallHitbox>();
@@ -38,15 +40,13 @@ public class AsteroidManager implements MomentaneumManager {
 			BallHitbox bb = new BallHitbox(
 					r.nextInt((int)Gdx.graphics.getWidth()),
 	  	            50+r.nextInt((int)Gdx.graphics.getHeight()-50),
-	  	            50+r.nextInt(10), velX, velY, 
-	  	            AssetManager.getInstancia().getAsteroideTexture());	
+	  	            50+r.nextInt(10));	
 	        asteroids.add(bb);
 	        auxColliders.add(bb);
 	  	}
 	}
 	
 	// Actualiza al asteroide movimiento y colision
-	@Override
 	public void update(float delta) {
 		for (BallHitbox ball : asteroids) {
             ball.update();
@@ -55,7 +55,6 @@ public class AsteroidManager implements MomentaneumManager {
     }
 	
 	// Dibujar todos los asteroides
-	@Override
     public void render(SpriteBatch batch) {
         for (BallHitbox ball : asteroids) {
             ball.draw(batch);
@@ -81,6 +80,11 @@ public class AsteroidManager implements MomentaneumManager {
             auxColliders.remove(index);
         }
     }
+	
+	public boolean remove(Hitbox asteroid) {
+		auxColliders.remove(asteroids.indexOf(asteroid));
+		return asteroids.remove(asteroid);
+	}
 	
 	public List<BallHitbox> getAsteroids() {
         return asteroids;

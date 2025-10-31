@@ -1,14 +1,14 @@
 package pantallas.opciones;
 
-import interfaces.NavigableOption;
+import interfaces.INavigableOption;
 
-public enum PauseOption implements NavigableOption {
+public enum EPauseOption implements INavigableOption {
 	CONTINUAR("Continuar"),
 	MENU("Menú Principal");
 	
 	private final String nombre;
 	
-	PauseOption(String nombre) {
+	EPauseOption(String nombre) {
 		this.nombre = nombre;
 	}
 	

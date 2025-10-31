@@ -6,16 +6,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
-public class BallHitbox extends Hitbox{
-    private int xSpeed;
-    private int ySpeed;
+import managers.AssetManager;
+
+public class BallHitbox extends Hitbox {
+    private int xSpeed = 0;
+    private int ySpeed = 0;
     
 	public ShapeRenderer shapeRenderer = new ShapeRenderer();
 
-    public BallHitbox(float x, float y, int size, int xSpeed, int ySpeed, Texture tx) {
-    	super(x,y);
+    public BallHitbox(float x, float y, int size) {
+    	super(x,y, new Sprite(AssetManager.getInstancia().getBalaTexture()));
     	
-    	setSpr(new Sprite(tx));
     	getSpr().setBounds(x, y, size * 2, size * 2);
     	getSpr().setOriginCenter();
 
@@ -24,10 +25,6 @@ public class BallHitbox extends Hitbox{
         if (getSpr().getX() + getSpr().getWidth() > Gdx.graphics.getWidth()) getSpr().setX(Gdx.graphics.getWidth() - getSpr().getWidth());
         if (getSpr().getY() < 0) getSpr().setY(0);
         if (getSpr().getY() + getSpr().getHeight() > Gdx.graphics.getHeight()) getSpr().setY(Gdx.graphics.getHeight() - getSpr().getHeight());
-
-        this.setXSpeed(xSpeed);
-        this.setySpeed(ySpeed);
-
     }
     
     public void update() {

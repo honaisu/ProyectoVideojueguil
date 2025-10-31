@@ -149,6 +149,8 @@ nb-configuration.xml
 Thumbs.db
 
 ## Miscellaneous:
+.project
+/.idea/
 *~
 *.*#
 *#*#

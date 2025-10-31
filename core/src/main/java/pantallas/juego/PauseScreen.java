@@ -9,18 +9,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import enumeradores.ScreenType;
-import interfaces.NavigableOption;
+import enumeradores.EScreenType;
+import interfaces.INavigableOption;
 import logica.MainGame;
 import pantallas.menus.NavigableScreen;
-import pantallas.opciones.PauseOption;
+import pantallas.opciones.EPauseOption;
 
 public class PauseScreen extends NavigableScreen {
 	private final Color TRANSPARENTE = new Color(0f, 0f, 0f, 0.45f);
     private final Texture TEXTURA_PAUSA;
 	
 	public PauseScreen(MainGame game) {
-		super(game, PauseOption.values());
+		super(game, EPauseOption.values());
 		
 		// Rellena un cuadrado entero con solo blanco para que sirva de "textura"
 		Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -34,13 +34,13 @@ public class PauseScreen extends NavigableScreen {
 	protected void update(float delta) {
 		// Navegación
 		navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-		NavigableOption opcionActual = navegador.getCurrentSelection();
+		INavigableOption opcionActual = navegador.getCurrentSelection();
 		
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-        	if (opcionActual.equals(PauseOption.CONTINUAR)) {        		
+        	if (opcionActual.equals(EPauseOption.CONTINUAR)) {        		
         		this.resume();
         	} else {
-        		getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        		getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
                 this.dispose();
                 return;
             }
