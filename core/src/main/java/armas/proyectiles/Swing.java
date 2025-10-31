@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import hitboxes.ArcHitbox;
-import personajes.Player;
 
 public class Swing extends Projectile {
 	// tiempo que dura activo el golpe

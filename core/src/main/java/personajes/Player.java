@@ -37,7 +37,7 @@ public class Player extends Hitbox {
 	private int hurtTime;
 	
 	// Armas
-	private Weapon weapon = new Melee();
+	private Weapon weapon = new HeavyMachineGun();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());

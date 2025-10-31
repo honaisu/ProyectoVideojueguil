@@ -3,7 +3,6 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import armas.proyectiles.Projectile;
 import managers.*;
 import personajes.Player;
 

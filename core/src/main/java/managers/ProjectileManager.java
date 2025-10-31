@@ -14,6 +14,7 @@ public class ProjectileManager {
 	
 	public void add(Projectile proyectil) {
 		if (proyectil == null) return;
+
 		proyectiles.add(proyectil);
 	}
 	
@@ -28,8 +29,13 @@ public class ProjectileManager {
 	
 	public void update(float delta, Rectangle r, float rotation) {
 		Iterator<Projectile> iterator = proyectiles.iterator();
+
 	    while (iterator.hasNext()) {
 	        Projectile proyectil = iterator.next();
+	        if (proyectil == null) {
+	        	iterator.remove();
+	        	continue;
+	        }
 	        proyectil.update(delta, r, rotation);
 	        if (proyectil.isDestroyed()) {
 	            iterator.remove();

@@ -13,7 +13,6 @@ public class ArcHitbox extends Hitbox{
         getSpr().setOriginCenter();
         getSpr().setRotation(rotacion);
         getSpr().setPosition(x - getSpr().getWidth() / 2, y - getSpr().getHeight() / 2);
-        
     }
 	
 	public void setPos(float x, float y){

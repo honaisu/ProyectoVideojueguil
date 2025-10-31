@@ -1,17 +1,9 @@
 package managers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.audio.Sound;
 
-import armas.proyectiles.Bullet;
-import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Projectile;
-import armas.proyectiles.Swing;
-import hitboxes.BallHitbox;
 import hitboxes.Hitbox;
-import personajes.Player;
 
 public class CollisionManager {
 	private final Sound explosionSound;

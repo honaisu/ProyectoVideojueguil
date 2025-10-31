@@ -45,7 +45,7 @@ public class GameLogicHandler {
 	}
 
 	public void handleCollisions() {
-		collisionManager.handleCollisions(proyectilManager, asteroidManager);
+		//collisionManager.handleCollisions(proyectilManager, asteroidManager);
 	}
 
 	public void addProjectile(Projectile projectile) {
