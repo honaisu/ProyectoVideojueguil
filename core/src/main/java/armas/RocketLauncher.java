@@ -1,12 +1,15 @@
 package armas;
 
-import logica.assets.AssetManager;
+import com.badlogic.gdx.math.Rectangle;
+
+import armas.proyectiles.Projectile;
+import logica.GameWorld;
+import managers.AssetManager;
 import pantallas.juego.GameScreen;
 import personajes.Player;
 
 
 public class RocketLauncher extends Weapon {
-
 	public RocketLauncher() {
 		super("Rocket Launcher",
 				0.3f,
@@ -15,14 +18,8 @@ public class RocketLauncher extends Weapon {
 	}
 
 	@Override
-	public void disparar(Player nave, GameScreen juego, float delta) {
+	public Projectile crearProyectil(Rectangle r, float rotation) {
 		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void crearProyectil(Player nave, GameScreen juego) {
-		// TODO Auto-generated method stub
-		
+		return null;
 	}
 }
