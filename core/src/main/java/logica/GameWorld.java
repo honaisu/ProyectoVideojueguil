@@ -12,6 +12,7 @@ public class GameWorld {
 	
 	private final float ROTATE_ANGLE = 3.0f;
 	private final float ACCELERATION = 0.2f;
+	private boolean estaEnPausa = false;
 	
 	public GameWorld() {
 		this.player  = new Player(5, 5);
@@ -41,6 +42,11 @@ public class GameWorld {
 			player.shoot(delta);
 			player.getWeapon().disparar(player, this, delta);
 		}
+		
+		// "manteniendo" la idea se marcar si está en pausa o no
+	    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+	        estaEnPausa = true;
+	    }
 	}
 	
 	public Player getPlayer() {
@@ -49,5 +55,14 @@ public class GameWorld {
 	
 	public GameManager getGameManager() {
 		return gameManager;
+	}
+	
+	//para manejar si está en pausa o no
+	public boolean isEstaEnPausa() {
+	    return estaEnPausa;
+	}
+	
+	public void setEstaEnPausa(boolean estaEnPausa) {
+	    this.estaEnPausa = estaEnPausa;
 	}
 }

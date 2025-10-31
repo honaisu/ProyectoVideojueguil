@@ -21,6 +21,12 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
+		
+		//veremos si funciona
+		if (world.isEstaEnPausa()) {
+	        getGame().getPantallaManager().cambiarPantalla(pantallas.ScreenType.PAUSA);
+	        world.setEstaEnPausa(false); // evita reentradas
+	    }
 	}
 
 	@Override

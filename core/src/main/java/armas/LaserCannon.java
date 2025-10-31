@@ -2,7 +2,8 @@ package armas;
 
 import armas.proyectiles.LaserBeam;
 import logica.assets.AssetManager;
-import pantallas.juego.GameScreen;
+import logica.GameWorld;
+import pantallas.juego.GameScreen; //eliminar ya que no se usa?
 import personajes.Player;
 
 public class LaserCannon extends Weapon {
@@ -21,7 +22,7 @@ public class LaserCannon extends Weapon {
     }
 
     @Override
-    public void disparar(Player nave, GameScreen pantalla, float delta) {
+    public void disparar(Player nave, GameWorld pantalla, float delta) {
         // avanza cooldown base
         actualizar(delta);
 
@@ -37,7 +38,7 @@ public class LaserCannon extends Weapon {
     }
 
 	@Override
-	public void crearProyectil(Player nave, GameScreen juego) {
+	public void crearProyectil(Player nave, GameWorld juego) {
 		LaserBeam rayo = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), estiloRayo);
 		
 		rayo.configurarPulso(duracionPulso); // fija TTL del pulso
