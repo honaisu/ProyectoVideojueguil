@@ -3,7 +3,6 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import managers.*;
 import personajes.Player;
 
 public class GameWorld {
@@ -22,7 +21,7 @@ public class GameWorld {
 		this.handleInput(delta);
 		
 		player.update(delta);
-		gameLogicHandler.handleCollisions();
+		gameLogicHandler.handleCollisions(player);
 	}
 
 	private void handleInput(float delta) {

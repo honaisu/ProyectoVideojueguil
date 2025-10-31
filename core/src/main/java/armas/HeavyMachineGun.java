@@ -10,7 +10,7 @@ import armas.proyectiles.Projectile;
  */
 public class HeavyMachineGun extends Weapon {
     public HeavyMachineGun() {
-    	super(0.2f, 30);
+    	super(0.2f, 300);
         super.setNombre("Heavy Machine Gun");
     }
     
@@ -31,7 +31,7 @@ public class HeavyMachineGun extends Weapon {
         float bulletY = centerY + (float) Math.sin(radians) * length;
 
         // TODO Arreglar valores hardcodeados...
-        Bullet bala = new Bullet(bulletX, bulletY, 20f, rotation, 10f);
+        Bullet bala = new Bullet(bulletX, bulletY, 40f, rotation, 10f);
         
         return bala;
     }

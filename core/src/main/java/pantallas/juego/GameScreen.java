@@ -10,14 +10,13 @@ import enumeradores.EScreenType;
 import logica.GameWorld;
 import logica.MainGame;
 import pantallas.BaseScreen;
-import pantallas.HUDScreen;
 
 /**
  * Clase que representa una pantalla del juego, con su propio mundo.
  */
 public class GameScreen extends BaseScreen {
 	private final GameWorld world;
-	private final HUDScreen hud = new HUDScreen();
+	private final HUDLayout hud = new HUDLayout();
 
 	public GameScreen(MainGame game) {
 		super(game);
@@ -27,7 +26,11 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
-		world.getGameLogicHandler().update(delta, world.getPlayer().getSpr().getBoundingRectangle(), world.getPlayer().getRotation());
+		world.getGameLogicHandler().update(
+				delta, 
+				world.getPlayer().getSpr().getBoundingRectangle(), 
+				world.getPlayer().getRotation()
+				);
 		
 		// Sistema de Pausa
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

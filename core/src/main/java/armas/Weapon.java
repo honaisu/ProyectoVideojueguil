@@ -40,7 +40,7 @@ public abstract class Weapon {
     
     // metodo abstracto para disparar un arma
     //public abstract void disparar(Player nave, GameWorld juego, float delta);
-    public Projectile disparar(float delta, Rectangle r, float rotation) {
+    public Projectile atacar(float delta, Rectangle r, float rotation) {
     	actualizar(delta);
     	if (!puedeDisparar()) return null;
         if (getMunicion() <= 0) return null;
