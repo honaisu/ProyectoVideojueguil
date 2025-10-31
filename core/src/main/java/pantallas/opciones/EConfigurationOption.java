@@ -1,8 +1,8 @@
 package pantallas.opciones;
 
-import interfaces.NavigableOption;
+import interfaces.INavigableOption;
 
-public enum ConfigurationOption implements NavigableOption {
+public enum EConfigurationOption implements INavigableOption {
 	VOLUMEN_GENERAL("Volumen General"),
 	VOLUMEN_MUSICA("Volumen Música"),
 	VOLUMEN_EFECTOS("Volumen Efectos"),
@@ -11,7 +11,7 @@ public enum ConfigurationOption implements NavigableOption {
 	
 	private final String nombre;
 	
-	ConfigurationOption(String nombre) {
+	EConfigurationOption(String nombre) {
 		this.nombre = nombre;
 	}
 	

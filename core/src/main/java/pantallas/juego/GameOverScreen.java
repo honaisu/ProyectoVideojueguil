@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.EScreenType;
 import logica.MainGame;
-import logica.assets.AssetManager;
+import managers.AssetManager;
 import pantallas.BaseScreen;
-import pantallas.ScreenType;
 
 /**ra la pantalla de game over:)
  * Clase que muest
@@ -37,7 +37,7 @@ public class GameOverScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			getGame().getPantallaManager().cambiarPantalla(ScreenType.JUEGO);
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.JUEGO);
 		}
 	}
 

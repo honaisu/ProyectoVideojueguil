@@ -4,29 +4,36 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import com.badlogic.gdx.math.Rectangle;
 import hitboxes.BallHitbox;
+import hitboxes.Hitbox;
 
 //Clase que representa una balla dentro del juego
 
-public class Bullet {
-	private BallHitbox hitbox;
+public class Bullet extends Projectile {
+	// velocidad de la bala eje x
+	private float xSpeed;
+	// velocidad de la bala eje y
+	private float ySpeed;
+	// ver si la bala esta destruida
+	private boolean destroyed = false;
+
+	public Bullet(float x, float y, float width, float rotation, float speed) {
+		super(new BallHitbox(x, y, width, rotation));
+		float radians = (float) Math.toRadians(rotation);
+
+        // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
+        this.xSpeed = (float) Math.cos(radians) * speed;
+        this.ySpeed = (float) Math.sin(radians) * speed;
+	}
 	
-	private float xSpeed;					// velocidad de la bala eje x
-	private float ySpeed;					// velocidad de la bala eje y
-	private boolean destroyed = false;		// ver si la bala esta destruida
-	
-	//TODO borrar
-	public ShapeRenderer shapeRenderer = new ShapeRenderer();;
-	    
     public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
-    	
-    	this.hitbox = new BallHitbox(x, y, (int) (tx.getWidth() / 2), 0, 0, tx);
-    	
+    	super(new BallHitbox(x, y, (int) (tx.getWidth() / 2)));
+
     	// Ajusta el origen y la rotación del sprite dentro del hitbox
-        this.hitbox.getSpr().setOriginCenter();
-        this.hitbox.getSpr().setRotation(rotacion);
+        this.getHitbox().getSpr().setOriginCenter();
+        this.getHitbox().getSpr().setRotation(rotacion);
 
         // Convertir rotación a radianes para calcular la dirección del movimiento
         float radians = (float) Math.toRadians(rotacion + 90);
@@ -35,11 +42,11 @@ public class Bullet {
         this.xSpeed = (float) Math.cos(radians) * speed;
         this.ySpeed = (float) Math.sin(radians) * speed;
     }
-	
+
     //movimiento de la bala y colision con el borde de la ventana
-    public void update() {
+    public void update(float delta, float x, float y, float rotation) {
     	// Mueve el sprite del hitbox
-        Sprite spr = hitbox.getSpr();
+        Sprite spr = getHitbox().getSpr();
         spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
 
         // Comprueba si la bala ha salido de los límites de la pantalla
@@ -48,24 +55,33 @@ public class Bullet {
             destroyed = true;
         }
     }
-    
-    public void draw(SpriteBatch batch) {
-    	hitbox.draw(batch);
+
+    @Override
+    public void update(float delta, Rectangle r, float rotation) {
+        // Mueve el sprite del hitbox
+        Sprite spr = getHitbox().getSpr();
+        spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
+
+        // Comprueba si la bala ha salido de los límites de la pantalla
+        if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() ||
+            spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
+            destroy();
+        }
     }
-    
+
+    @Override
+    public void draw(SpriteBatch batch) {
+    	getHitbox().draw(batch);
+    }
+
     //colision con un asteroide
-    public boolean checkCollision(BallHitbox b2) {
-    	if (hitbox.checkCollision(b2)) {
-            this.destroyed = true; // La bala se destruye al colisionar
+    public boolean checkCollision(Hitbox b2) {
+    	if (getHitbox().checkCollision(b2)) {
+            destroy();
             return true;
         }
         return false;
     }
-    
-    public boolean isDestroyed() { return destroyed; }
 
-	public BallHitbox getHitbox() {
-		return hitbox;
-	}
-    
+    public boolean isDestroyed() { return destroyed; }
 }

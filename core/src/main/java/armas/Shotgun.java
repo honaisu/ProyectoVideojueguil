@@ -2,13 +2,20 @@ package armas;
 
 import java.util.Random;
 
+import com.badlogic.gdx.math.Rectangle;
+
 import armas.proyectiles.Bullet;
+<<<<<<< HEAD
 import logica.GameWorld;
 import logica.assets.AssetManager;
+=======
+import armas.proyectiles.Projectile;
+import logica.GameWorld;
+import managers.AssetManager;
+>>>>>>> origin/noche
 import personajes.Player;
 
 public class Shotgun extends Weapon {
-
 	public Shotgun() {
 		super("Shotgun",
 				3f, 											// cadencia
@@ -17,6 +24,16 @@ public class Shotgun extends Weapon {
 	}
 
 	@Override
+<<<<<<< HEAD
+=======
+	public Projectile crearProyectil(Rectangle r, float rotation) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	@Override
+>>>>>>> origin/noche
 	public void disparar(Player nave, GameWorld juego, float delta) {
 		actualizar(delta);
         
@@ -56,10 +73,17 @@ public class Shotgun extends Weapon {
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
                 AssetManager.getInstancia().getBalaTexture()	// textura de la bala
             );
+<<<<<<< HEAD
 
             juego.getGameManager().getBulletManager().add(bala);
       
+=======
+            
+            // TODO Agregar Bala...
+            juego.getGameManager().getProyectilManager().add(bala);
+>>>>>>> origin/noche
         }
         getSoundBala().play(0.1f);
-    }
+    }*/
+	
 }

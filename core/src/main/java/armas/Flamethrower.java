@@ -1,10 +1,10 @@
 package armas;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 
-import logica.assets.AssetManager;
-import pantallas.juego.GameScreen;
-import personajes.Player;
+import armas.proyectiles.Projectile;
+import managers.AssetManager;
 
 public class Flamethrower extends Weapon {
 	public Flamethrower(int daño, float cadencia, int municion, Sprite spr) {
@@ -13,15 +13,8 @@ public class Flamethrower extends Weapon {
 	}
 
 	@Override
-	public void disparar(Player nave, GameScreen juego, float delta) {
+	public Projectile crearProyectil(Rectangle r, float rotation) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
-
-	@Override
-	public void crearProyectil(Player nave, GameScreen juego) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -1,10 +1,14 @@
 package interfaces;
 
 /**
+ * @deprecated
  * Interfaz de navegación. Provee direcciones hacia las que se puede mover una selección
  * junto con un método default para navegar.
  */
-public interface Navigation {
+public interface INavigation {
+	/**
+	 * Método encargado de navegar menús de manera fácil e intuitiva.
+	 */
 	default public int navegar(boolean vaAdelante, int indiceActual, int length) {
     	int eleccion = 1;
     	

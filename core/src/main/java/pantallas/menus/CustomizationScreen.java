@@ -7,14 +7,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import interfaces.NavigableOption;
+import enumeradores.EScreenType;
+import enumeradores.ESkinJugador;
+import interfaces.INavigableOption;
 import logica.MainGame;
-import logica.assets.SkinJugador;
-import pantallas.ScreenType;
 
 public class CustomizationScreen extends NavigableScreen {
     public CustomizationScreen(MainGame game) {
-        super(game, SkinJugador.values());
+        super(game, ESkinJugador.values());
     }
 
 	@Override
@@ -25,13 +25,13 @@ public class CustomizationScreen extends NavigableScreen {
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
         	// TODO Volver a poner el poder elegir skin
-        	getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        	getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
             return;
         }
 
         // Volver sin cambios
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-        	getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        	getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
             return;
         }
 	}
@@ -50,11 +50,11 @@ public class CustomizationScreen extends NavigableScreen {
         int x = 360, y = 300;
         final float PREVIEW_HW = 128f;
         
-		NavigableOption opcionActual = navegador.getCurrentSelection();
+		INavigableOption opcionActual = navegador.getCurrentSelection();
         
         int i = 1;
         String mensajeSeleccionado;
-        for (SkinJugador skin : SkinJugador.values()) {
+        for (ESkinJugador skin : ESkinJugador.values()) {
         	boolean seleccionado = opcionActual.equals(skin);
 
         	// Mensaje al estar apretando en uno

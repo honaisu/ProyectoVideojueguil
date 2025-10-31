@@ -2,31 +2,36 @@ package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 import hitboxes.RayHitbox;
 import personajes.Player;
 
-
-public class LaserBeam {
-    private final Player nave;
-    private final RayHitbox hitbox;
+public class LaserBeam extends Projectile {
+    private Player nave;
     private boolean destroyed = false;
 
     // Control de encendido por tecla mantenida (Z)
-    private float tiempoRestanteEncendido = 0f;     // si llega a 0, se apaga
-    private final float tiempoRefrescoEncendido = 0.12f; // margen entre frames para mantener encendido
+    // si llega a 0, se apaga
+    private float tiempoRestanteEncendido = 0f;     
+    // margen entre frames para mantener encendido
+    private final float tiempoRefrescoEncendido = 0.12f; 
     
-    //TODO borrar
-    public ShapeRenderer shapeRenderer = new ShapeRenderer();
-
+    /*
     public LaserBeam(Player nave, float ancho, Texture textura, int num) {
+    	super(new RayHitbox(muzzle[0], muzzle[1], 1f, ancho, ang, textura, num));
         this.nave = nave;
 
         float ang = nave.getRotation() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
-
-        this.hitbox = new RayHitbox(muzzle[0], muzzle[1], 1f, ancho, ang, textura, num);
+    }*/
+    
+    public LaserBeam(float x, float y, float width, float angle) {
+    	super(new RayHitbox(new Rectangle(x, y, width, 1f), angle, true));
+    }
+    
+    public LaserBeam(Rectangle r, float angle) {
+    	super(new RayHitbox(r, angle, true));
     }
     
     //TODO revisar para reutilizar este metodo para otras armas
@@ -59,7 +64,7 @@ public class LaserBeam {
         // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
         float ang = nave.getRotation() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
-        hitbox.setTransform(muzzle[0], muzzle[1], ang);
+        getHitbox().setTransform(muzzle[0], muzzle[1], ang);
 
         // Apagar si no se refrescó (la tecla se soltó)
         tiempoRestanteEncendido -= delta;
@@ -68,8 +73,9 @@ public class LaserBeam {
         }
     }
 
+    @Override
     public void draw(SpriteBatch batch) {
-        if (!destroyed) hitbox.draw(batch);
+        if (!destroyed) getHitbox().draw(batch);
     }
 
     public void destroy() {
@@ -81,5 +87,19 @@ public class LaserBeam {
         return destroyed;
     }
 
-	public RayHitbox getHitbox() { return hitbox; }
+	@Override
+	public void update(float delta, Rectangle r, float rotation) {
+		if (destroyed) return;
+
+        // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
+        float ang = rotation;
+        //float[] muzzle = calcularMuzzle(nave, ang);
+        //getHitbox().setTransform(muzzle[0], muzzle[1], ang);
+
+        // Apagar si no se refrescó (la tecla se soltó)
+        tiempoRestanteEncendido -= delta;
+        if (tiempoRestanteEncendido <= 0f) {
+            destroy();
+        }
+	}
 }

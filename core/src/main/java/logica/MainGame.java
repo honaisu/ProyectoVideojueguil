@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import logica.assets.AssetManager;
+import enumeradores.EScreenType;
+import managers.AssetManager;
 import managers.ScreenManager;
-import pantallas.ScreenType;
 
 public class MainGame extends Game {	
 	private SpriteBatch batch;
@@ -38,7 +38,7 @@ public class MainGame extends Game {
 		AssetManager.getInstancia().load();
 		
         pantallaManager = new ScreenManager(this);
-        pantallaManager.cambiarPantalla(ScreenType.MENU);
+        pantallaManager.cambiarPantalla(EScreenType.MENU);
 	}
 
 	@Override
@@ -46,10 +46,14 @@ public class MainGame extends Game {
 		batch.dispose();
 		font.dispose();
 		pantallaManager.dispose();
+		// Cuando lo probé daba error de lo que recuerdo xd
 		//assets.dispose();
 	}
 
-    @Override public void render() { super.render(); }
+    @Override 
+    public void render() { 
+    	super.render();
+    }
     
     public SpriteBatch getBatch() { return batch; }
     public BitmapFont getFont() { return font; }

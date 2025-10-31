@@ -1,17 +1,9 @@
 package managers;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.audio.Sound;
 
-import armas.proyectiles.Bullet;
-import armas.proyectiles.LaserBeam;
-import armas.proyectiles.Swing;
-import hitboxes.BallHitbox;
-import logica.MainGame;
-import logica.assets.AssetManager;
-import personajes.Jugador;
-import personajes.Player;
+import armas.proyectiles.Projectile;
+import hitboxes.Hitbox;
 
 public class CollisionManager {
 	private final Sound explosionSound;
@@ -34,18 +26,18 @@ public class CollisionManager {
     /**
      * Resuelve colisiones y devuelve la cantidad total de puntos ganados en esta invocación.
      */
-    public int handleCollisions(Player nave, BulletManager bm, MeleeManager mm, LaserManager lm, AsteroidManager am) {
+    /*
+    public int handleCollisions(Player nave, AsteroidManager am) {
         int totalScore = 0;
 
-        ArrayList<Bullet> bullets = bm.getBullets();
-        ArrayList<BallHitbox> asteroids = am.getAsteroids();
+        List<BallHitbox> asteroids = am.getAsteroids();
 
         // 1) Balas vs Asteroides
         // Iteramos hacia atrás para permitir remociones seguras
         for (int bi = bullets.size() - 1; bi >= 0; bi--) {
-            Bullet b = bullets.get(bi);
-
-            boolean bulletHit = false;
+        	boolean bulletHit = false;
+        	// TODO
+        	Bullet b = bullets.get(bi);
             for (int ai = asteroids.size() - 1; ai >= 0; ai--) {
                 BallHitbox a = asteroids.get(ai);
                 // Usamos el método existente en Bullet: checkCollision(Ball2)
@@ -103,5 +95,23 @@ public class CollisionManager {
         }
 
         return totalScore;
+    }*/
+    
+    public int handleCollisions(ProjectileManager proyectilManager, AsteroidManager enemyManager) {
+    	int totalScore = 0;
+    	
+    	while (!proyectilManager.isEmpty()) {
+    		Projectile proyectil = proyectilManager.getActual();
+    		// TODO Remover completamente las listas. Muy mala práctica
+    		for (Hitbox enemy : enemyManager.getAsteroids()) {    			
+    			if (proyectil.getHitbox().checkCollision(enemy)) {
+    				enemyManager.remove(enemy);
+    				if (explosionSound != null) explosionSound.play();
+    				totalScore += scorePerAsteroid;
+    			}
+    		}
+    	}
+    	
+    	return totalScore;
     }
 }

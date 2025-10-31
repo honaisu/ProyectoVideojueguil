@@ -7,17 +7,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import interfaces.NavigableOption;
+import enumeradores.EScreenType;
+import interfaces.INavigableOption;
 import logica.MainGame;
 import logica.Volumen;
-import pantallas.ScreenType;
-import pantallas.opciones.ConfigurationOption;
+import pantallas.opciones.EConfigurationOption;
 
 public class ConfigurationScreen extends NavigableScreen {
 	private Volumen volumenTemporal = new Volumen();
     
     public ConfigurationScreen(MainGame game) {
-        super(game, ConfigurationOption.values());
+        super(game, EConfigurationOption.values());
     }
     
     @Override
@@ -25,29 +25,29 @@ public class ConfigurationScreen extends NavigableScreen {
         // Navegación vertical
     	// TODO arreglar método ajustarValorSonido (evitar castings)
     	navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-        NavigableOption opcionActual = navegador.getCurrentSelection();
+        INavigableOption opcionActual = navegador.getCurrentSelection();
         
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) 
-    		volumenTemporal.ajustarValorSonido((ConfigurationOption) opcionActual, -Volumen.STEP);
+    		volumenTemporal.adjustSoundValue((EConfigurationOption) opcionActual, -Volumen.STEP);
     	else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) 
-    		volumenTemporal.ajustarValorSonido((ConfigurationOption) opcionActual, Volumen.STEP);
+    		volumenTemporal.adjustSoundValue((EConfigurationOption) opcionActual, Volumen.STEP);
 
         // Confirmaciones
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
         	// TODO evitar hacer castings
-        	switch ((ConfigurationOption) opcionActual) {
+        	switch ((EConfigurationOption) opcionActual) {
         	case GUARDAR:
-        		Volumen.aplicarCambios(getGame().getVolumen(), volumenTemporal);
+        		Volumen.applyChanges(getGame().getVolumen(), volumenTemporal);
         		break;
         	case VOLVER:
-        		getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        		getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
         		break;
         	default: break;
         	}
         }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-        	getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+        	getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
             return;
         }
     }
@@ -64,37 +64,15 @@ public class ConfigurationScreen extends NavigableScreen {
         font.draw(batch, "OPCIONES", 480, 640);
 
         font.getData().setScale(1.5f);
-        
-        /*
-        for (ConfigurationOption opcion : opciones) {
-            boolean seleccionada = (opcionActual.equals(opcion));
-            float alpha = seleccionada ? 1f : 0.7f;
-            font.setColor(alpha, alpha, alpha, alpha);
-            
-            label = opcion.getNombre();
-            value = "";
-            
-            switch (opcion) {
-            case VOLUMEN_GENERAL:
-            	value = labelValor(volumenTemporal.getMasterVolume()); 
-            	break;
-            case VOLUMEN_MUSICA:  
-            	value = labelValor(volumenTemporal.getMusicVolume()); 
-            	break;
-            case VOLUMEN_EFECTOS: 
-            	value = labelValor(volumenTemporal.getSfxVolume()); 
-            	break;
-            default: break;
-            }
-            
-            textoCompleto = (seleccionada ? "> " : "  ") + label + (value.isEmpty() ? "" : ": " + value) + (seleccionada ? " <" : "");
-            font.draw(batch, textoCompleto, x, y - opcion.ordinal() * 60);
-        }*/
+        // TODO No me gustan los números mágicos pero no se me ocurrió otra alternativa u.u
+        font.draw(batch,labelValor(volumenTemporal.getMasterVolume()), 460, 300);
+        font.draw(batch,labelValor(volumenTemporal.getRawMusicVolume()), 460, 240);
+        font.draw(batch,labelValor(volumenTemporal.getRawSfxVolume()), 460, 180);
         
         navegador.drawOptions(batch, font);
         
         font.setColor(Color.WHITE);
-        font.draw(batch, "LEFT/RIGHT para ajustar | ENTER para confirmar | ESC para volver", 220, 160);
+        font.draw(batch, "LEFT/RIGHT para ajustar | ENTER para confirmar | ESC para volver", 220, 500);
 
         batch.end();
     }

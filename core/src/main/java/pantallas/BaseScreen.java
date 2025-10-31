@@ -14,8 +14,7 @@ import logica.MainGame;
  * requerimiento implementar todas a las sub-clases.
  */
 public abstract class BaseScreen implements Screen {
-    // TODO Cambiar parámetro a private para usar el getGame
-	private MainGame game;
+    private MainGame game;
 	
     /**
      * Constructor que toma el juego.

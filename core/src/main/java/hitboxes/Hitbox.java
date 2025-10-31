@@ -20,12 +20,22 @@ public abstract class Hitbox {
 		this.sprite = sprite;
 	}
 	
+	public void mover(float centerX, float centerY, float rot, float radio) {
+		float radians = (float) Math.toRadians(rot + 90);
+
+	    float nuevoX = centerX + (float) Math.cos(radians) * radio;
+	    float nuevoY = centerY + (float) Math.sin(radians) * radio;
+
+	    getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
+	    getSpr().setRotation(rot);
+	}
+	
 	/**
 	 * Verifica la colision de un objeto de tipo BallHitbox
 	 * @param BallHitbox -> puede ser un asteroide
 	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
 	 */
-	public boolean checkCollision(BallHitbox b2) {
+	public boolean checkCollision(Hitbox b2) {
 		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(b2.getSpr()));
 	}
 	

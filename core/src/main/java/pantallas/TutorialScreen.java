@@ -3,18 +3,20 @@ package pantallas;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;   // <-- para medir ancho del título
-import com.badlogic.gdx.utils.Align;               // <-- para centrar texto en una “caja”
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;               
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import logica.AssetsLoader;
-import logica.NotHotlineMiami;
+import enumeradores.EScreenType;
+import logica.MainGame;
+import managers.AssetManager;
 
-public class PantallaTutorial extends PantallaBase {
+public class TutorialScreen extends BaseScreen {
+    private enum Step { MOVER, MOVER_CONFIRMADO, DISPARAR, DISPARAR_CONFIRMADO, FIN } //esto quisas ponerlo en otro lado
 
-    private enum Paso { MOVER, MOVER_CONFIRMADO, DISPARAR, DISPARAR_CONFIRMADO, FIN } //esto quisas ponerlo en otro lado
-
-    private Paso pasoActual = Paso.MOVER;
+    private Step pasoActual = Step.MOVER;
 
     // Control general de inputs para evitar rebotes
     private float keyCooldown = 0f;
@@ -29,21 +31,20 @@ public class PantallaTutorial extends PantallaBase {
     
     //Musica 
     private Music musicaTutorial;
+    
+    final float worldW;
+    final float worldH;
 
     // Utilidad para centrar el título
     private final GlyphLayout layout = new GlyphLayout();
 
-    public PantallaTutorial(NotHotlineMiami game) {
+    public TutorialScreen(MainGame game) {
         super(game);
-        musicaTutorial = AssetsLoader.getInstancia().getTutorialSound();
+        worldW = game.getViewport().getWorldWidth();
+        worldH = game.getViewport().getWorldHeight();
+        musicaTutorial = AssetManager.getInstancia().getTutorialSound();
     }
     
-    @Override
-    public void render(float delta) {
-        this.update(delta);
-        this.draw();
-    }
-
     @Override
     protected void update(float delta) {
         musicaTutorial.setLooping(true);
@@ -56,7 +57,7 @@ public class PantallaTutorial extends PantallaBase {
                         || Gdx.input.isKeyPressed(Input.Keys.RIGHT)
                         || Gdx.input.isKeyPressed(Input.Keys.UP)
                         || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                    pasoActual = Paso.MOVER_CONFIRMADO;
+                    pasoActual = Step.MOVER_CONFIRMADO;
                     timer = 0f;
                     keyCooldown = repeatDelay;
                 }
@@ -66,14 +67,14 @@ public class PantallaTutorial extends PantallaBase {
                 // El jugador puede seguir moviéndose; solo corre el temporizador
                 timer += delta;
                 if (timer >= delayMoverConfirmado) {
-                    pasoActual = Paso.DISPARAR;
+                    pasoActual = Step.DISPARAR;
                     keyCooldown = repeatDelay;
                 }
                 break;
 
             case DISPARAR:
                 if (keyCooldown <= 0f && Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-                    pasoActual = Paso.DISPARAR_CONFIRMADO;
+                    pasoActual = Step.DISPARAR_CONFIRMADO;
                     timer = 0f;
                     keyCooldown = repeatDelay;
                 }
@@ -83,7 +84,7 @@ public class PantallaTutorial extends PantallaBase {
                 // Puede seguir presionando Z; mostramos el mensaje por un rato y luego finalizamos
                 timer += delta;
                 if (timer >= delayDisparoConfirmado) {
-                    pasoActual = Paso.FIN;
+                    pasoActual = Step.FIN;
                     keyCooldown = repeatDelay;
                 }
                 break;
@@ -91,71 +92,66 @@ public class PantallaTutorial extends PantallaBase {
             case FIN:
                 if (keyCooldown <= 0f &&
                         (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-                    game.getPantallaManager().cambiarPantalla(TipoPantalla.MENU);
+                    getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
                     musicaTutorial.stop();
                 }
                 break;
         }
     }
-
-    @Override
-    protected void draw() {
-        ScreenUtils.clear(0.1f, 0.12f, 0.16f, 1f);
-
-        // Usamos dimensiones del viewport para centrar en tu “mundo” lógico
-        final float worldW = game.getViewport().getWorldWidth();
-        final float worldH = game.getViewport().getWorldHeight();
+    
+	@Override
+	protected void draw(SpriteBatch batch, BitmapFont font) {
+		ScreenUtils.clear(0.1f, 0.12f, 0.16f, 1f);
 
         // Caja centrada para el cuerpo (multilínea)
         final float cajaAncho = Math.min(720f, worldW * 0.8f);
-        final float cajaX = (worldW - cajaAncho) * 0.5f; // centramos la caja horizontalmente
+        final float cajaX = (worldW - cajaAncho) * 0.5f; // caja centrada horizontalmente
         final float tituloY = worldH * 0.82f;
         final float cuerpoY = worldH * 0.6f;
         final float lineaDY = 64f;
 
-        game.getBatch().begin();
+        batch.begin();
 
         // — TÍTULO CENTRADO —
         // 1) Medimos el texto con GlyphLayout (obtiene ancho exacto).
         // 2) Dibujamos en X = centro_mundo − (ancho_texto / 2).
-        game.getFont().getData().setScale(2.2f);
+        font.getData().setScale(2.2f);
         String titulo = "TUTORIAL";
-        layout.setText(game.getFont(), titulo);
+        layout.setText(font, titulo);
         float tituloX = (worldW - layout.width) * 0.5f;
-        game.getFont().draw(game.getBatch(), layout, tituloX, tituloY);
+        font.draw(batch, layout, tituloX, tituloY);
 
         // — CUERPO CENTRADO —
         // Usamos draw con Align.center dentro de una “caja” (cajaX, cajaAncho), ideal para varias líneas.
-        game.getFont().getData().setScale(1.6f);
+        font.getData().setScale(1.6f);
 
         switch (pasoActual) {
             case MOVER:
-                game.getFont().draw(game.getBatch(), "Muévete con las flechitas", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                game.getFont().draw(game.getBatch(), "Presiona cualquier flecha para continuar", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
+                font.draw(batch, "Muévete con las flechitas", cajaX, cuerpoY, cajaAncho, Align.center, false);
+                font.draw(batch, "Presiona cualquier flecha para continuar", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
                 break;
 
             case MOVER_CONFIRMADO:
-                game.getFont().draw(game.getBatch(), "¡ESO, Sigue moviéndote y acostumbrandote.", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                game.getFont().draw(game.getBatch(), "Aprenderemos a disparar en un momento", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
+                font.draw(batch, "¡ESO, Sigue moviéndote y acostumbrandote.", cajaX, cuerpoY, cajaAncho, Align.center, false);
+                font.draw(batch, "Aprenderemos a disparar en un momento", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
                 break;
 
             case DISPARAR:
-                game.getFont().draw(game.getBatch(), "Dispara con Z", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                game.getFont().draw(game.getBatch(), "Presiona Z para continuar", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
+                font.draw(batch, "Dispara con Z", cajaX, cuerpoY, cajaAncho, Align.center, false);
+                font.draw(batch, "Presiona Z para continuar", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
                 break;
 
             case DISPARAR_CONFIRMADO:
-                game.getFont().draw(game.getBatch(), "¡ESOOOO! Sigue disparando y masacrando.", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                game.getFont().draw(game.getBatch(), "Por el momento la munición es infinita.", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
+                font.draw(batch, "¡ESOOOO! Sigue disparando y masacrando.", cajaX, cuerpoY, cajaAncho, Align.center, false);
+                font.draw(batch, "Por el momento la munición es infinita.", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
                 break;
 
             case FIN:
-                game.getFont().draw(game.getBatch(), "¡Listo!, hasta aquí llego lo facil", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                game.getFont().draw(game.getBatch(), "ENTER o ESC para volver al Menú", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
+                font.draw(batch, "¡Listo!, hasta aquí llego lo facil", cajaX, cuerpoY, cajaAncho, Align.center, false);
+                font.draw(batch, "ENTER o ESC para volver al Menú", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
                 break;
         }
 
-        game.getBatch().end();
-    }
-    
+        batch.end();
+	}
 }
