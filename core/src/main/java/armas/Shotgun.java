@@ -1,19 +1,13 @@
 package armas;
 
+
 import java.util.Random;
 
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Bullet;
-<<<<<<< HEAD
-import logica.GameWorld;
-import logica.assets.AssetManager;
-=======
-import armas.proyectiles.Projectile;
-import logica.GameWorld;
 import managers.AssetManager;
->>>>>>> origin/noche
-import personajes.Player;
+import managers.ProjectileManager;
 
 public class Shotgun extends Weapon {
 	public Shotgun() {
@@ -24,11 +18,34 @@ public class Shotgun extends Weapon {
 	}
 
 	@Override
-<<<<<<< HEAD
-=======
-	public Projectile crearProyectil(Rectangle r, float rotation) {
-		// TODO Auto-generated method stub
-		return null;
+	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
+		float radians = (float) Math.toRadians(rotation + 90);
+        float centerX = r.getX() + r.getWidth() / 2;
+        float centerY = r.getY() + r.getHeight() / 2;
+        float length = r.getHeight() / 2;
+
+        float bulletX = centerX + (float) Math.cos(radians) * length;
+        float bulletY = centerY + (float) Math.sin(radians) * length;
+        
+        //simula una dispersion de balas aleatorias
+        Random ra = new Random();
+        
+        int pellets = 8;	// perdigones
+        int spread = 15; 	// grados de apertura
+
+        for (int i = 0; i < pellets; i++) {
+            // Ángulo con desviación aleatoria
+            float angle = rotation + (ra.nextFloat() * spread * 2 - spread); // -15 a +15 grados
+
+            Bullet bala = new Bullet(
+            		centerX, centerY,		// posicion de la bala
+                20f,                    // escala de la bala
+                angle,					// angulo de la bala
+                10f + ra.nextInt(4)     // velocidad levemente aleatoria
+            );
+            manager.add(bala);
+        }
+  
 	}
 
 	/*

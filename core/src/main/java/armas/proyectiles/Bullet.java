@@ -43,18 +43,6 @@ public class Bullet extends Projectile {
     }*/
 
     //movimiento de la bala y colision con el borde de la ventana
-    public void update(float delta, float x, float y, float rotation) {
-    	// Mueve el sprite del hitbox
-        Sprite spr = getHitbox().getSpr();
-        spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
-
-        // Comprueba si la bala ha salido de los límites de la pantalla
-        if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() ||
-            spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
-            destroyed = true;
-        }
-    }
-
     @Override
     public void update(float delta, Rectangle r, float rotation) {
         // Mueve el sprite del hitbox

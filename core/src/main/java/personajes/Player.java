@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
-import armas.proyectiles.Projectile;
 import enumeradores.ESkinJugador;
 import hitboxes.Hitbox;
 import logica.AnimationFactory;
 import managers.AssetManager;
+import managers.ProjectileManager;
 
 public class Player extends Hitbox {
 	private final float MAX_VELOCITY = 10.0f;
@@ -38,7 +38,7 @@ public class Player extends Hitbox {
 	private int hurtTime;
 	
 	// Armas
-	private Weapon weapon = new Melee();
+	private Weapon weapon = new HeavyMachineGun();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
@@ -124,10 +124,14 @@ public class Player extends Hitbox {
         yVel *= friction;
     }
     
-    public Projectile shoot(float delta) {
-    	if (hurted) return null;
+    public void shoot(float delta, ProjectileManager manager) {
+    	if (hurted) return;
     	
-    	return weapon.atacar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f);
+    	weapon.atacar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f, manager);
+    	
+    	if (weapon.getMunicion() == 0) {
+    		weapon = new Melee();
+    	}
     }
     
     private void borderBounce(float positionX, float positionY) {

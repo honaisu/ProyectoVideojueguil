@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
 import managers.AssetManager;
+import managers.ProjectileManager;
 
 //Clase Abstracta Arma generica
 public abstract class Weapon {
@@ -40,19 +41,19 @@ public abstract class Weapon {
     
     // metodo abstracto para disparar un arma
     //public abstract void disparar(Player nave, GameWorld juego, float delta);
-    public Projectile atacar(float delta, Rectangle r, float rotation) {
+    public void atacar(float delta, Rectangle r, float rotation, ProjectileManager manager) {
     	actualizar(delta);
-    	if (!puedeDisparar()) return null;
-        if (getMunicion() <= 0) return null;
+    	if (!puedeDisparar()) return;
+        if (getMunicion() <= 0) return;
         
         restarMunicion(delta);
         if (puedeDisparar()) reiniciarCooldown();
-        return crearProyectil(r, rotation);
+        crearProyectil(r, rotation, manager);
     }
     
     // metodo abstracto para crear el proyectil para cada arma
     //public abstract void crearProyectil(Player nave, GameWorld juego);
-    public abstract Projectile crearProyectil(Rectangle r, float rotation);
+    public abstract void crearProyectil(Rectangle r, float rotation, ProjectileManager manager);
     
     public void restarMunicion(float delta) {
     	tiempoUltDisp += delta;
@@ -61,7 +62,6 @@ public abstract class Weapon {
             tiempoUltDisp = 0;
         }
     }
-    
     
     //actualiza el timer entre disparo y disparo
     public void actualizar(float delta) {

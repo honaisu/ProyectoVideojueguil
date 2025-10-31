@@ -33,7 +33,7 @@ public class GameWorld {
 		else player.applyFriction(0.9f);
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			gameLogicHandler.addProjectile(player.shoot(delta));
+			player.shoot(delta, gameLogicHandler.getProyectilManager());
 			//player.getWeapon().disparar(player, this, delta);
 		}
 	}
