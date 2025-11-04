@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
 import managers.AssetManager;
+import managers.ProjectileManager;
 
 public class Flamethrower extends Weapon {
 	public Flamethrower(int daño, float cadencia, int municion, Sprite spr) {
@@ -13,8 +14,8 @@ public class Flamethrower extends Weapon {
 	}
 
 	@Override
-	public Projectile crearProyectil(Rectangle r, float rotation) {
+	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 }
