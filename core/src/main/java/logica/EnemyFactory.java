@@ -23,7 +23,7 @@ public class EnemyFactory {
 		return createBasic(x, y, size);
 	}
 	
-	public static Enemy createBasic(int x, int y, int size) {
-		return new Enemy(x, y, size);
+	public static Enemy createBasic(float x, float y, int size) {
+		return new Enemy(x, y, size);//, 100, 20);
 	}
 }

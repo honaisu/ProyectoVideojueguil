@@ -2,12 +2,19 @@ package personajes;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import hitboxes.BallHitbox;
+import hitboxes.Hitbox;
 import managers.AssetManager;
 
-public class Enemy extends BallHitbox {
-	public Enemy(float x, float y, float size) {
-		super(x, y, size, 0f);
-		super.setSpr(new Sprite(AssetManager.getInstancia().getAsteroideTexture()));
+public class Enemy extends Hitbox {
+
+	private float rareDrop;
+	private int healthPoints;
+	private float damage;
+	
+	public Enemy(float x, float y, float rareDrop){//, int healthPoints, int damage) {
+		super(x, y, new Sprite(AssetManager.getInstancia().getAsteroideTexture()));
+		this.rareDrop = rareDrop;
+		//this.healthPoints = healthPoints;
+		//this.damage = damage;
 	}
 }

@@ -2,7 +2,6 @@ package armas;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import armas.proyectiles.Projectile;
 import managers.AssetManager;
 import managers.ProjectileManager;
 
