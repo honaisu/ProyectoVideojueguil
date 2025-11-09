@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
-import armas.proyectiles.Projectile;
 import enumeradores.ESkinJugador;
 import hitboxes.Hitbox;
 import logica.AnimationFactory;
 import managers.AssetManager;
+import managers.ProjectileManager;
 
 public class Player extends Hitbox {
 	private final float MAX_VELOCITY = 10.0f;
@@ -20,6 +20,7 @@ public class Player extends Hitbox {
 	private int score = 0;
     private int round = 1;
     private int life; // ANTES: lives
+
     
 	private float xVel;
 	private float yVel;
@@ -37,7 +38,7 @@ public class Player extends Hitbox {
 	private int hurtTime;
 	
 	// Armas
-	private Weapon weapon = new HeavyMachineGun();
+	private Weapon weapon = new Melee();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
@@ -107,6 +108,29 @@ public class Player extends Hitbox {
 	    		getSpr().getRotation());
 	}
 	
+	//TODO revisar tema de la vida//
+	public void takeDamage(int damage) {
+		// Solo recibe daño si no está herido (invulnerable)
+		if (hurted) return;
+		
+		this.life -= 1; // O puedes usar el 'damage' si la vida es > 3
+		this.hurted = true;
+		this.hurtTime = 120; // Invulnerable por 120 frames (aprox 2 segundos)
+		
+		if (hurtSound != null) {
+			hurtSound.play();
+		}
+	}
+	
+	public boolean isHurt() {
+		return hurted;
+	}
+	
+	public boolean isDead() {
+		return life <= 0;
+	}
+	//TODO revisar tema de la vida//
+	
 	public void rotate(float amount) {
         if (hurted) return;
         this.rotation += amount;
@@ -123,10 +147,14 @@ public class Player extends Hitbox {
         yVel *= friction;
     }
     
-    public Projectile shoot(float delta) {
-    	if (hurted) return null;
+    public void shoot(float delta, ProjectileManager manager) {
+    	if (hurted) return;
     	
-    	return weapon.atacar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f);
+    	weapon.atacar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f, manager);
+    	
+    	if (weapon.getMunicion() == 0) {
+    		weapon = new Melee();
+    	}
     }
     
     private void borderBounce(float positionX, float positionY) {
@@ -147,6 +175,9 @@ public class Player extends Hitbox {
 	public Weapon getWeapon() {
 		return weapon;
 	}
+	public void setWeapon(Weapon newWeapon) {
+        this.weapon = newWeapon;
+    }
 	
 	public int getRound() {
 		return round;

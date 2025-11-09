@@ -9,7 +9,7 @@ public class GameWorld {
 	private final Player player;
 	private final GameLogicHandler gameLogicHandler;
 	
-	private final float ROTATE_ANGLE = 3.0f;
+	private final float ROTATE_ANGLE = 5.0f;
 	private final float ACCELERATION = 0.2f;
 	
 	public GameWorld() {
@@ -33,7 +33,7 @@ public class GameWorld {
 		else player.applyFriction(0.9f);
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			gameLogicHandler.addProjectile(player.shoot(delta));
+			player.shoot(delta, gameLogicHandler.getProyectilManager());
 			//player.getWeapon().disparar(player, this, delta);
 		}
 	}

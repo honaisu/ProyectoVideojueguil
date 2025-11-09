@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import armas.proyectiles.Projectile;
 import managers.EnemyManager;
 import managers.CollisionManager;
+import managers.DropManager;
 import managers.ProjectileManager;
 import personajes.Player;
 
@@ -21,10 +22,14 @@ public class GameLogicHandler {
     // No es un strategy :c
     private final ProjectileManager proyectilManager;
     
+    private final DropManager dropManager;
+    
     public GameLogicHandler() {
     	this.enemyManager = new EnemyManager();
     	this.collisionManager = new CollisionManager();
     	this.proyectilManager = new ProjectileManager();
+    	this.dropManager = new DropManager();
+    	
     }
     
     public EnemyManager getAsteroidManager() {
@@ -42,17 +47,20 @@ public class GameLogicHandler {
 	public void render(SpriteBatch batch) {
 		enemyManager.render(batch);
 		proyectilManager.draw(batch);
+		dropManager.render(batch);
 	}
 	
 	public void update(float delta, Rectangle r, float rotation) {
 		proyectilManager.update(delta, r, rotation);
 		enemyManager.update(delta);
+		dropManager.update(delta);
 	}
 
 	public void handleCollisions(Player player) {
 		// TODO Eliminar listas. O ver alternativas para manejar las colisiones
 		// (No se me ocurre ninguna por el momento)
-		collisionManager.handleCollisions(player, proyectilManager.getProjectiles(), enemyManager.getEnemies());
+		collisionManager.handleCollisions(player, proyectilManager.getProjectiles(), enemyManager.getEnemies(), dropManager);
+		collisionManager.handlePlayerVsDrops(player, dropManager);
 	}
 
 	public void addProjectile(Projectile projectile) {

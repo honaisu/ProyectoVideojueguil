@@ -2,11 +2,9 @@ package armas;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import armas.proyectiles.Projectile;
-import logica.GameWorld;
 import managers.AssetManager;
-import pantallas.juego.GameScreen;
-import personajes.Player;
+import managers.ProjectileManager;
+
 
 
 public class RocketLauncher extends Weapon {
@@ -18,8 +16,8 @@ public class RocketLauncher extends Weapon {
 	}
 
 	@Override
-	public Projectile crearProyectil(Rectangle r, float rotation) {
+	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 }

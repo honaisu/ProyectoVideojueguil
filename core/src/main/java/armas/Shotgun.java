@@ -1,31 +1,69 @@
 package armas;
 
+
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Bullet;
-import armas.proyectiles.Projectile;
-import logica.GameWorld;
 import managers.AssetManager;
-import personajes.Player;
+import managers.ProjectileManager;
 
 public class Shotgun extends Weapon {
 	public Shotgun() {
 		super("Shotgun",
+				10,												// daño
 				3f, 											// cadencia
 				8, 												// municion
 				AssetManager.getInstancia().getDisparoSound());	// sonido
+		
 	}
 
 	@Override
-	public Projectile crearProyectil(Rectangle r, float rotation) {
-		// TODO Auto-generated method stub
-		return null;
+	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
+		float radians = (float) Math.toRadians(rotation + 90);
+        float centerX = r.getX() + r.getWidth() / 2;
+        float centerY = r.getY() + r.getHeight() / 2;
+        float length = r.getHeight() / 2;
+
+        float bulletX = centerX + (float) Math.cos(radians) * length;
+        float bulletY = centerY + (float) Math.sin(radians) * length;
+        
+        //simula una dispersion de balas aleatorias
+        Random ra = new Random();
+        
+        int pellets = 8;	// perdigones
+        int spread = 15; 	// grados de apertura
+
+        for (int i = 0; i < pellets; i++) {
+            // Ángulo con desviación aleatoria
+            float angle = rotation + (ra.nextFloat() * spread * 2 - spread); // -15 a +15 grados
+
+            Bullet bala = new Bullet(
+            		centerX, centerY,		// posicion de la bala
+                20f,                    // escala de la bala
+                angle,					// angulo de la bala
+                10f + ra.nextInt(4)     // velocidad levemente aleatoria
+            );
+            manager.add(bala);
+        }
+  
 	}
+	@Override
+    public Texture getDropTexture() {
+        return AssetManager.getInstancia().getSTexture();
+    }
+
+    @Override
+    public Sound getPickupSound() {
+        return AssetManager.getInstancia().getSSound();
+    }
 
 	/*
 	@Override
+>>>>>>> origin/noche
 	public void disparar(Player nave, GameWorld juego, float delta) {
 		actualizar(delta);
         
@@ -65,9 +103,15 @@ public class Shotgun extends Weapon {
                 10f + r.nextInt(4),        						// velocidad levemente aleatoria
                 AssetManager.getInstancia().getBalaTexture()	// textura de la bala
             );
+<<<<<<< HEAD
+
+            juego.getGameManager().getBulletManager().add(bala);
+      
+=======
             
             // TODO Agregar Bala...
             juego.getGameManager().getProyectilManager().add(bala);
+>>>>>>> origin/noche
         }
         getSoundBala().play(0.1f);
     }*/

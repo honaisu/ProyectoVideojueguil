@@ -1,13 +1,11 @@
 package armas;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.LaserBeam;
-import armas.proyectiles.Projectile;
-import logica.GameWorld;
 import managers.AssetManager;
-import pantallas.juego.GameScreen;
-import personajes.Player;
+import managers.ProjectileManager;
 
 public class LaserCannon extends Weapon {
     // Configuración del pulso
@@ -24,10 +22,13 @@ public class LaserCannon extends Weapon {
     }
 
 	@Override
-	public Projectile crearProyectil(Rectangle r, float rotation) {
+	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
 		LaserBeam rayo = new LaserBeam(r, rotation);
 		rayo.configurarPulso(duracionPulso);
-		return rayo;
+		
+		rayo.getHitbox().setSpr(new Sprite(AssetManager.getInstancia().getLaserGunTexture()));
+		manager.add(rayo);
+		
 	}
 
     /*
@@ -46,10 +47,17 @@ public class LaserCannon extends Weapon {
 
     /*
 	@Override
+>>>>>>> origin/noche
 	public void crearProyectil(Player nave, GameWorld juego) {
 		LaserBeam rayo = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), estiloRayo);
 		rayo.configurarPulso(duracionPulso); // fija TTL del pulso
+<<<<<<< HEAD
+		
+		juego.getGameManager().getLaserManager().add(rayo);
+	}
+=======
 		// TODO Agregar Laser? 
 		juego.getGameManager().getProyectilManager().add(rayo);
 	}*/
+
 }

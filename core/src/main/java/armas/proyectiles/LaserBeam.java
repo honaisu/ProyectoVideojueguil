@@ -1,6 +1,5 @@
 package armas.proyectiles;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -64,7 +63,8 @@ public class LaserBeam extends Projectile {
         // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
         float ang = nave.getRotation() + 90f;
         float[] muzzle = calcularMuzzle(nave, ang);
-        getHitbox().setTransform(muzzle[0], muzzle[1], ang);
+        // TODO 
+        //getHitbox().setTransform(muzzle[0], muzzle[1], ang);
 
         // Apagar si no se refrescó (la tecla se soltó)
         tiempoRestanteEncendido -= delta;
@@ -80,7 +80,7 @@ public class LaserBeam extends Projectile {
 
     public void destroy() {
         destroyed = true;
-        hitbox.setActivo(false);
+        //hitbox.setActivo(false);
     }
 
     public boolean isDestroyed() {
