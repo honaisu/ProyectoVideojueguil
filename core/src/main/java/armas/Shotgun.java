@@ -3,6 +3,8 @@ package armas;
 
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Bullet;
@@ -12,9 +14,11 @@ import managers.ProjectileManager;
 public class Shotgun extends Weapon {
 	public Shotgun() {
 		super("Shotgun",
+				10,												// daño
 				3f, 											// cadencia
 				8, 												// municion
 				AssetManager.getInstancia().getDisparoSound());	// sonido
+		
 	}
 
 	@Override
@@ -47,6 +51,15 @@ public class Shotgun extends Weapon {
         }
   
 	}
+	@Override
+    public Texture getDropTexture() {
+        return AssetManager.getInstancia().getSTexture();
+    }
+
+    @Override
+    public Sound getPickupSound() {
+        return AssetManager.getInstancia().getSSound();
+    }
 
 	/*
 	@Override

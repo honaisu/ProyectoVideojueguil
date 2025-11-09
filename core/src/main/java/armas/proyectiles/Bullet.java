@@ -61,14 +61,7 @@ public class Bullet extends Projectile {
     	getHitbox().draw(batch);
     }
 
-    //colision con un asteroide
-    public boolean checkCollision(Hitbox b2) {
-    	if (getHitbox().checkCollision(b2)) {
-            destroy();
-            return true;
-        }
-        return false;
-    }
+   
 
     public boolean isDestroyed() { return destroyed; }
 }

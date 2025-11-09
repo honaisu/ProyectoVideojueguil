@@ -1,9 +1,10 @@
 package armas;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-import armas.proyectiles.Projectile;
 import managers.AssetManager;
 import managers.ProjectileManager;
 
@@ -17,5 +18,17 @@ public class Flamethrower extends Weapon {
 	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Texture getDropTexture() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Sound getPickupSound() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

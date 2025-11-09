@@ -38,7 +38,7 @@ public class Player extends Hitbox {
 	private int hurtTime;
 	
 	// Armas
-	private Weapon weapon = new HeavyMachineGun();
+	private Weapon weapon = new Melee();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
@@ -108,6 +108,29 @@ public class Player extends Hitbox {
 	    		getSpr().getRotation());
 	}
 	
+	//TODO revisar tema de la vida//
+	public void takeDamage(int damage) {
+		// Solo recibe daño si no está herido (invulnerable)
+		if (hurted) return;
+		
+		this.life -= 1; // O puedes usar el 'damage' si la vida es > 3
+		this.hurted = true;
+		this.hurtTime = 120; // Invulnerable por 120 frames (aprox 2 segundos)
+		
+		if (hurtSound != null) {
+			hurtSound.play();
+		}
+	}
+	
+	public boolean isHurt() {
+		return hurted;
+	}
+	
+	public boolean isDead() {
+		return life <= 0;
+	}
+	//TODO revisar tema de la vida//
+	
 	public void rotate(float amount) {
         if (hurted) return;
         this.rotation += amount;
@@ -152,6 +175,9 @@ public class Player extends Hitbox {
 	public Weapon getWeapon() {
 		return weapon;
 	}
+	public void setWeapon(Weapon newWeapon) {
+        this.weapon = newWeapon;
+    }
 	
 	public int getRound() {
 		return round;
