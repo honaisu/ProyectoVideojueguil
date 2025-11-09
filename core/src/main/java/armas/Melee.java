@@ -1,11 +1,8 @@
 package armas;
 
 import com.badlogic.gdx.math.Rectangle;
-
-import armas.proyectiles.Projectile;
 import armas.proyectiles.Swing;
-import logica.GameWorld;
-import personajes.Player;
+import managers.ProjectileManager;
 
 //Clase para el arma cuerpo a cuerpo
 public class Melee extends Weapon {
@@ -58,7 +55,7 @@ public class Melee extends Weapon {
     }
 
 	@Override
-	public Projectile crearProyectil(Rectangle r, float rotation) {
+	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
 		float radians = (float) Math.toRadians(rotation);
 		float centerX = r.getX() + r.getWidth() / 2;
         float centerY = r.getY() + r.getHeight() / 2;
@@ -67,7 +64,7 @@ public class Melee extends Weapon {
         float swingX = centerX + (float) Math.cos(radians) * length;
         float swingY = centerY + (float) Math.sin(radians) * length;
         swingActual = new Swing(swingX, swingY, rotation, length);
-		return swingActual;
+        manager.add(swingActual);
 	}
 }
 

@@ -1,33 +1,28 @@
-# LibGDX
+# Not Hotline Miami
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+_Not Hotline Miami_ es un videojuego desarrollado con [libGDX](https://libgdx.com/), inspirado en los clásicos de acción con vista superior. El proyecto está organizado en módulos multiplataforma, siendo `core` el módulo principal con toda la lógica del juego y `lwjgl3` la plataforma de escritorio.
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+## Características principales
 
-## Platforms
+- **Acción arcade**: Controla a tu personaje, esquiva enemigos y dispara diferentes tipos de armas.
+- **Gestión de recursos**: Sistema de texturas, sonidos y música centralizado mediante un singleton ([`managers.AssetManager`](core/src/main/java/managers/AssetManager.java)).
+- **Pantallas navegables**: Menú principal, personalización de personaje, configuración, tutorial, pausa y game over, gestionadas por [`managers.ScreenManager`](core/src/main/java/managers/ScreenManager.java).
+- **Sistema de armas**: Diferentes armas implementadas en [`armas`](core/src/main/java/armas/) y proyectiles en [`armas.proyectiles`](core/src/main/java/armas/proyectiles/).
+- **Colisiones y enemigos**: Lógica de colisiones y gestión de enemigos en [`managers.CollisionManager`](core/src/main/java/managers/CollisionManager.java) y [`managers.EnemyManager`](core/src/main/java/managers/EnemyManager.java).
+- **Personalización**: Selección de skins para el jugador.
+- **Configuración de audio**: Ajuste de volúmenes de música y efectos.
 
-- `core`: Main module with the application logic shared by all platforms.
-- `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
+## Estructura del proyecto
 
-## Gradle
+- **core/**: Lógica principal del juego, pantallas, managers, armas, personajes, etc.
+- **lwjgl3/**: Lanzador y configuración para escritorio (Windows/Linux/macOS).
+- **assets/**: Recursos del juego (imágenes, sonidos, música).
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+## Cómo ejecutar
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
-
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+1. **Requisitos**: Java 8+ y Gradle (o usar el wrapper incluido).
+2. **Instalación**: Para instalarlo se puede clonar el repositorio a través de las opciones provistas por GitHub.
+3. **Compilar y ejecutar**: Dentro de la carpeta del proyecto, ejecutar el siguiente comando.
+   ```sh
+   ./gradlew lwjgl3:run
+   ```

@@ -21,7 +21,7 @@ public class OptionNavigator {
 	
 	public OptionNavigator(INavigableOption[] opciones) {
 		this.opciones = opciones;
-		this.delay = 0.1f;
+		this.delay = 0.001f;
 	}
 	
 	public OptionNavigator(INavigableOption[] opciones, float delay) {
@@ -41,9 +41,9 @@ public class OptionNavigator {
 	    if (keyCooldown <= 0f) {
 	    	int largo = opciones.length;
 	    	
-	        if (Gdx.input.isKeyPressed(siguiente))
+	        if (Gdx.input.isKeyJustPressed(siguiente))
 	        	indiceActual = navegar(true, indiceActual, largo);
-	        else if (Gdx.input.isKeyPressed(anterior)) 
+	        else if (Gdx.input.isKeyJustPressed(anterior)) 
 	        	indiceActual = navegar(false, indiceActual, largo);
 	        
 	        keyCooldown = delay;

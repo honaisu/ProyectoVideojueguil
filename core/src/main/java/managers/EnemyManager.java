@@ -39,13 +39,10 @@ public class EnemyManager {
     return true;
   }
 
-  public void update(float delta) {
-    for (Enemy e : enemies) e.update();
-  }
-
-  public void render(SpriteBatch batch) {
-    for (Enemy e : enemies) e.draw(batch);
-  }
+  public void update(float delta) { for (Enemy e : enemies) e.update(); }
+  public void render(SpriteBatch batch) { for (Enemy e : enemies) e.draw(batch); }
 
   public List<Enemy> getEnemies() { return enemies; }
+  public int size() { return enemies.size(); }
+  public boolean isEmpty() { return enemies.isEmpty(); }
 }

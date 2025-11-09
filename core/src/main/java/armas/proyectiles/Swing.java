@@ -10,8 +10,7 @@ public class Swing extends Projectile {
     private float duracion = 0.25f;     
     // Contador
     private float tiempoActivo = 0f;  	
-    // para que desaparezca el swing
-    private boolean destroyed = false;	
+    // para que desaparezca el swing	
     
     private float radio;
 
@@ -29,21 +28,13 @@ public class Swing extends Projectile {
     	
     	//actualiza el movimiento de la colision con el movimiento de la nave
     	getHitbox().mover(centerX, centerY, rotation, radio);
-    	
-        //stateTime += delta;
         
-        //un breve periodod de tiempo hasta que se destruye automaticamente
+        //un breve periodo de tiempo hasta que se destruye automaticamente
         tiempoActivo += delta;
         if (tiempoActivo > duracion) {
             destroy();
         }
     }
-
-    @Override
-    public boolean isDestroyed() {
-        return destroyed;
-    }
-
 	@Override
 	public void draw(SpriteBatch batch) {
 		getHitbox().draw(batch);

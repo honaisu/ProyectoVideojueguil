@@ -3,14 +3,14 @@ package armas;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Bullet;
-import armas.proyectiles.Projectile;
+import managers.ProjectileManager;
 
 /**
  * Clase para un arma escopeta
  */
 public class HeavyMachineGun extends Weapon {
     public HeavyMachineGun() {
-    	super(0.2f, 300);
+    	super(0.2f, 30);
         super.setNombre("Heavy Machine Gun");
     }
     
@@ -21,7 +21,7 @@ public class HeavyMachineGun extends Weapon {
     
     //crea la bala de la metralleta con direccion respecto al jugador
     @Override
-    public Projectile crearProyectil(Rectangle r, float rotation) {
+    public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
     	float radians = (float) Math.toRadians(rotation);
         float centerX = r.getX() + r.getWidth() / 2;
         float centerY = r.getY() + r.getHeight() / 2;
@@ -32,7 +32,6 @@ public class HeavyMachineGun extends Weapon {
 
         // TODO Arreglar valores hardcodeados...
         Bullet bala = new Bullet(bulletX, bulletY, 40f, rotation, 10f);
-        
-        return bala;
+        manager.add(bala);
     }
 }

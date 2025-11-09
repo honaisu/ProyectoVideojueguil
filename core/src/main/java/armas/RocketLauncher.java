@@ -3,10 +3,8 @@ package armas;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
-import logica.GameWorld;
 import managers.AssetManager;
-import pantallas.juego.GameScreen;
-import personajes.Player;
+
 
 
 public class RocketLauncher extends Weapon {
