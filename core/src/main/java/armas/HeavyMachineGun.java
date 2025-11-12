@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Bullet;
+import armas.proyectiles.Projectile;
 import managers.AssetManager;
 import managers.ProjectileManager;
 import personajes.Player;
@@ -16,24 +17,18 @@ public class HeavyMachineGun extends Weapon {
 		super("Heavy Machine Gun",
 				25,												// daño
 				0.2f, 											// cadencia
-				30, 												// municion
+				30, 											// municion
 				AssetManager.getInstancia().getDisparoSound());	// sonido
 	}
     
     //crea la bala de la metralleta con direccion respecto al jugador
     @Override
     public void crearProyectil(Player p, ProjectileManager manager) {
-    	float rotation = p.getRotation() + 90;
-    	float radians = (float) Math.toRadians(rotation);
-        float centerX = p.getSpr().getBoundingRectangle().getX() + p.getSpr().getBoundingRectangle().getWidth() / 2;
-        float centerY = p.getSpr().getBoundingRectangle().getY() + p.getSpr().getBoundingRectangle().getHeight() / 2;
-        float length = p.getSpr().getBoundingRectangle().getHeight() / 2;
-
-        float bulletX = centerX + (float) Math.cos(radians) * length;
-        float bulletY = centerY + (float) Math.sin(radians) * length;
-
-        // TODO Arreglar valores hardcodeados...
-        Bullet bala = new Bullet(centerX, centerY, 30f, rotation, 10f, p);
+        float[] muzzle = Projectile.calcularMuzzle(p, false);
+        float width = 30f;
+        float vel = 10f;
+        
+        Bullet bala = new Bullet(muzzle[0], muzzle[1], width, muzzle[2], vel, p);
         manager.add(bala);
     }
     @Override

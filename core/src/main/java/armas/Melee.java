@@ -2,6 +2,8 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+
+import armas.proyectiles.Projectile;
 import armas.proyectiles.Swing;
 import managers.AssetManager;
 import managers.ProjectileManager;
@@ -26,15 +28,10 @@ public class Melee extends Weapon {
 
 	@Override
 	public void crearProyectil(Player p, ProjectileManager manager) {
-		float rotation = p.getRotation() + 90;
-		float radians = (float) Math.toRadians(rotation + 90);
-        float centerX = p.getSpr().getBoundingRectangle().getX() + p.getSpr().getBoundingRectangle().getWidth() / 2;
-        float centerY = p.getSpr().getBoundingRectangle().getY() + p.getSpr().getBoundingRectangle().getHeight() / 2;
-        // distancia delante del jugador
         float length = p.getSpr().getBoundingRectangle().getHeight() / 2 + 20; 
-        float swingX = centerX + (float) Math.cos(radians) * length;
-        float swingY = centerY + (float) Math.sin(radians) * length;
-        swingActual = new Swing(swingX, swingY, rotation, length, p);
+        float[] muzzle = Projectile.calcularMuzzle(p, true);
+        
+        swingActual = new Swing(muzzle[0], muzzle[1], muzzle[2], length, p);
         manager.add(swingActual);
 	}
 	

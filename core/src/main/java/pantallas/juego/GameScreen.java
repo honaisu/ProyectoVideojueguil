@@ -26,24 +26,43 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
-		world.getGameLogicHandler().update(
+		
+		
+		/*world.getGameLogicHandler().update(
 				delta, 
 				world.getPlayer()
 				);
+		*/
+		//para cuando muere
+		if (world.getPlayer().isDead()) {
+			
+			// Asumo que tienes una pantalla llamada EScreenType.GAME_OVER
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
+			
+			// Detenemos la ejecución de este update para no chequear la pausa
+			return; 
+		}
+		
 		
 		// Sistema de Pausa
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			getGame().getPantallaManager().cambiarPantalla(EScreenType.PAUSA);
 		}
+
 	}
 
 	@Override
 	protected void draw(SpriteBatch batch, BitmapFont font) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		//ahora antes de "dibujar" le preguntamos al GameWorld//
+		String currentRoundName = world.getCurrentRoundName();
 		batch.begin();
 		world.getPlayer().draw(batch);				//TODO ⇧⇩ para que el player superponga las balas de las armas
 		world.getGameLogicHandler().render(batch);
-		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore());
+		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
+		
+		
 		batch.end();
 	}
 }

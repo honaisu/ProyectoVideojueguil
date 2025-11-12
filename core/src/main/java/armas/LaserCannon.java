@@ -1,34 +1,55 @@
 package armas;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.LaserBeam;
+import armas.proyectiles.Projectile;
 import managers.AssetManager;
 import managers.ProjectileManager;
+import personajes.Player;
 
 public class LaserCannon extends Weapon {
     // Configuración del pulso
-    private final float anchoLaser = 20f;     // grosor visual/efectivo
-    private final float duracionPulso = 0.25f; // duración del rayo por disparo (segundos)
     private final int estiloRayo = 2;         // usa el “num” para grosor/estilo en RayHitbox
 
     public LaserCannon() {
-        // cadencia controla cada cuánto puede volver a disparar (cooldown)
-        super(1.8f, 15);
-        
-        super.setNombre("Laser Cannon");
-        super.setSoundBala(AssetManager.getInstancia().getLaserGunSound());
+    	super("Laser Cannon",
+				25,													// daño
+				0.9f, 												// cadencia
+				15, 												// municion
+				AssetManager.getInstancia().getLaserGunSound());	// sonido
     }
 
 	@Override
-	public void crearProyectil(Rectangle r, float rotation, ProjectileManager manager) {
-		LaserBeam rayo = new LaserBeam(r, rotation);
+	public void crearProyectil(Player p, ProjectileManager manager) {
+		float muzzle[] = Projectile.calcularMuzzle(p, true);
+		float width = 20f;     // grosor visual/efectivo
+		float duracionPulso = 0.25f; // duración del rayo por disparo (segundos)
+		
+		LaserBeam rayo = new LaserBeam(muzzle[0],
+				muzzle[1],
+				width,
+				muzzle[2],
+				true,
+				new Sprite(AssetManager.getInstancia().getLaserGunTexture()),
+				p);
 		rayo.configurarPulso(duracionPulso);
 		
-		rayo.getHitbox().setSpr(new Sprite(AssetManager.getInstancia().getLaserGunTexture()));
 		manager.add(rayo);
 		
+	}
+
+	@Override
+	public Texture getDropTexture() {
+		return AssetManager.getInstancia().getLGTexture(); //TODO
+	}
+
+	@Override
+	public Sound getPickupSound() {
+		return AssetManager.getInstancia().getLCSound();
 	}
 
     /*

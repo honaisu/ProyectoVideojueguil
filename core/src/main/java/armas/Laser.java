@@ -15,17 +15,13 @@ public class Laser extends Weapon {
 
     // misma idea que el metralleta (literal es igual en todos creo xd)
     public Laser() {
-        super(0.08f, 60);
-        super.setNombre("Laser Gun");
-    	super.setSoundBala(AssetManager.getInstancia().getLaserContSound());
+    	super("Laser Gun",
+				2,													// daño
+				0.08f, 												// cadencia
+				60, 												// municion
+				AssetManager.getInstancia().getLaserContSound());	// sonido
     }
     
-    public Laser(float cadencia, int municionMax) {
-    	super(cadencia, municionMax);
-    	
-    	super.setNombre("Laser Gun");
-    	super.setSoundBala(AssetManager.getInstancia().getLaserContSound());
-    }
     // Disparo “pulso” como dijo benjoid
     /*
     @Override
@@ -57,9 +53,9 @@ public class Laser extends Weapon {
         juego.getGameManager().getProyectilManager().add(pulso);
     }*/
     @Override
-    public Projectile crearProyectil(Rectangle r, float rotation) {    	
+    public void crearProyectil(Player p, float rotation) {    	
         //LaserBeam pulso = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), 1);
-        LaserBeam pulso = new LaserBeam(r, rotation);
+        LaserBeam pulso = new LaserBeam(p, rotation);
     	pulso.configurarPulso(ttlPulso); // se apaga solo al vencer el TTL
         
         return pulso;

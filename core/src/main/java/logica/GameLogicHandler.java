@@ -32,7 +32,7 @@ public class GameLogicHandler {
     	
     }
     
-    public EnemyManager getAsteroidManager() {
+    public EnemyManager getEnemyManager() {
     	return enemyManager;
     }
 	

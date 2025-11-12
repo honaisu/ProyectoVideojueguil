@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Bullet;
+import armas.proyectiles.Projectile;
 import managers.AssetManager;
 import managers.ProjectileManager;
 import personajes.Player;
@@ -15,7 +16,7 @@ public class Shotgun extends Weapon {
 	public Shotgun() {
 		super("Shotgun",
 				10,												// daño
-				3f, 											// cadencia
+				2.5f, 											// cadencia
 				8, 												// municion
 				AssetManager.getInstancia().getDisparoSound());	// sonido
 		
@@ -23,31 +24,25 @@ public class Shotgun extends Weapon {
 
 	@Override
 	public void crearProyectil(Player p, ProjectileManager manager) {
-		float rotation = p.getRotation() + 90;
-		
-		float radians = (float) Math.toRadians(rotation + 90);
-        float centerX = p.getSpr().getBoundingRectangle().getX() + p.getSpr().getBoundingRectangle().getWidth() / 2;
-        float centerY = p.getSpr().getBoundingRectangle().getY() + p.getSpr().getBoundingRectangle().getHeight() / 2;
-        float length = p.getSpr().getBoundingRectangle().getHeight() / 2;
-
-        float bulletX = centerX + (float) Math.cos(radians) * length;
-        float bulletY = centerY + (float) Math.sin(radians) * length;
+        float[] muzzle = Projectile.calcularMuzzle(p, false);
+        float width = 20f;
+        float vel = 10f;
         
         //simula una dispersion de balas aleatorias
         Random ra = new Random();
         
-        int pellets = 8;	// perdigones
-        int spread = 15; 	// grados de apertura
+        int pellets = 8;
+        int spread = 15;
 
         for (int i = 0; i < pellets; i++) {
             // Ángulo con desviación aleatoria
-            float angle = rotation + (ra.nextFloat() * spread * 2 - spread); // -15 a +15 grados
+            float angle = muzzle[2] + (ra.nextFloat() * spread * 2 - spread);
 
             Bullet bala = new Bullet(
-            		centerX, centerY,		// posicion de la bala
-                20f,                    // escala de la bala
-                angle,					// angulo de la bala
-                10f + ra.nextInt(4),     // velocidad levemente aleatoria
+            		muzzle[0], muzzle[1],	// posicion de la bala
+                width,                    	// escala de la bala
+                angle,						// angulo de la bala
+                vel + ra.nextInt(4),     	// velocidad levemente aleatoria
                 p
             );
             manager.add(bala);

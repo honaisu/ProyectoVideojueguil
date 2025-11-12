@@ -13,6 +13,7 @@ import pantallas.menus.ConfigurationScreen;
 import pantallas.menus.CustomizationScreen;
 import pantallas.menus.MainMenuScreen;
 
+
 public class ScreenManager {
 	private final MainGame game;
     private Map<EScreenType, BaseScreen> pantallas;
@@ -32,6 +33,7 @@ public class ScreenManager {
         pantallas.put(EScreenType.CONFIGURACION, 	new ConfigurationScreen(game));
         pantallas.put(EScreenType.PAUSA, new PauseScreen(game));
         pantallas.put(EScreenType.TUTORIAL, new TutorialScreen(game));
+
     }
     
     public void cambiarPantalla(EScreenType tipoPantalla) {
@@ -52,6 +54,7 @@ public class ScreenManager {
             game.setScreen(screen);
         } 
     }
+    
     
     public void dispose() {
         for (BaseScreen screen : pantallas.values()) {

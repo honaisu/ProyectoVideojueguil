@@ -66,7 +66,9 @@ public class PauseScreen extends NavigableScreen {
         font.draw(batch, "PAUSA", px + 190, py + 200);
         navegador.drawOptions(batch, font);
 
+
         batch.end();
+
 	}
 
 }

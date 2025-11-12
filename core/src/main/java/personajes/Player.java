@@ -14,6 +14,7 @@ import logica.AnimationFactory;
 import managers.AssetManager;
 import managers.ProjectileManager;
 
+
 public class Player extends Entity {
 	private final float MAX_VELOCITY = 10.0f;
 	// Estado básico 
@@ -21,28 +22,26 @@ public class Player extends Entity {
     private int round = 1;
     private int life; // ANTES: lives
 
-    
+	//fisica de si
 	private float xVel;
 	private float yVel;
 	private float rotation;
-
-	// Visual y audio
+	
+	//Visual y audio
 	private Sound hurtSound = AssetManager.getInstancia().getHurtSound();
-	
-	// ENCARGADOS DE ANIMACIÓN
 	private Animation<TextureRegion> animation;
-    private float stateTime = 0f;
-    
-	// Herido
-	private boolean hurted = false;
-	private int hurtTime;
-	
-	// Armas
+	private float stateTime = 0f;
+		
+	//Lógica de Daño merge
+	private boolean hurted = false; // benjoid
+	private int hurtTime;           //TODO
+	private float iFrames = 0f;     // si
+	  
+	//Arma inicial o por defecto
 	private Weapon weapon = new HeavyMachineGun();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
-		
 		this.life = 100;
 		this.xVel = 0f;
 		this.yVel = 0f;
@@ -57,17 +56,53 @@ public class Player extends Entity {
 	 
 	@Override
 	public void update(float delta) {
-        boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
-        if (isMoving) stateTime += delta;
+	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+	    if (isMoving) stateTime += delta;
+
+	    // Lógica de daño fusionada //o queda bien o se jode todo
+	    if (hurted) {
+	      hurtTime--;
+	      if (hurtTime <= 0) hurted = false;
+	    }
+	    if (iFrames > 0f) iFrames -= delta;
+
+	    xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
+	    yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
+
+	    float positionX = getSpr().getX() + xVel;
+	    float positionY = getSpr().getY() + yVel;
+
+	    // Logica de rebote 
+	    borderBounce(positionX, positionY);
+	    
+	    getSpr().setPosition(positionX, positionY);
+	    getSpr().setRotation(rotation);
+
+	    weapon.actualizar(delta);
+	  }
+
+ /*TODO
+	public void draw(SpriteBatch batch) {
+	    TextureRegion currentFrame;
+	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+
+	    currentFrame = isMoving ? animation.getKeyFrame(stateTime, true)
+	                            : animation.getKeyFrame(0f, true);
 
 	    if (hurted) {
-            hurtTime--;
-            if (hurtTime <= 0) hurted = false;
+	      if ((hurtTime % 10) < 5) return; // Parpadeo
 	    }
 
-        // Límites de velocidad
-        xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
-        yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
+	    batch.draw(
+	      currentFrame,
+	      getSpr().getX(), getSpr().getY(),
+	      getSpr().getOriginX(), getSpr().getOriginY(),
+	      getSpr().getWidth(), getSpr().getHeight(),
+	      getSpr().getScaleX(), getSpr().getScaleY(),
+	      getSpr().getRotation()
+	    );
+	  }
+
 
         // Rebote en bordes
         float positionX = getSpr().getX() + xVel;
@@ -81,7 +116,7 @@ public class Player extends Entity {
         // Actualizar el arma
         weapon.actualizar(delta);
     }
-	
+	*/
 	@Override
 	public void draw(SpriteBatch batch) {
  		TextureRegion currentFrame;
@@ -131,7 +166,7 @@ public class Player extends Entity {
 		return life <= 0;
 	}
 	//TODO revisar tema de la vida//
-	
+
 	public void rotate(float amount) {
         this.rotation += amount;
     }
@@ -164,32 +199,53 @@ public class Player extends Entity {
         	yVel *= -1;
         }
     }
-
-	public float getRotation() {
-		return rotation;
-	}
-
-	public Weapon getWeapon() {
-		return weapon;
-	}
+	
 	public void setWeapon(Weapon newWeapon) {
         this.weapon = newWeapon;
     }
-	
-	public int getRound() {
-		return round;
-	}
-	
-	public int getScore() {
-		return score;
-	}
-	
-	public int getLife() {
-		return life;
-	}
+/*
+  private void borderBounce(float positionX, float positionY) {
+    // Rebote horizontal
+    if (positionX < 0f || (positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
+      xVel *= -1f;
+      // Corrige posición para no salir
+      if (positionX < 0f) positionX = 0f;
+      else positionX = Gdx.graphics.getWidth() - getSpr().getWidth();
+    }
+    // Rebote vertical
+    if (positionY < 0f || (positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
+      yVel *= -1f;
+      if (positionY < 0f) positionY = 0f;
+      else positionY = Gdx.graphics.getHeight() - getSpr().getHeight();
+    }
+    // Aplica corrección local
+    getSpr().setPosition(positionX, positionY);
+  }
+  */
+/*
+  // Llamado por el CollisionManager al detectar choque con Enemy
+  public void onHitByEnemy(personajes.Enemy e) {
+    if (iFrames > 0f) return;   // invulnerable
+    damage(1);
+    iFrames = 0.5f;             // medio segundo de invulnerabilidad
+    hurted = true;
+    hurtTime = 30;              // frames de parpadeo, ajusta si usas delta
+    if (hurtSound != null) hurtSound.play();
+  }*/
 
-	public boolean hasWeapon() {
-		if (weapon.getMunicion() > 0) return true;
-		return false;
-	}
+  public void damage(int amount) {
+    life -= amount;
+    if (life < 0) life = 0;
+  }
+
+  // Getters básicos
+  public float getRotation() { return rotation; }
+  public Weapon getWeapon() { return weapon; }
+  public int getRound() { return round; }
+  public int getScore() { return score; }
+  public int getLife() { return life; }
+
+  public boolean hasWeapon() {
+    return weapon.getMunicion() > 0;
+  }
 }

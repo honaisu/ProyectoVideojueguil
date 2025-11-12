@@ -1,19 +1,26 @@
 package armas.proyectiles;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import hitboxes.RayHitbox;
+import managers.AssetManager;
 import personajes.Player;
 
 public class LaserBeam extends Projectile {
     private Player nave;
     private boolean destroyed = false;
+    
+
+    private float largo;
+    private float ancho;
+    private float angle;
 
     // Control de encendido por tecla mantenida (Z)
     // si llega a 0, se apaga
-    private float tiempoRestanteEncendido = 0f;     
-    // margen entre frames para mantener encendido
+    private float tiempoRestanteEncendido = 0f;
     private final float tiempoRefrescoEncendido = 0.12f; 
     
     /*
@@ -25,23 +32,49 @@ public class LaserBeam extends Projectile {
         float[] muzzle = calcularMuzzle(nave, ang);
     }*/
     
-    public LaserBeam(float x, float y, float width, float angle) {
-    	super(new RayHitbox(new Rectangle(x, y, width, 1f), angle, true));
+    public LaserBeam(float x, float y, float width, float angle, boolean isThin, Sprite spr, Player p) {
+    	super(x, y, spr, p);
+    	
+    	// 2. Configura los campos (lógica de RayHitbox)
+        this.ancho = p.getSpr().getBoundingRectangle().getWidth();
+        this.largo = p.getSpr().getBoundingRectangle().getHeight(); // r.getHeight() es probablemente 1f, pero está bien
+        this.angle = angle;
+        
+        if (isThin) getSpr().scale(3f);
+        else getSpr().scale(10f);
+        
+        // 3. Llama al método de configuración (copiado de RayHitbox)
+        this.setToScreenEnd();
     }
     
-    public LaserBeam(Rectangle r, float angle) {
-    	super(new RayHitbox(r, angle, true));
+    private void setToScreenEnd() {
+        float radians = (float) Math.toRadians(angle);
+        float dx = (float) Math.cos(radians);
+        float dy = (float) Math.sin(radians);
+
+        float W = Gdx.graphics.getWidth();
+        float H = Gdx.graphics.getHeight();
+        float tMin = Float.POSITIVE_INFINITY;
+        
+        if (dx > 0f) tMin = Math.min(tMin, (W - getX()) / dx);
+        if (dx < 0f) tMin = Math.min(tMin, (0 - getX()) / dx);
+        if (dy > 0f) tMin = Math.min(tMin, (H - getY()) / dy);
+        if (dy < 0f) tMin = Math.min(tMin, (0 - getY()) / dy);
+
+        largo = (tMin == Float.POSITIVE_INFINITY) ? Math.max(W, H) : tMin;
+        
+        getSpr().setSize(largo, ancho);
     }
     
-    //TODO revisar para reutilizar este metodo para otras armas
-    private static float[] calcularMuzzle(Player nave, float ang) {
-        float cx = nave.getSpr().getX() + nave.getSpr().getWidth() / 2f;
-        float cy = nave.getSpr().getY() + nave.getSpr().getHeight() / 2f;
-        float length = nave.getSpr().getHeight() / 2f;
-        float rad = (float) Math.toRadians(ang);
-        float mx = cx + (float) Math.cos(rad) * length;
-        float my = cy + (float) Math.sin(rad) * length;
-        return new float[]{mx, my};
+    public void setTransform(float x, float y, float angulo) {
+        setX(x);
+        setY(y);
+        this.angle = angulo;
+
+        getSpr().setRotation(angulo);
+        getSpr().setPosition(x, y - ancho / 2f); // (Asumo que quieres centrarlo)
+
+        setToScreenEnd();
     }
 
     // Llamado por Laser.disparar cada frame mientras la tecla (Z) siga presionada
@@ -56,7 +89,27 @@ public class LaserBeam extends Projectile {
         // No se llama a refrescarEncendido desde CanonLaser, por lo que se apagará solo al vencer
     }
     
+    @Override
+    public void update(float delta, Player p) {
+        if (isDestroyed()) return;
+
+        // Lógica de tiempo de vida
+        tiempoRestanteEncendido -= delta;
+        if (tiempoRestanteEncendido <= 0f) {
+            destroy();
+        }
+        
+        // Igual que Swing, la clase Weapon que usa el LaserBeam
+        // debe llamar a laser.setTransform(x, y, angulo) CADA FRAME
+        // antes de llamar a laser.update(delta).
+    }
     
+    @Override
+    public void update(float delta) {
+    	// TODO Auto-generated method stub
+    	
+    }
+    /*
     public void update(float delta) {
         if (destroyed) return;
 
@@ -71,12 +124,12 @@ public class LaserBeam extends Projectile {
         if (tiempoRestanteEncendido <= 0f) {
             destroy();
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void draw(SpriteBatch batch) {
-        if (!destroyed) getHitbox().draw(batch);
-    }
+        if (!destroyed) draw(batch);
+    }*/
 
     public void destroy() {
         destroyed = true;
@@ -87,6 +140,8 @@ public class LaserBeam extends Projectile {
         return destroyed;
     }
 
+    
+    /*
 	@Override
 	public void update(float delta, Rectangle r, float rotation) {
 		if (destroyed) return;
@@ -101,5 +156,5 @@ public class LaserBeam extends Projectile {
         if (tiempoRestanteEncendido <= 0f) {
             destroy();
         }
-	}
+	}*/
 }

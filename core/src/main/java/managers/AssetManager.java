@@ -82,45 +82,46 @@ public class AssetManager {
         this.loadTexturesJugador();
         
         // TEXTURAS
-        balaTexture = new Texture(Gdx.files.internal("Bala.png"));
-        enemigoTexture = new Texture(Gdx.files.internal("Mono.png"));
-        //swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
+        enemigoTexture = new Texture(Gdx.files.internal("textures/enemies/Mono.png"));
         
         //Drops
-        HMTexture = new Texture(Gdx.files.internal("HeavyDrop.png"));
-        STexture = new Texture(Gdx.files.internal("ShotgunDrop.png"));
-        RLTexture = new Texture(Gdx.files.internal("RocketDrop.png"));
-        MTexture = new Texture(Gdx.files.internal("MeleeDrop.png"));
-        //LCTexture = new Texture(Gdx.files.internal("LaserCannonDrop.png"));
-        LGTexture = new Texture(Gdx.files.internal("LaserGunDrop.png"));
+        HMTexture = new Texture(Gdx.files.internal("textures/drops/HeavyDrop.png"));
+        STexture = new Texture(Gdx.files.internal("textures/drops/ShotgunDrop.png"));
+        RLTexture = new Texture(Gdx.files.internal("textures/drops/RocketDrop.png"));
+        MTexture = new Texture(Gdx.files.internal("textures/drops/MeleeDrop.png"));
+        //LCTexture = new Texture(Gdx.files.internal("textures/drops/LaserCannonDrop.png"));
+        LGTexture = new Texture(Gdx.files.internal("textures/drops/LaserGunDrop.png"));
         
-        swingHitboxTexture = new Texture(Gdx.files.internal("semicirculo.png"));
-        laserContTexture = new Texture(Gdx.files.internal("laserCont.png"));
-        laserGunTexture = new Texture(Gdx.files.internal("laserGun.png"));
+        //swingHitboxTexture = new Texture(Gdx.files.internal("AtaqueMelee.png"));
+        balaTexture = new Texture(Gdx.files.internal("textures/projectiles/Bala.png"));
+        swingHitboxTexture = new Texture(Gdx.files.internal("textures/projectiles/semicirculo.png"));
+        laserContTexture = new Texture(Gdx.files.internal("textures/projectiles/laserCont.png"));
+        laserGunTexture = new Texture(Gdx.files.internal("textures/projectiles/laserGun.png"));
         
         // SONIDOS
-        //drops
-        HMSound = Gdx.audio.newSound(Gdx.files.internal("audios/HeavyMachineGun.mp3"));
-        SSound = Gdx.audio.newSound(Gdx.files.internal("audios/Shotgun.mp3"));
-        RLSound = Gdx.audio.newSound(Gdx.files.internal("audios/RocketLauncher.mp3"));
-        MSound = Gdx.audio.newSound(Gdx.files.internal("audios/Melee.mp3"));
-        LCSound = Gdx.audio.newSound(Gdx.files.internal("audios/LaserCannon.mp3"));
-        LGSound = Gdx.audio.newSound(Gdx.files.internal("audios/LaserGun.mp3"));
+        //Drops
+        HMSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/drops/HeavyMachineGun.mp3"));
+        SSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/drops/Shotgun.mp3"));
+        RLSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/drops/RocketLauncher.mp3"));
+        MSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/drops/Melee.mp3"));
+        LCSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/drops/LaserCannon.mp3"));
+        LGSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/drops/LaserGun.mp3"));
         
+        //Enemigos
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/enemies/explosionSound.ogg"));
         
-        //Entidades
-        explosionSound = Gdx.audio.newSound(Gdx.files.internal("audios/explosionSound.ogg"));
-        hurtSound = Gdx.audio.newSound(Gdx.files.internal("audios/danoSound.mp3"));
-        muerteSound = Gdx.audio.newSound(Gdx.files.internal("audios/muerteSound.mp3"));
+        //Jugador
+        hurtSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/player/danoSound.mp3"));
+        muerteSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/player/muerteSound.mp3"));
         
         //Disparos
-        disparoSound = Gdx.audio.newSound(Gdx.files.internal("audios/popSound.mp3"));
-        laserContSound = Gdx.audio.newSound(Gdx.files.internal("audios/laserSound.mp3"));
-        laserGunSound = Gdx.audio.newSound(Gdx.files.internal("audios/canonLaserSound.mp3"));
+        disparoSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/weapons/popSound.mp3"));
+        laserContSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/weapons/laserSound.mp3"));
+        laserGunSound = Gdx.audio.newSound(Gdx.files.internal("audios/sfx/weapons/canonLaserSound.mp3"));
         
         // musica
-        musicaTutorial =  Gdx.audio.newMusic(Gdx.files.internal("audios/tutorial.mp3"));
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/musicaDoom.mp3"));
+        musicaTutorial =  Gdx.audio.newMusic(Gdx.files.internal("audios/music/tutorial.mp3"));
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("audios/music/musicaDoom.mp3"));
         gameMusic.setLooping(true);
     }
     
