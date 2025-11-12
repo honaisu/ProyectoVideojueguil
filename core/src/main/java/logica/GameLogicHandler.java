@@ -32,7 +32,7 @@ public class GameLogicHandler {
     	
     }
     
-    public EnemyManager getAsteroidManager() {
+    public EnemyManager getEnemyManager() {
     	return enemyManager;
     }
 	
@@ -50,8 +50,8 @@ public class GameLogicHandler {
 		dropManager.render(batch);
 	}
 	
-	public void update(float delta, Rectangle r, float rotation) {
-		proyectilManager.update(delta, r, rotation);
+	public void update(float delta, Player player) {
+		proyectilManager.update(delta, player);
 		enemyManager.update(delta);
 		dropManager.update(delta);
 	}

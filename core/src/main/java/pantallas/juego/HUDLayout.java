@@ -8,9 +8,12 @@ import armas.Melee;
 import personajes.Player;
 
 public class HUDLayout {
-	public void draw(SpriteBatch batch, BitmapFont font, Player player, int highScore) {
+	public void draw(SpriteBatch batch, BitmapFont font, Player player, int highScore, String roundName) {
 		font.getData().setScale(2f);
-		font.draw(batch, "Vidas: " + player.getLife() + " Ronda: " + player.getRound(), 10, 30);
+		//antes font.draw(batch, "Vidas: " + player.getLife() + " Ronda: " + player.getRound(), 10, 30);
+		//ahorita con GameWorld
+		font.draw(batch, "Vidas: " + player.getLife() + " " + roundName, 10, 30);
+		
         font.draw(batch, "HighScore: " + highScore, Gdx.graphics.getWidth() / 2 - 100, 30);
         
         

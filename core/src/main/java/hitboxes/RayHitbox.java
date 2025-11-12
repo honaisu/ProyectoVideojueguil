@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import managers.AssetManager;
 
-public class RayHitbox extends Hitbox {
+public class RayHitbox extends Entity {
     private float largo;
     private float ancho;
     private float angle;

@@ -8,9 +8,9 @@ import interfaces.INavigableOption;
 import managers.AssetManager;
 
 public enum ESkinJugador implements INavigableOption, IAssetRoute {
-	JUGADOR_ORIGINAL("Skin Original", "JugadorOriginal.png"),
-	JUGADOR_ALT_1("Skin Alt 1", "JugadorAlt1.png"),
-	JUGADOR_ALT_2("Skin Alt 2", "JugadorAlt2.png");
+	JUGADOR_ORIGINAL("Skin Original", "textures/player/JugadorOriginal.png"),
+	JUGADOR_ALT_1("Skin Alt 1", "textures/player/JugadorAlt1.png"),
+	JUGADOR_ALT_2("Skin Alt 2", "textures/player/JugadorAlt2.png");
 	
 	private final String nombre;
 	private final String ruta;

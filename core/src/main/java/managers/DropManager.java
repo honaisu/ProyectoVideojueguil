@@ -1,6 +1,7 @@
 package managers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -19,8 +20,16 @@ public class DropManager {
     }
 
     public void update(float delta) {
-        for (WeaponDrop drop : drops) {
+        Iterator<WeaponDrop> iterator = drops.iterator();
+        
+        while (iterator.hasNext()) {
+            WeaponDrop drop = iterator.next();
+            
             drop.update(delta);
+            
+            if (drop.isDestroyed()) {
+                iterator.remove();
+            }
         }
     }
 

@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.Weapon;
-import hitboxes.Hitbox;
+import hitboxes.Entity;
 
-public class WeaponDrop extends Hitbox {
+public class WeaponDrop extends Entity {
 	private Weapon weaponToGive;
+	private float activeTime = 0f;
+	private float duration = 3f;
 	
 	public WeaponDrop(float x, float y, Weapon weapon) {
         // TODO: Reemplaza "getDropTexture()" con la textura real para la caja/drop
@@ -23,15 +25,14 @@ public class WeaponDrop extends Hitbox {
         getSpr().draw(batch);
     }
 	
-	public Weapon getWeapon() {
-        return weaponToGive;
+    public void update(float delta) {
+    	activeTime += delta;
+        if (activeTime > duration) {
+            destroy();
+        }
     }
 	
-	/**
-     * El update podría usarse para animaciones, o para que el drop
-     * desaparezca después de un tiempo. Por ahora lo dejamos vacío.
-     */
-    public void update(float delta) {
-        // Opcional: animar, rotar, etc.
-    }
+	public Weapon getWeapon() {
+		return weaponToGive;
+	}
 }
