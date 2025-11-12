@@ -1,7 +1,10 @@
 package armas;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import armas.proyectiles.Swing;
+import managers.AssetManager;
 import managers.ProjectileManager;
 
 //Clase para el arma cuerpo a cuerpo
@@ -10,46 +13,13 @@ public class Melee extends Weapon {
     private Swing swingActual;
 
     public Melee() {
-        super(0.8f, 9999);
-        super.setNombre("Melee");
-    }
-
-    //clase sobrescrita
-    /*
-    @Override
-    public void disparar(Player nave, GameWorld juego, float delta) {
-        actualizar(delta);
-
-        // No hay munición que contar en ataques melee
-        if (!puedeDisparar()) return;
-
-        // Crear golpe (Swing)
-        crearProyectil(nave, juego);
-        reiniciarCooldown();
-    }
+		super("Melee",
+				50,												// daño
+				1f, 											// cadencia
+				99999, 											// municion
+				AssetManager.getInstancia().getDisparoSound());	// sonido
+	}
     
-    //crea el swing del arma con direccion respecto al jugador
-    @Override
-    public void crearProyectil(Player player, GameWorld juego) {
-    	float radians = (float) Math.toRadians(player.getRotation() + 90);
-
-        float centerX = player.getSpr().getX() + player.getSpr().getWidth() / 2;
-        float centerY = player.getSpr().getY() + player.getSpr().getHeight() / 2;
-        
-        // distancia delante del jugador
-        float length = player.getSpr().getHeight() / 2 + 20; 
-        
-        float swingX = centerX + (float) Math.cos(radians) * length;
-        float swingY = centerY + (float) Math.sin(radians) * length;
-        
-        getSoundBala().play(0.1f);
-        float radio = 20 + player.getSpr().getHeight() / 2;
-        swingActual = new Swing(swingX, swingY, player.getRotation(), radio);
-        // TODO Agregar Swing...
-        // add Swing
-        juego.getGameManager().getProyectilManager().add(swingActual); 
-    }*/
-
     public Swing getSwingActual() {
         return swingActual;
     }
@@ -66,5 +36,15 @@ public class Melee extends Weapon {
         swingActual = new Swing(swingX, swingY, rotation, length);
         manager.add(swingActual);
 	}
+	
+	@Override
+    public Texture getDropTexture() {
+        return AssetManager.getInstancia().getMTexture();
+    }
+
+    @Override
+    public Sound getPickupSound() {
+        return AssetManager.getInstancia().getMSound();
+    }
 }
 

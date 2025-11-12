@@ -1,15 +1,17 @@
 package armas;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
-import armas.proyectiles.Projectile;
 import managers.AssetManager;
 import managers.ProjectileManager;
 
 //Clase Abstracta Arma generica
 public abstract class Weapon {
 	private String nombre;
+	
+	private int damage;
 	//tiempo que dura un ataque despues de otro
 	private float cadencia;
 	//contador para que se cumpla la cadencia
@@ -20,24 +22,21 @@ public abstract class Weapon {
     private int municionMax;
     private Sound soundBala;
     
-    public Weapon(String nombre, float cadencia, int municionMax, Sound soundBala) {
+    public Weapon(String nombre, int damage, float cadencia, int municionMax, Sound soundBala) {
     	this.nombre = nombre;
+    	this.damage = damage;
     	this.cadencia = cadencia;
         this.municionMax = municionMax;
         this.municion = municionMax;
         this.soundBala = soundBala;
         this.tiempoUltDisp = cadencia; //para que dispare instantaneamente el primer disparo
     }
-    
-    public Weapon(float cadencia, int municionMax) {
-    	this.cadencia = cadencia;
-    	this.tiempoUltDisp = cadencia;
-    	this.municion = municionMax;
-    	this.municionMax = municionMax;
-    	
-    	this.nombre = "Weapon";
-    	this.soundBala = AssetManager.getInstancia().getDisparoSound();
-    }
+    // metodo abstracto para crear el proyectil para cada arma
+    public abstract void crearProyectil(Rectangle r, float rotation, ProjectileManager manager);
+    // metodo abstracto para crear la textura del drop
+    public abstract Texture getDropTexture();
+    // metodo abstracto para crear es sonido del drop
+    public abstract Sound getPickupSound();
     
     // metodo abstracto para disparar un arma
     //public abstract void disparar(Player nave, GameWorld juego, float delta);
@@ -51,9 +50,6 @@ public abstract class Weapon {
         crearProyectil(r, rotation, manager);
     }
     
-    // metodo abstracto para crear el proyectil para cada arma
-    //public abstract void crearProyectil(Player nave, GameWorld juego);
-    public abstract void crearProyectil(Rectangle r, float rotation, ProjectileManager manager);
     
     public void restarMunicion(float delta) {
     	tiempoUltDisp += delta;
@@ -81,6 +77,8 @@ public abstract class Weapon {
     }
     
     //Getters y Setters
+    public int getDamage() {return damage; }
+    
     public int getMunicion() { return municion; }
 
     public int getMunicionMax() { return municionMax; }

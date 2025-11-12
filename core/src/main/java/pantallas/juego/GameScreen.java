@@ -34,6 +34,16 @@ public class GameScreen extends BaseScreen {
 				world.getPlayer().getRotation()
 				);
 		*/
+		//para cuando muere
+		if (world.getPlayer().isDead()) {
+			
+			// Asumo que tienes una pantalla llamada EScreenType.GAME_OVER
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
+			
+			// Detenemos la ejecución de este update para no chequear la pausa
+			return; 
+		}
+		
 		
 		// Sistema de Pausa
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

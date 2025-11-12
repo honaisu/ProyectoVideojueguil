@@ -1,23 +1,24 @@
 package armas;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Bullet;
+import managers.AssetManager;
 import managers.ProjectileManager;
 
 /**
  * Clase para un arma escopeta
  */
 public class HeavyMachineGun extends Weapon {
-    public HeavyMachineGun() {
-    	super(0.2f, 30);
-        super.setNombre("Heavy Machine Gun");
-    }
-    
-    public HeavyMachineGun(float cadencia, int municionMax) {
-    	super(cadencia, municionMax);
-    	super.setNombre("Heavy Machine Gun");
-    }
+	public HeavyMachineGun() {
+		super("Heavy Machine Gun",
+				25,												// daño
+				0.2f, 											// cadencia
+				30, 												// municion
+				AssetManager.getInstancia().getDisparoSound());	// sonido
+	}
     
     //crea la bala de la metralleta con direccion respecto al jugador
     @Override
@@ -31,7 +32,16 @@ public class HeavyMachineGun extends Weapon {
         float bulletY = centerY + (float) Math.sin(radians) * length;
 
         // TODO Arreglar valores hardcodeados...
-        Bullet bala = new Bullet(bulletX, bulletY, 40f, rotation, 10f);
+        Bullet bala = new Bullet(bulletX, bulletY, 30f, rotation, 10f);
         manager.add(bala);
+    }
+    @Override
+    public Texture getDropTexture() {
+        return AssetManager.getInstancia().getHMTexture();
+    }
+
+    @Override
+    public Sound getPickupSound() {
+        return AssetManager.getInstancia().getHMSound();
     }
 }

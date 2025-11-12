@@ -22,101 +22,119 @@ public class Player extends Hitbox {
   private int round = 1;
   private int life; // ANTES: lives
 
+  //fisica de si
   private float xVel;
   private float yVel;
   private float rotation;
 
-  // Visual y audio
+  //Visual y audio
   private Sound hurtSound = AssetManager.getInstancia().getHurtSound();
-
-  // Animación
   private Animation<TextureRegion> animation;
   private float stateTime = 0f;
-
-  // Herido
-  private boolean hurted = false;
-  private int hurtTime;
-
-  // Invulnerabilidad (i-frames) tras recibir daño
-  private float iFrames = 0f; // en segundos
-
-  // Armas
+	
+  //Lógica de Daño merge
+  private boolean hurted = false; // benjoid
+  private int hurtTime;           // benjoid
+  private float iFrames = 0f;     // si
+  
+  //Arma inicial o por defecto
   private Weapon weapon = new HeavyMachineGun();
+	
+	public Player(float x, float y) {
+		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
+		this.life = 3;
+		this.xVel = 0f;
+		this.yVel = 0f;
+		this.rotation = 0f;
+	    
+		// IMPLEMENTACIÓN DE LA ANIMACIÓN
+    	this.animation = AnimationFactory.createJugadorAnimation(ESkinJugador.JUGADOR_ORIGINAL);
+    	
+    	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+    	getSpr().setOriginCenter();
+	}
+	
+	public void update(float delta) {
+	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+	    if (isMoving) stateTime += delta;
 
-  public Player(float x, float y) {
-    super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
+	    // Lógica de daño fusionada //o queda bien o se jode todo
+	    if (hurted) {
+	      hurtTime--;
+	      if (hurtTime <= 0) hurted = false;
+	    }
+	    if (iFrames > 0f) iFrames -= delta;
 
-    this.life = 3;
-    this.xVel = 0f;
-    this.yVel = 0f;
-    this.rotation = 0f;
+	    xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
+	    yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
 
-    // Animación
-    this.animation = AnimationFactory.createJugadorAnimation(ESkinJugador.JUGADOR_ORIGINAL);
+	    float positionX = getSpr().getX() + xVel;
+	    float positionY = getSpr().getY() + yVel;
 
-    getSpr().setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
-    getSpr().setOriginCenter();
-  }
+	    // Logica de rebote 
+	    borderBounce(positionX, positionY);
+	    
+	    getSpr().setRotation(rotation);
 
-  public void update(float delta) {
-    // Avanza animación solo si hay movimiento perceptible
-    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
-    if (isMoving) stateTime += delta;
+	    weapon.actualizar(delta);
+	  }
 
-    // Temporizadores de daño/iframes
-    if (hurted) {
-      hurtTime--;
-      if (hurtTime <= 0) hurted = false;
-    }
-    if (iFrames > 0f) iFrames -= delta;
+  
+	public void draw(SpriteBatch batch) {
+	    TextureRegion currentFrame;
+	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
 
-    // Límites de velocidad
-    xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
-    yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
+	    currentFrame = isMoving ? animation.getKeyFrame(stateTime, true)
+	                            : animation.getKeyFrame(0f, true);
 
-    // Propuesta de nueva posición
-    float positionX = getSpr().getX() + xVel;
-    float positionY = getSpr().getY() + yVel;
+	    if (hurted) {
+	      if ((hurtTime % 10) < 5) return; // Parpadeo
+	    }
 
-    // Rebote en bordes
-    borderBounce(positionX, positionY);
-
-    // Aplicar posición y rotación
-    getSpr().setPosition(positionX, positionY);
-    getSpr().setRotation(rotation);
-
-    // Actualizar arma
-    weapon.actualizar(delta);
-  }
-
-  public void draw(SpriteBatch batch) {
-    TextureRegion currentFrame;
-    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
-
-    currentFrame = isMoving ? animation.getKeyFrame(stateTime, true)
-                            : animation.getKeyFrame(0f, true);
-
-    if (hurted) {
-      // Reproduce sonido una vez por “entrada” de estado herido
-      if (hurtTime % 10 == 9 && hurtSound != null) hurtSound.play();
-      // Parpadeo simple
-      if ((hurtTime % 10) < 5) return;
-    }
-
-    batch.draw(
-      currentFrame,
-      getSpr().getX(), getSpr().getY(),
-      getSpr().getOriginX(), getSpr().getOriginY(),
-      getSpr().getWidth(), getSpr().getHeight(),
-      getSpr().getScaleX(), getSpr().getScaleY(),
-      getSpr().getRotation()
-    );
-  }
+	    batch.draw(
+	      currentFrame,
+	      getSpr().getX(), getSpr().getY(),
+	      getSpr().getOriginX(), getSpr().getOriginY(),
+	      getSpr().getWidth(), getSpr().getHeight(),
+	      getSpr().getScaleX(), getSpr().getScaleY(),
+	      getSpr().getRotation()
+	    );
+	  }
 
   public void rotate(float amount) {
     if (hurted) return;
     this.rotation += amount;
   }
+	
+	//TODO revisar tema de la vida//
+	  /**
+	  * MÉTODO DE DAÑO FUSIONADO 
+	  * Llamado por el CollisionManager.
+	  */
+	 public void takeDamage(int damage) {
+	   if (iFrames > 0f) return; // Invulnerable mioid
+	
+	   this.life -= damage;
+	   if (life < 0) life = 0;
+	   
+	   this.iFrames = 1.0f; // 1 segundo de invulnerabilidad
+	   this.hurted = true;  // (de origin/dia)
+	   this.hurtTime = 60;  // 60 frames de parpadeo (de origin/dia)
+	   
+	   if (hurtSound != null) {
+	       hurtSound.play();
+	   }
+	 }
+	
+	public boolean isHurt() {
+		return hurted;
+	}
+	
+	public boolean isDead() {
+		return life <= 0;
+	}
+	//TODO revisar tema de la vida//
+	
 
   public void accelerate(float amount) {
     if (hurted) return;
@@ -124,11 +142,18 @@ public class Player extends Hitbox {
     yVel += (float) Math.cos(Math.toRadians(rotation)) * amount;
   }
 
+
   public void applyFriction(float friction) {
     xVel *= friction;
     yVel *= friction;
   }
 
+	
+	public void setWeapon(Weapon newWeapon) {
+        this.weapon = newWeapon;
+    }
+	
+	
   public void shoot(float delta, ProjectileManager manager) {
     if (hurted) return;
 

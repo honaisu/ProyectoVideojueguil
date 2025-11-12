@@ -7,27 +7,52 @@ import logica.EnemyFactory;
 import personajes.Enemy;
 
 public class EnemyManager {
+	
+  //mio
   private final List<Enemy> enemies = new ArrayList<>();
   private static final float MIN_SEPARATION = 72f;
 
+  //vacio para las rondas creo
   public EnemyManager() { }
-
-
+  
+  //mio //sgeun gemini mejor e mio xd// Tu spawner con lógica 'isFar'. Es mejor.
   public void spawnEnemies(int cant) {
-    final int triesPerEnemy = 24;
-    for (int i = 0; i < cant; i++) {
-      Enemy cand = null;
-      boolean placed = false;
-      for (int t = 0; t < triesPerEnemy && !placed; t++) {
-        cand = EnemyFactory.createRandomBasic();
-        if (isFar(cand.getX(), cand.getY(), MIN_SEPARATION)) {
-          enemies.add(cand);
-          placed = true;
-        }
+      final int triesPerEnemy = 24;
+      for (int i = 0; i < cant; i++) {
+          Enemy cand = null;
+          boolean placed = false;
+          for (int t = 0; t < triesPerEnemy && !placed; t++) {
+              cand = EnemyFactory.createRandomBasic();
+              if (isFar(cand.getX(), cand.getY(), MIN_SEPARATION)) {
+                  enemies.add(cand);
+                  placed = true;
+              }
+          }
+          if (!placed && cand != null) enemies.add(cand);
       }
-      if (!placed && cand != null) enemies.add(cand);
-    }
   }
+	
+  /*//benjoid
+   * public EnemyManager(int sumEnemies, int velXenemies, int velYenemies) {
+		enemies = new ArrayList<>();
+		spawnEnemies(sumEnemies);
+    }
+	
+	// TODO Poner algo génerico o similar
+	public EnemyManager() {
+		enemies = new ArrayList<>();
+		spawnEnemies(MAX_ENEMIES);
+	}
+
+	// Genera los asteroides con atributos levemente aleatorios
+	private void spawnEnemies(int cant) {
+		for (int i = 0; i < cant; i++) {
+			// Enemigos sin movimiento
+			Enemy enemy = EnemyFactory.createRandomBasic();
+	        enemies.add(enemy);
+	  	}
+	}*/
+	
 
   private boolean isFar(float x, float y, float min) {
     float m2 = min * min;
@@ -50,4 +75,9 @@ public class EnemyManager {
   public void add(Enemy e) {
       enemies.add(e);
   }
+  
+  //benjoid // Método útil
+  public boolean remove(Enemy enemy) {
+		return enemies.remove(enemy);
+	}
 }

@@ -3,60 +3,141 @@ package managers;
 import java.util.Iterator;
 import java.util.List;
 import com.badlogic.gdx.audio.Sound;
+
+import java.util.Random;
+
+import com.badlogic.gdx.audio.Sound;
+
+import armas.*;
 import armas.proyectiles.Projectile;
-import hitboxes.BallHitbox;
 import personajes.Enemy;
 import personajes.Player;
+import personajes.WeaponDrop;
 
 public class CollisionManager {
-  private final Sound explosionSound;
-  private final int scorePerAsteroid;
 
-  public CollisionManager(Sound explosionSound, int scorePerAsteroid) {
+  private final Sound explosionSound;
+  private final int scorePerEnemy;
+
+  //de benjoid
+  private Random r = new Random();
+
+  public CollisionManager(Sound explosionSound, int scorePerEnemy) {
     this.explosionSound = explosionSound;
-    this.scorePerAsteroid = scorePerAsteroid;
+    this.scorePerEnemy = scorePerEnemy;
   }
 
   public CollisionManager() {
     this.explosionSound = AssetManager.getInstancia().getExplosionSound();
-    this.scorePerAsteroid = 10;
+    this.scorePerEnemy = 10;
   }
 
-  // NUEVO: daño al jugador cuando colisiona con enemigos
-  public void handlePlayerEnemyCollision(Player player, List<Enemy> enemies) {
-    // Usa checkCollision si tus Hitbox lo tienen implementado:
-    for (int i = enemies.size() - 1; i >= 0; i--) {
-      Enemy e = enemies.get(i);
-      if (player.checkCollision(e)) {
-        player.onHitByEnemy(e);
-        break; // un golpe por frame
-      }
-    }
-    // Alternativa con bounding rectangles:
-    // Rectangle pr = player.getSpr().getBoundingRectangle();
-    // for (Enemy e : enemies) {
-    //   if (pr.overlaps(e.getBoundingRectangle())) { player.onHitByEnemy(e); break; }
-    // }
-  }
-
-  // EXISTENTE: proyectiles vs enemigos (ajusta tipos si usas Enemy en la lista) //cambio segun geminis
-  public int handleCollisions(Player player, List<Projectile> projectiles, List<? extends BallHitbox> enemies) {
+  /**
+   * ESTE ES EL MÉTODO DE COLISIÓN PRINCIPAL (de origin/dia)
+   * Es el que debemos llamar desde GameLogicHandler.
+   * Maneja Proyectil vs Enemigo Y Jugador vs Enemigo.
+   */
+  public int handleCollisions(Player player, List<Projectile> projectiles, List<Enemy> enemies, DropManager dropManager) {
     int totalScore = 0;
+    
+    // --- 1) Colisiones: Proyectiles vs Enemigos ---
     Iterator<Projectile> projectileIterator = projectiles.iterator();
     while (projectileIterator.hasNext()) {
-      Projectile projectile = projectileIterator.next();
-   // Tiene que ser "? extends BallHitbox" para coincidir con la lista.
-      Iterator<? extends BallHitbox> enemyIterator = enemies.iterator();
-      while (enemyIterator.hasNext()) {
-        BallHitbox asteroid = enemyIterator.next();
-        if (!projectile.getHitbox().checkCollision(asteroid)) continue;
-        if (explosionSound != null) explosionSound.play(0.1f);
-        totalScore += scorePerAsteroid;
-        enemyIterator.remove();
-        projectileIterator.remove();
-        break;
-      }
+        Projectile projectile = projectileIterator.next();
+        
+        Iterator<Enemy> enemyIterator = enemies.iterator();
+        while (enemyIterator.hasNext()) {
+            Enemy enemy = enemyIterator.next();
+            
+            if (!projectile.getHitbox().checkCollision(enemy)) continue;
+            
+            // Lógica de daño
+            enemy.takeDamage(player.getWeapon().getDamage());
+            
+            // Los Melee no se destruyen al golpear
+            if(!(player.getWeapon() instanceof Melee)) {
+                projectileIterator.remove();                	
+            }
+
+            if(enemy.isDead()) {
+                if (explosionSound != null) explosionSound.play(0.1f);
+                totalScore += scorePerEnemy;
+                
+                // Lógica de Drop
+                if (Math.random() < enemy.getRareDropProbability()) {
+                    Weapon weaponToDrop = createRandomWeapon(); 
+                    WeaponDrop drop = new WeaponDrop(enemy.getX(), enemy.getY(), weaponToDrop);
+                    dropManager.add(drop); // Añade al DropManager
+                }
+                enemyIterator.remove();
+            }
+            break; 
+        }
     }
+    
+    // --- 2) Colisiones: Jugador vs Enemigos ---
+    Iterator<Enemy> enemyIterator = enemies.iterator();
+    while (enemyIterator.hasNext()) {
+        Enemy enemy = enemyIterator.next();
+        
+        // Usamos el 'isHurt()' fusionado que incluye iFrames
+        if (player.checkCollision(enemy) && !player.isHurt()) {
+            
+            // El jugador recibe daño del enemigo
+            //player.takeDamage((int)enemy.getDamage()); antes
+        	player.takeDamage(1);//ahora recive 1 de daño
+            
+            // El enemigo también se destruye (opcional)
+            if (explosionSound != null) explosionSound.play(0.1f);
+            enemyIterator.remove();
+        }
+    }
+    
     return totalScore;
   }
+
+ 
+    
+    //para los drops
+    public void handlePlayerVsDrops(Player player, DropManager dropManager) {
+        
+        Iterator<WeaponDrop> dropIterator = dropManager.getDrops().iterator();
+        
+        while (dropIterator.hasNext()) {
+            WeaponDrop drop = dropIterator.next();
+            
+            // Si el jugador colisiona con el drop
+            if (player.checkCollision(drop)) {
+                
+            	Weapon pickedUpWeapon = drop.getWeapon();
+                
+                player.setWeapon(pickedUpWeapon);
+                
+                pickedUpWeapon.getPickupSound().play();
+                
+                dropIterator.remove();
+                
+            }
+        }
+    }
+    
+    private Weapon createRandomWeapon() {
+        // Genera un número aleatorio basado en cuántas armas tienes
+        int weaponType = r.nextInt(3); // 0, 1, o 2
+
+        switch (weaponType) {
+            case 0:
+                return new Shotgun();
+            case 1:
+                return new HeavyMachineGun();
+            case 2:
+                // Asumiendo que tienes una clase RocketLauncher
+                // return new RocketLauncher(); 
+                return new Melee(); // Por ahora, si no la tienes
+            default:
+                return new Melee();
+        }
+    }
+
 }
+

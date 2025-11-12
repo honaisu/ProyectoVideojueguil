@@ -110,16 +110,30 @@ public class GameWorld {
 
         // RONDAS COMPLEJAS (usan el método 'add' para control total)
         allRounds.add(new Round("Ronda 3: Formación en V", (em) -> {
+        	
+        	// Stats por defecto para enemigos manuales
+            float defaultSize = 100f; // El tamaño de la factory
+            float defaultDrop = 0.05f;  // 5% de drop
+            int defaultHealth = 50;   // 50 de vida
+            int defaultDamage = 10;   // 10 de daño
+        	
             // Usamos 'new Enemy' para control total de la posición
-            em.add(new Enemy(500, 700, 64)); // Centro
-            em.add(new Enemy(450, 650, 64)); // Izq
-            em.add(new Enemy(550, 650, 64)); // Der
+            em.add(new Enemy(500, 700, defaultSize, defaultDrop, defaultHealth, defaultDamage));//centro
+            em.add(new Enemy(450, 650, defaultSize, defaultDrop, defaultHealth, defaultDamage));//izquierda
+            em.add(new Enemy(550, 650, defaultSize, defaultDrop, defaultHealth, defaultDamage));//derecha
         }));
         
         // RONDAS HÍBRIDAS
         allRounds.add(new Round("Ronda 4: Jefe con Escolta", (em) -> {
             em.spawnEnemies(4); // 4 aleatorios
-            em.add(new Enemy(400, 1200, 400)); // Un jefe grande en el centro
+            
+            // Stats para el "Jefe"
+            float bossSize = 400f; // El tamaño 
+            float bossDrop = 0.5f;   // 50% drop
+            int bossHealth = 200;  // Más vida
+            int bossDamage = 25;   // Más daño
+            
+            em.add(new Enemy(400, 1200, bossSize, bossDrop, bossHealth, bossDamage));
         }));
     }
 	
