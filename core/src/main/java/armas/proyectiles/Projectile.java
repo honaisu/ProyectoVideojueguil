@@ -1,31 +1,24 @@
 package armas.proyectiles;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
-import hitboxes.Hitbox;
+import hitboxes.Entity;
+import personajes.Player;
 
-public abstract class Projectile {
-	private Hitbox hitbox;
-	private boolean destroyed;
+public abstract class Projectile extends Entity{
 	
-	public Projectile(Hitbox hitbox) {
-		this.hitbox = hitbox;
-		this.destroyed = false;
+	public Projectile(float x, float y, Sprite spr, Player player) {
+		super(x,y,spr);
 	}
 	
-	public abstract void update(float delta, Rectangle r, float rotation);
-	public abstract void draw(SpriteBatch batch);
+	public abstract void update(float delta, Player player);
 	
-	public void destroy() {
-        destroyed = true;
-    }
-	
-	public boolean isDestroyed() {
-		return destroyed;
+	public  void draw(SpriteBatch batch) {
+		if (!isDestroyed()) {
+            super.draw(batch);
+        }
 	}
 	
-	public Hitbox getHitbox() {
-		return hitbox;
-	}
+	//TODO calcularMuzzle
 }

@@ -28,8 +28,7 @@ public class GameScreen extends BaseScreen {
 		world.update(delta);
 		world.getGameLogicHandler().update(
 				delta, 
-				world.getPlayer().getSpr().getBoundingRectangle(), 
-				world.getPlayer().getRotation()
+				world.getPlayer()
 				);
 		
 		// Sistema de Pausa
@@ -42,7 +41,7 @@ public class GameScreen extends BaseScreen {
 	protected void draw(SpriteBatch batch, BitmapFont font) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		world.getPlayer().draw(batch);
+		world.getPlayer().draw(batch);				//TODO ⇧⇩ para que el player superponga las balas de las armas
 		world.getGameLogicHandler().render(batch);
 		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore());
 		batch.end();

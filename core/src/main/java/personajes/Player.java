@@ -9,12 +9,12 @@ import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
 import enumeradores.ESkinJugador;
-import hitboxes.Hitbox;
+import hitboxes.Entity;
 import logica.AnimationFactory;
 import managers.AssetManager;
 import managers.ProjectileManager;
 
-public class Player extends Hitbox {
+public class Player extends Entity {
 	private final float MAX_VELOCITY = 10.0f;
 	// Estado básico 
 	private int score = 0;
@@ -38,12 +38,12 @@ public class Player extends Hitbox {
 	private int hurtTime;
 	
 	// Armas
-	private Weapon weapon = new Melee();
+	private Weapon weapon = new HeavyMachineGun();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
 		
-		this.life = 3;
+		this.life = 100;
 		this.xVel = 0f;
 		this.yVel = 0f;
 		this.rotation = 0f;
@@ -54,7 +54,8 @@ public class Player extends Hitbox {
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	getSpr().setOriginCenter();
 	}
-	
+	 
+	@Override
 	public void update(float delta) {
         boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
         if (isMoving) stateTime += delta;
@@ -81,6 +82,7 @@ public class Player extends Hitbox {
         weapon.actualizar(delta);
     }
 	
+	@Override
 	public void draw(SpriteBatch batch) {
  		TextureRegion currentFrame;
  		boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
@@ -93,7 +95,6 @@ public class Player extends Hitbox {
          
         // Si está herido, se podría aplicar un efecto de parpadeo con el color del batch
         if (hurted) {
-        	hurtSound.play();
             // Lógica simple de parpadeo
             if (hurtTime % 10 < 5) {
                 return;
@@ -113,7 +114,7 @@ public class Player extends Hitbox {
 		// Solo recibe daño si no está herido (invulnerable)
 		if (hurted) return;
 		
-		this.life -= 1; // O puedes usar el 'damage' si la vida es > 3
+		this.life -= damage; //
 		this.hurted = true;
 		this.hurtTime = 120; // Invulnerable por 120 frames (aprox 2 segundos)
 		
@@ -132,12 +133,10 @@ public class Player extends Hitbox {
 	//TODO revisar tema de la vida//
 	
 	public void rotate(float amount) {
-        if (hurted) return;
         this.rotation += amount;
     }
 
     public void accelerate(float amount) {
-        if (hurted) return;
         xVel -= (float) Math.sin(Math.toRadians(rotation)) * amount;
         yVel += (float) Math.cos(Math.toRadians(rotation)) * amount;
     }
@@ -147,10 +146,8 @@ public class Player extends Hitbox {
         yVel *= friction;
     }
     
-    public void shoot(float delta, ProjectileManager manager) {
-    	if (hurted) return;
-    	
-    	weapon.atacar(delta, getSpr().getBoundingRectangle(), getSpr().getRotation() + 90f, manager);
+    public void shoot(float delta, ProjectileManager manager) {    	
+    	weapon.atacar(delta, this, manager);
     	
     	if (weapon.getMunicion() == 0) {
     		weapon = new Melee();

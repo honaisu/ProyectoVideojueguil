@@ -3,10 +3,10 @@ package personajes;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import hitboxes.Hitbox;
+import hitboxes.Entity;
 import managers.AssetManager;
 
-public class Enemy extends Hitbox {
+public class Enemy extends Entity {
 
 	private float rareDrop;
 	private int healthPoints;
@@ -29,6 +29,7 @@ public class Enemy extends Hitbox {
 	 * Actualiza la lógica del enemigo (movimiento, IA, etc.)
 	 * Por ahora lo dejamos vacío, pero debe existir para el Manager.
 	 */
+	@Override
 	public void update(float delta) {
 		// TODO: Implementar movimiento o IA del enemigo aquí
 		// Ejemplo: getSpr().setPosition(getSpr().getX() + xVel * delta, getSpr().getY() + yVel * delta);

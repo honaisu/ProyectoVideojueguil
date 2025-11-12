@@ -119,7 +119,7 @@ public class CollisionManager {
                 Enemy enemy = enemyIterator.next();
                 
                 // Comprobamos la colisión
-                if (!projectile.getHitbox().checkCollision(enemy)) continue;
+                if (!projectile.checkCollision(enemy)) continue;
                 
                 // LÓGICA DE DAÑO: El proyectil golpea al enemigo
                 enemy.takeDamage(player.getWeapon().getDamage());
@@ -132,8 +132,6 @@ public class CollisionManager {
                 	totalScore += scorePerAsteroid;
                 	
                 	if (Math.random() < enemy.getRareDropProbability()) {
-                        // Decidimos qué arma soltar
-                        // TODO: Crear una lógica más avanzada para elegir el arma
                         Weapon weaponToDrop = createRandomWeapon(); 
                         
                         // Creamos el drop en la posición del enemigo
