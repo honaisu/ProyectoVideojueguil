@@ -27,7 +27,7 @@ public class GameLogicHandler {
     	this.proyectilManager = new ProjectileManager();
     }
     
-    public EnemyManager getAsteroidManager() {
+    public EnemyManager getEnemyManager() {
     	return enemyManager;
     }
 	

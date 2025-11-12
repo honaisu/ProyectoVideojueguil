@@ -26,11 +26,14 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
-		world.getGameLogicHandler().update(
+		
+		
+		/*world.getGameLogicHandler().update(
 				delta, 
 				world.getPlayer().getSpr().getBoundingRectangle(), 
 				world.getPlayer().getRotation()
 				);
+		*/
 		
 		// Sistema de Pausa
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -42,10 +45,15 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void draw(SpriteBatch batch, BitmapFont font) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		//ahora antes de "dibujar" le preguntamos al GameWorld//
+		String currentRoundName = world.getCurrentRoundName();
 		batch.begin();
 		world.getPlayer().draw(batch);
 		world.getGameLogicHandler().render(batch);
-		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore());
+		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
+		
+		
 		batch.end();
 	}
 }

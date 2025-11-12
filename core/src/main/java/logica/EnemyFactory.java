@@ -8,7 +8,7 @@ public class EnemyFactory {
   private static final Random RNG = new Random();
 
   // Tamaño fijo
-  private static final float ENEMY_SIZE = 48f;
+  private static final float ENEMY_SIZE = 100f;
   private static float margin() { return ENEMY_SIZE; }
 
   // Velocidad inicial

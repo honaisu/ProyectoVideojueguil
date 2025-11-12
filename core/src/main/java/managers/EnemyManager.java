@@ -8,13 +8,12 @@ import personajes.Enemy;
 
 public class EnemyManager {
   private final List<Enemy> enemies = new ArrayList<>();
-  private static final int DEFAULT_ENEMIES = 12;
   private static final float MIN_SEPARATION = 72f;
 
-  public EnemyManager() { spawnEnemies(DEFAULT_ENEMIES); }
-  public EnemyManager(int cantidad) { spawnEnemies(cantidad); }
+  public EnemyManager() { }
 
-  private void spawnEnemies(int cant) {
+
+  public void spawnEnemies(int cant) {
     final int triesPerEnemy = 24;
     for (int i = 0; i < cant; i++) {
       Enemy cand = null;
@@ -45,4 +44,10 @@ public class EnemyManager {
   public List<Enemy> getEnemies() { return enemies; }
   public int size() { return enemies.size(); }
   public boolean isEmpty() { return enemies.isEmpty(); }
+  
+  
+  //creado para ronda
+  public void add(Enemy e) {
+      enemies.add(e);
+  }
 }

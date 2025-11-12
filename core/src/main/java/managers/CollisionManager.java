@@ -39,13 +39,14 @@ public class CollisionManager {
     // }
   }
 
-  // EXISTENTE: proyectiles vs enemigos (ajusta tipos si usas Enemy en la lista)
-  public int handleCollisions(Player player, List<Projectile> projectiles, List<BallHitbox> enemies) {
+  // EXISTENTE: proyectiles vs enemigos (ajusta tipos si usas Enemy en la lista) //cambio segun geminis
+  public int handleCollisions(Player player, List<Projectile> projectiles, List<? extends BallHitbox> enemies) {
     int totalScore = 0;
     Iterator<Projectile> projectileIterator = projectiles.iterator();
     while (projectileIterator.hasNext()) {
       Projectile projectile = projectileIterator.next();
-      Iterator<BallHitbox> enemyIterator = enemies.iterator();
+   // Tiene que ser "? extends BallHitbox" para coincidir con la lista.
+      Iterator<? extends BallHitbox> enemyIterator = enemies.iterator();
       while (enemyIterator.hasNext()) {
         BallHitbox asteroid = enemyIterator.next();
         if (!projectile.getHitbox().checkCollision(asteroid)) continue;
