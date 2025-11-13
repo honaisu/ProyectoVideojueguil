@@ -1,10 +1,9 @@
-package personajes;
+package entidades;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.Weapon;
-import hitboxes.Entity;
 
 public class WeaponDrop extends Entity {
 	private Weapon weaponToGive;

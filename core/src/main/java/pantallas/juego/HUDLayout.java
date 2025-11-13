@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.Melee;
-import personajes.Player;
+import entidades.Player;
 
 public class HUDLayout {
 	public void draw(SpriteBatch batch, BitmapFont font, Player player, int highScore, String roundName) {

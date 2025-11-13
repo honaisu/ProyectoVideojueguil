@@ -3,8 +3,9 @@ package armas.proyectiles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import managers.AssetManager;
-import personajes.Player;
+import entidades.Player;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 
 //Clase que representa una balla dentro del juego
 
@@ -15,7 +16,7 @@ public class Bullet extends Projectile {
 	private float ySpeed;
 
 	public Bullet(float x, float y, float width, float rotation, float speed, Player p) {
-		super(x, y, new Sprite(AssetManager.getInstancia().getBalaTexture()), p);
+		super(x, y, SpriteFactory.create(EProjectileType.BULLET_TEMPLATE), p);
 		
 		getSpr().setBounds(x, y, width, width);
         getSpr().setOriginCenter();

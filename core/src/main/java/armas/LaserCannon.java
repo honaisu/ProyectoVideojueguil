@@ -7,9 +7,13 @@ import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Projectile;
-import managers.AssetManager;
+import entidades.Player;
+import enumeradores.recursos.EDropType;
+import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 import managers.ProjectileManager;
-import personajes.Player;
+import managers.assets.AssetManager;
 
 public class LaserCannon extends Weapon {
     // Configuración del pulso
@@ -20,7 +24,7 @@ public class LaserCannon extends Weapon {
 				25,													// daño
 				0.9f, 												// cadencia
 				15, 												// municion
-				AssetManager.getInstancia().getLaserGunSound());	// sonido
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT_LASER_CANNON));	// sonido
     }
 
 	@Override
@@ -34,7 +38,7 @@ public class LaserCannon extends Weapon {
 				width,
 				muzzle[2],
 				true,
-				new Sprite(AssetManager.getInstancia().getLaserGunTexture()),
+				SpriteFactory.create(EProjectileType.LASER_GUN),
 				p);
 		rayo.configurarPulso(duracionPulso);
 		
@@ -44,12 +48,12 @@ public class LaserCannon extends Weapon {
 
 	@Override
 	public Texture getDropTexture() {
-		return AssetManager.getInstancia().getLGTexture(); //TODO
+		return AssetManager.getInstancia().getTexture(EDropType.LASER_CANNON); //TODO
 	}
 
 	@Override
 	public Sound getPickupSound() {
-		return AssetManager.getInstancia().getLCSound();
+		return AssetManager.getInstancia().getSound(EGameSound.DROP_LC);
 	}
 
     /*

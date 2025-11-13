@@ -4,9 +4,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Projectile;
+import entidades.Player;
+import enumeradores.recursos.EGameSound;
 import logica.GameWorld;
-import managers.AssetManager;
-import personajes.Player;
+import managers.assets.AssetManager;
 
 public class Laser extends Weapon {
     // Parámetros del “pulso” (un disparo = un rayo breve)
@@ -19,7 +20,7 @@ public class Laser extends Weapon {
 				2,													// daño
 				0.08f, 												// cadencia
 				60, 												// municion
-				AssetManager.getInstancia().getLaserContSound());	// sonido
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT_LASER));	// sonido
     }
     
     // Disparo “pulso” como dijo benjoid

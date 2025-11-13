@@ -1,15 +1,22 @@
-package logica;
+package factories;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
-import enumeradores.ESkinJugador;
-import managers.AssetManager;
+import enumeradores.recursos.EPlayerSkin;
+import enumeradores.recursos.EProjectileType;
+import managers.assets.AssetManager;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimationFactory {
+	private AnimationFactory() {}
+	
+	/**
+	 * Método general para crear animaciones en base a una textura ("sprite sheet")
+	 * sus filas, columnas y la duración esperada de frames :D
+	 */
 	private static Animation<TextureRegion> createAnimation(Texture textura, int filas, int columnas, float duracionFrame) {
 		// Parte encargada de la textura para la animación
     	// Toma de forma temporal la textura y la divide en cuadrantes
@@ -33,8 +40,8 @@ public class AnimationFactory {
 		return animacion;
 	}
 	
-	public static Animation<TextureRegion> createJugadorAnimation(ESkinJugador skin) {
-		Texture jugadorSheet = AssetManager.getInstancia().getSkinTexture(skin);
+	public static Animation<TextureRegion> createPlayer(EPlayerSkin skin) {
+		Texture jugadorSheet = AssetManager.getInstancia().getTexture(skin);
 		int filas = 1;
 		int columnas = 4;
 		float duracionFrames = 0.2f;
@@ -43,8 +50,8 @@ public class AnimationFactory {
 		return animacionJugador;
 	}
 	
-	public static Animation<TextureRegion> createAtaqueMeleeAnimation() {
-		Texture ataqueSheet = AssetManager.getInstancia().getSwingHitboxTexture();
+	public static Animation<TextureRegion> createSwing() {
+		Texture ataqueSheet = AssetManager.getInstancia().getTexture(EProjectileType.SWING);
 		int filas = 1;
 		int columnas = 8;
 		float duracionFrames = 0.25f;

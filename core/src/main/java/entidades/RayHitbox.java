@@ -1,10 +1,12 @@
-package hitboxes;
+package entidades;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-import managers.AssetManager;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
+import managers.assets.AssetManager;
 
 public class RayHitbox extends Entity {
     private float largo;
@@ -33,7 +35,7 @@ public class RayHitbox extends Entity {
     }*/
     
     public RayHitbox(Rectangle r, float angle, boolean isThin) {
-    	super(r.getX(), r.getY(), new Sprite(AssetManager.getInstancia().getLaserContTexture()));
+    	super(r.getX(), r.getY(), SpriteFactory.create(EProjectileType.LASER_GUN));
     	this.ancho = r.getWidth();
     	this.largo = r.getHeight();
     	this.angle = angle;

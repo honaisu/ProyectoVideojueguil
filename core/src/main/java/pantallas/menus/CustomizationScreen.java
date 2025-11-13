@@ -8,13 +8,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
-import enumeradores.ESkinJugador;
+import enumeradores.recursos.EPlayerSkin;
 import interfaces.INavigableOption;
 import logica.MainGame;
+import managers.assets.AssetManager;
 
 public class CustomizationScreen extends NavigableScreen {
     public CustomizationScreen(MainGame game) {
-        super(game, ESkinJugador.values());
+        super(game, EPlayerSkin.values());
     }
 
 	@Override
@@ -54,7 +55,7 @@ public class CustomizationScreen extends NavigableScreen {
         
         int i = 1;
         String mensajeSeleccionado;
-        for (ESkinJugador skin : ESkinJugador.values()) {
+        for (EPlayerSkin skin : EPlayerSkin.values()) {
         	boolean seleccionado = opcionActual.equals(skin);
 
         	// Mensaje al estar apretando en uno
@@ -66,7 +67,7 @@ public class CustomizationScreen extends NavigableScreen {
         			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f + 200);
         	
         	// Sprite de la skin
-        	batch.draw(skin.crearSprite(),
+        	batch.draw(AssetManager.getInstancia().getTexture(skin),
         			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f, 
         			PREVIEW_HW, PREVIEW_HW);
         	

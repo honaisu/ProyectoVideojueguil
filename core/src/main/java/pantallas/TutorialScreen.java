@@ -10,8 +10,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
+import enumeradores.recursos.EGameMusic;
 import logica.MainGame;
-import managers.AssetManager;
+import managers.assets.AssetManager;
 
 public class TutorialScreen extends BaseScreen {
     private enum Step { MOVER, MOVER_CONFIRMADO, DISPARAR, DISPARAR_CONFIRMADO, FIN } //esto quisas ponerlo en otro lado
@@ -42,7 +43,7 @@ public class TutorialScreen extends BaseScreen {
         super(game);
         worldW = game.getViewport().getWorldWidth();
         worldH = game.getViewport().getWorldHeight();
-        musicaTutorial = AssetManager.getInstancia().getTutorialSound();
+        musicaTutorial = AssetManager.getInstancia().getMusic(EGameMusic.TUTORIAL);
     }
     
     @Override

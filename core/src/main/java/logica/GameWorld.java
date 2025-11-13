@@ -3,12 +3,12 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import personajes.Player;
+import entidades.Enemy;
+import entidades.Player;
 
 //coso para los enemigos y el cambio de ronda
 import java.util.ArrayList; //no c que tan necesario
 import java.util.List; // no c si rompa lo e Strategy      
-import personajes.Enemy;
 
 
 public class GameWorld {

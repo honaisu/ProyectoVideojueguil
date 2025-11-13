@@ -3,8 +3,9 @@ package managers;
 import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import logica.EnemyFactory;
-import personajes.Enemy;
+
+import entidades.Enemy;
+import factories.EnemyFactory;
 
 public class EnemyManager {
 	

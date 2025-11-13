@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-import hitboxes.RayHitbox;
-import managers.AssetManager;
-import personajes.Player;
+import entidades.Player;
+import entidades.RayHitbox;
+import managers.assets.AssetManager;
 
 public class LaserBeam extends Projectile {
     private Player nave;

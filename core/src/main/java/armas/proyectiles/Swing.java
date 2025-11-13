@@ -1,9 +1,8 @@
 package armas.proyectiles;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
-import managers.AssetManager;
-import personajes.Player;
+import entidades.Player;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 
 public class Swing extends Projectile {
 	// tiempo que dura activo el golpe
@@ -15,7 +14,7 @@ public class Swing extends Projectile {
     private float radio;
 
     public Swing(float x, float y, float rotation, float radio, Player p) {
-    	super(x, y, new Sprite(AssetManager.getInstancia().getSwingHitboxTexture()), p);
+    	super(x, y, SpriteFactory.create(EProjectileType.SWING, 96, 64), p);
     	
     	getSpr().setBounds(x, y, 120, 60);
         getSpr().setOriginCenter();

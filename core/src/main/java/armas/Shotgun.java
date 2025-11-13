@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Bullet;
 import armas.proyectiles.Projectile;
-import managers.AssetManager;
+import entidades.Player;
+import enumeradores.recursos.EDropType;
+import enumeradores.recursos.EGameSound;
 import managers.ProjectileManager;
-import personajes.Player;
+import managers.assets.AssetManager;
 
 public class Shotgun extends Weapon {
 	public Shotgun() {
@@ -18,8 +20,7 @@ public class Shotgun extends Weapon {
 				10,												// daño
 				2.5f, 											// cadencia
 				8, 												// municion
-				AssetManager.getInstancia().getDisparoSound());	// sonido
-		
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT));	// sonido
 	}
 
 	@Override
@@ -51,11 +52,11 @@ public class Shotgun extends Weapon {
 	}
 	@Override
     public Texture getDropTexture() {
-        return AssetManager.getInstancia().getSTexture();
+        return AssetManager.getInstancia().getTexture(EDropType.SHOTGUN);
     }
 
     @Override
     public Sound getPickupSound() {
-        return AssetManager.getInstancia().getSSound();
+        return AssetManager.getInstancia().getSound(EGameSound.DROP_SHOTGUN);
     }
 }

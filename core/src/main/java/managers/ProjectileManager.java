@@ -7,7 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import armas.proyectiles.Projectile;
-import personajes.Player;
+import entidades.Player;
 
 public class ProjectileManager {
 	private final List<Projectile> proyectiles = new ArrayList<>();

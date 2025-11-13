@@ -9,8 +9,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
+import enumeradores.recursos.EGameSound;
 import logica.MainGame;
-import managers.AssetManager;
+import managers.assets.AssetManager;
 import pantallas.BaseScreen;
 
 /**ra la pantalla de game over:)
@@ -18,7 +19,7 @@ import pantallas.BaseScreen;
  */
 public class GameOverScreen extends BaseScreen {
 	// Efecto de muerte al entrar en Game Over
-	private Sound sonidoMuerte = AssetManager.getInstancia().getMuerteSound();
+	private Sound sonidoMuerte = AssetManager.getInstancia().getSound(EGameSound.DEATH);
 	private boolean played = false;
 
 	public GameOverScreen(MainGame game) {

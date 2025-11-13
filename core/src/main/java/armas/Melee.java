@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Projectile;
 import armas.proyectiles.Swing;
-import managers.AssetManager;
+import entidades.Player;
+import enumeradores.recursos.EDropType;
+import enumeradores.recursos.EGameSound;
 import managers.ProjectileManager;
-import personajes.Player;
+import managers.assets.AssetManager;
 
 //Clase para el arma cuerpo a cuerpo
 public class Melee extends Weapon {
@@ -18,8 +20,7 @@ public class Melee extends Weapon {
 		super("Melee",
 				50,												// daño
 				1f, 											// cadencia
-				99999, 											// municion
-				AssetManager.getInstancia().getDisparoSound());	// sonido
+				99999); 											// municion
 	}
     
     public Swing getSwingActual() {
@@ -37,12 +38,12 @@ public class Melee extends Weapon {
 	
 	@Override
     public Texture getDropTexture() {
-        return AssetManager.getInstancia().getMTexture();
+        return AssetManager.getInstancia().getTexture(EDropType.MELEE);
     }
 
     @Override
     public Sound getPickupSound() {
-        return AssetManager.getInstancia().getMSound();
+        return AssetManager.getInstancia().getSound(EGameSound.DROP_MELEE);
     }
 }
 

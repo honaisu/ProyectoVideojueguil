@@ -8,9 +8,11 @@ import java.util.Random;
 
 import armas.*;
 import armas.proyectiles.Projectile;
-import personajes.Enemy;
-import personajes.Player;
-import personajes.WeaponDrop;
+import entidades.Enemy;
+import entidades.Player;
+import entidades.WeaponDrop;
+import enumeradores.recursos.EGameSound;
+import managers.assets.AssetManager;
 
 public class CollisionManager {
 
@@ -25,7 +27,7 @@ public class CollisionManager {
   }
 
   public CollisionManager() {
-    this.explosionSound = AssetManager.getInstancia().getExplosionSound();
+    this.explosionSound = AssetManager.getInstancia().getSound(EGameSound.EXPLOSION);
     this.scorePerEnemy = 10;
   }
 
