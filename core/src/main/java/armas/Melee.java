@@ -16,12 +16,13 @@ public class Melee extends Weapon {
 	//usa un proyectil arqueado
     private Swing swingActual;
 
+    public Melee(int dano, float cadencia, int municion) {
+		super("Melee", dano, cadencia, municion);
+    }
+    
     public Melee() {
-		super("Melee",
-				50,												// daño
-				1f, 											// cadencia
-				99999); 											// municion
-	}
+    	this(50, 1f, 1);
+    }
     
     public Swing getSwingActual() {
         return swingActual;

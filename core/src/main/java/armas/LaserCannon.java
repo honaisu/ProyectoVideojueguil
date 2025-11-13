@@ -2,8 +2,6 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Projectile;
@@ -55,34 +53,4 @@ public class LaserCannon extends Weapon {
 	public Sound getPickupSound() {
 		return AssetManager.getInstancia().getSound(EGameSound.DROP_LC);
 	}
-
-    /*
-    @Override
-    public void disparar(Player nave, GameWorld juego, float delta) {
-        // avanza cooldown base
-        actualizar(delta);
-        // tiro a tiro: solo dispara cuando el gate de cadencia lo permite
-        if (!puedeDisparar() || getMunicion() <= 0) return;
-        restarMunicion(nave, juego, delta);
-        // feedback y consumo
-        getSoundBala().play(0.1f);
-        // entra en cooldown; aunque se mantenga Z, no se disparará de nuevo hasta que termine
-        reiniciarCooldown();
-    }*/
-
-    /*
-	@Override
->>>>>>> origin/noche
-	public void crearProyectil(Player nave, GameWorld juego) {
-		LaserBeam rayo = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), estiloRayo);
-		rayo.configurarPulso(duracionPulso); // fija TTL del pulso
-<<<<<<< HEAD
-		
-		juego.getGameManager().getLaserManager().add(rayo);
-	}
-=======
-		// TODO Agregar Laser? 
-		juego.getGameManager().getProyectilManager().add(rayo);
-	}*/
-
 }

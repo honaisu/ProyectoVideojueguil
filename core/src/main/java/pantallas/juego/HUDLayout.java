@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import armas.Melee;
 import entidades.Player;
 
 public class HUDLayout {
@@ -18,10 +17,9 @@ public class HUDLayout {
 		font.draw(batch, "Vidas: " + player.getLife() + " " + roundName, 10, 30);
         font.draw(batch, "HighScore: " + highScore, Gdx.graphics.getWidth() / 2 - 100, 30);
         
-        
         font.draw(batch, "Arma: " + player.getWeapon().getNombre() ,
                 Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 20);
-        if (player.hasWeapon() && !(player.getWeapon() instanceof Melee)) {
+        if (player.hasWeapon()) {
             int mun = player.getWeapon().getMunicion();
             int max = player.getWeapon().getMunicionMax();
             font.draw(batch, "Municion: " + mun + " / " + max,

@@ -4,7 +4,6 @@ import interfaces.IRoundStrategy; // Implementa la interface de Round
 import managers.EnemyManager;     // posiblemnte sirva
 
 public class Round {
-    
     private final String name;
     private final IRoundStrategy spawnStrategy;
     

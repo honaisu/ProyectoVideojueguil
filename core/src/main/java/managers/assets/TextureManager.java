@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
+import enumeradores.recursos.EBackgroundType;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EEnemyType;
 import enumeradores.recursos.EPlayerSkin;
@@ -21,6 +22,7 @@ public class TextureManager implements Disposable {
     public void load() {
     	// Carga los enumeradores
     	loadFromEnum(EProjectileType.values());
+    	loadFromEnum(EBackgroundType.values());
     	loadFromEnum(EPlayerSkin.values());
     	loadFromEnum(EEnemyType.values());
     	loadFromEnum(EDropType.values());

@@ -21,15 +21,9 @@ public class LevelTransitionScreen extends BaseScreen {
 
     public LevelTransitionScreen(MainGame game) {
         super(game);
-        
-        // 1. Obtenemos el ÍNDICE del próximo nivel (ej: 1, si terminaste el 0)
         int nextLevelIndex = game.getNextLevelToLoad();
         
-        // 2. Calculamos los nombres que SÍ son correctos
-        // El nivel completado es el "Nivel 1" (índice 0 + 1)
         this.completedLevelName = "Nivel " + (nextLevelIndex);
-        
-        // El próximo nivel es el "Nivel 2" (índice 1 + 1)
         this.nextLevelName = "Nivel " + (nextLevelIndex + 1);
     }
 
