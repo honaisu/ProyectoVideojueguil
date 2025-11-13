@@ -2,6 +2,7 @@ package managers;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -20,6 +21,10 @@ public class AssetManager {
 	// Jugador
 	// TODO Evaluar para ver si es como SkinManager(?) o que sea parte de un "TextureManager"
     private Map<ESkinJugador, Texture> skinJugadorTextures;
+    
+    
+ // Un mapa para guardar las texturas de los fondos (perdon nachoid)
+    private Map<String, Texture> fondosTextures;
     
     //armas
     private Texture HMTexture;
@@ -64,7 +69,11 @@ public class AssetManager {
     private Music musicaTutorial;
 
     
-    private AssetManager() {}
+    //private AssetManager() {}antes
+    
+    private AssetManager() { //perdon nachoid u_u
+        fondosTextures = new HashMap<>(); 
+    }
     
     /**
      * Método que consigue AL AssetsLoader
@@ -80,6 +89,7 @@ public class AssetManager {
      */
     public void load() {
         this.loadTexturesJugador();
+        this.loadFondos();
         
         // TEXTURAS
         balaTexture = new Texture(Gdx.files.internal("Bala.png"));
@@ -135,6 +145,22 @@ public class AssetManager {
         }
     }
     
+    
+    /**
+     * Carga todas las texturas de fondos definidas en LevelFactory.
+     */
+    private void loadFondos() {
+    	// Cargamos el fondo del Nivel 1
+        fondosTextures.put("fondos/fondoNivelUno.png", new Texture(Gdx.files.internal("fondos/fondoNivelUno.png")));
+        
+        //Y para nivel 2
+        fondosTextures.put("fondos/fondoNivelDos.png", new Texture(Gdx.files.internal("fondos/fondoNivelDos.png")));
+        
+        // Si creas más fondos (ej: "fondos/toxico.png") para otros niveles,
+        // ¡agrégalos aquí también para que se precarguen!
+        // fondosTextures.put("fondos/toxico.png", new Texture(Gdx.files.internal("fondos/toxico.png")));
+    }
+    
 	/**
      *  Método para liberar todos los recursos de la memoria
      */
@@ -145,12 +171,26 @@ public class AssetManager {
         hurtSound.dispose();
         disparoSound.dispose();
         gameMusic.dispose();
+        
+        
+     // Liberar los fondos //van a haber más de 1 
+        for (Texture fondo : fondosTextures.values()) {
+            fondo.dispose();
+        }
     }
 
     // Jugador
 	public Texture getSkinTexture(ESkinJugador skin) {
 		return skinJugadorTextures.get(skin);
 	}
+	
+	//Fondos
+	/**
+     * Obtiene una textura de fondo por su path (debe estar precargada).
+     */
+    public Texture getFondo(String path) {
+        return fondosTextures.get(path);
+    }
 
 	//Armas
 	public Texture getHMTexture() { return HMTexture; }

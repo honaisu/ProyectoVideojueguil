@@ -7,5 +7,6 @@ public enum EScreenType {
 	CONFIGURACION,
 	TUTORIAL,
 	PAUSA,
+	TRANSICION,
 	GAME_OVER;
 }
