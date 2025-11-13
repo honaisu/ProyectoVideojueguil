@@ -1,24 +1,24 @@
 package armas;
 
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Projectile;
-import logica.GameWorld;
 import managers.AssetManager;
+import managers.ProjectileManager;
 import personajes.Player;
 
-public class Laser extends Weapon {
+public class LaserGun extends Weapon {
     // Parámetros del “pulso” (un disparo = un rayo breve)
-    private final float anchoLaser = 10f;     // grosor del rayo
-    private final float ttlPulso   = 0.12f;   // duración de cada pulso en segundos
 
     // misma idea que el metralleta (literal es igual en todos creo xd)
-    public Laser() {
+    public LaserGun() {
     	super("Laser Gun",
 				2,													// daño
 				0.08f, 												// cadencia
-				60, 												// municion
+				6000, 												// municion
 				AssetManager.getInstancia().getLaserContSound());	// sonido
     }
     
@@ -53,11 +53,31 @@ public class Laser extends Weapon {
         juego.getGameManager().getProyectilManager().add(pulso);
     }*/
     @Override
-    public void crearProyectil(Player p, float rotation) {    	
+    public void crearProyectil(Player p, ProjectileManager manager) {
+    	float muzzle[] = Projectile.calcularMuzzle(p, true);
+		float width = 20f;     // grosor visual/efectivo
+		float duracionPulso = 0.25f; // duración del rayo por disparo (segundos)
         //LaserBeam pulso = new LaserBeam(nave, anchoLaser, AssetManager.getInstancia().getLaserContTexture(), 1);
-        LaserBeam pulso = new LaserBeam(p, rotation);
-    	pulso.configurarPulso(ttlPulso); // se apaga solo al vencer el TTL
+		LaserBeam rayo = new LaserBeam(muzzle[0],
+				muzzle[1],
+				width,
+				muzzle[2],
+				true,
+				new Sprite(AssetManager.getInstancia().getLaserContTexture()),
+				p);
+		
+    	rayo.configurarPulso(duracionPulso); // se apaga solo al vencer el TTL
         
-        return pulso;
+    	manager.add(rayo);
     }
+
+	@Override
+	public Texture getDropTexture() {
+		return AssetManager.getInstancia().getLGTexture(); //TODO
+	}
+
+	@Override
+	public Sound getPickupSound() {
+		return AssetManager.getInstancia().getLGSound();
+	}
 }

@@ -24,7 +24,7 @@ public class Enemy extends Entity {
 		this.damage = damage;
 		
 		getSpr().setPosition(x, y); 
-		
+		//getSpr().setScale(size);
 		// Es buena idea centrar el origen si vas a rotar o escalar
 		getSpr().setOriginCenter();
 	}

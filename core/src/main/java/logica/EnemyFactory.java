@@ -10,7 +10,7 @@ public class EnemyFactory {
   
   //constantes para los enemigos
   // Tamaño fijo
-  private static final float ENEMY_SIZE = 100f;
+  private static final float ENEMY_SIZE = 10f;
   private static float margin() { return ENEMY_SIZE; }
   // Velocidad inicial
   private static final float MIN_SPEED = 60f, MAX_SPEED = 140f;

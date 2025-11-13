@@ -45,4 +45,3 @@ public class Melee extends Weapon {
         return AssetManager.getInstancia().getMSound();
     }
 }
-

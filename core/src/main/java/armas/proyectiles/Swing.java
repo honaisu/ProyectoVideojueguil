@@ -7,9 +7,9 @@ import personajes.Player;
 
 public class Swing extends Projectile {
 	// tiempo que dura activo el golpe
-    private float duracion = 0.25f;     
+    private float duracion = 0.25f;
     // Contador
-    private float tiempoActivo = 0f;  	
+    private float tiempoActivo = 0f;
     // para que desaparezca el swing	
     
     private float radio;
@@ -27,11 +27,9 @@ public class Swing extends Projectile {
     
     @Override
     public void update(float delta, Player p) {
-        float centerX = p.getSpr().getBoundingRectangle().getX() + p.getSpr().getBoundingRectangle().getWidth() / 2;
-        float centerY = p.getSpr().getBoundingRectangle().getY() + p.getSpr().getBoundingRectangle().getHeight() / 2;
+    	float muzzle[] = calcularMuzzle(p, false);
     	
-    	
-        mover(centerX, centerY, p.getRotation(), radio);
+        mover(muzzle[0], muzzle[1], muzzle[2]-90, radio);
         if (isDestroyed()) return;
 
         tiempoActivo += delta;

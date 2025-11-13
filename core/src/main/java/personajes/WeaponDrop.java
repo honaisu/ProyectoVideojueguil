@@ -12,7 +12,6 @@ public class WeaponDrop extends Entity {
 	private float duration = 3f;
 	
 	public WeaponDrop(float x, float y, Weapon weapon) {
-        // TODO: Reemplaza "getDropTexture()" con la textura real para la caja/drop
         super(x, y, new Sprite(weapon.getDropTexture())); 
         
         this.weaponToGive = weapon;

@@ -38,7 +38,7 @@ public class Player extends Entity {
 	private float iFrames = 0f;     // si
 	  
 	//Arma inicial o por defecto
-	private Weapon weapon = new HeavyMachineGun();
+	private Weapon weapon = new LaserGun();
 	
 	public Player(float x, float y) {
 		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());

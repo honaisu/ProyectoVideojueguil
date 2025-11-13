@@ -3,7 +3,7 @@ package armas;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
+
 
 import armas.proyectiles.LaserBeam;
 import armas.proyectiles.Projectile;
@@ -12,8 +12,6 @@ import managers.ProjectileManager;
 import personajes.Player;
 
 public class LaserCannon extends Weapon {
-    // Configuración del pulso
-    private final int estiloRayo = 2;         // usa el “num” para grosor/estilo en RayHitbox
 
     public LaserCannon() {
     	super("Laser Cannon",

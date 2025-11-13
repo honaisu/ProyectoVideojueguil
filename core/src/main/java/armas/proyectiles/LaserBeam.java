@@ -2,11 +2,7 @@ package armas.proyectiles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
-import hitboxes.RayHitbox;
-import managers.AssetManager;
 import personajes.Player;
 
 public class LaserBeam extends Projectile {
@@ -17,11 +13,12 @@ public class LaserBeam extends Projectile {
     private float largo;
     private float ancho;
     private float angle;
+    private boolean isThin;
 
     // Control de encendido por tecla mantenida (Z)
     // si llega a 0, se apaga
     private float tiempoRestanteEncendido = 0f;
-    private final float tiempoRefrescoEncendido = 0.12f; 
+    private final float tiempoRefrescoEncendido = 0.12f;
     
     /*
     public LaserBeam(Player nave, float ancho, Texture textura, int num) {
@@ -36,15 +33,24 @@ public class LaserBeam extends Projectile {
     	super(x, y, spr, p);
     	
     	// 2. Configura los campos (lógica de RayHitbox)
-        this.ancho = p.getSpr().getBoundingRectangle().getWidth();
-        this.largo = p.getSpr().getBoundingRectangle().getHeight(); // r.getHeight() es probablemente 1f, pero está bien
-        this.angle = angle;
+        this.ancho = width;
+        this.angle = angle-90f;
+        this.isThin = isThin;
         
-        if (isThin) getSpr().scale(3f);
+        if (isThin) getSpr().scale(1f);
         else getSpr().scale(10f);
         
         // 3. Llama al método de configuración (copiado de RayHitbox)
-        this.setToScreenEnd();
+        this.setToScreenEnd(); // Esto ya establece el tamaño y el origen (gracias al paso 1)
+        
+        // CAMBIA ESTA SECCIÓN:
+        // getSpr().setPosition(x - getSpr().getWidth() / 2, y - getSpr().getHeight() / 2);
+        
+        // POR ESTAS DOS LÍNEAS:
+        // Rota el sprite primero
+        getSpr().setRotation(angle); 
+        // Ahora posiciónalo usando el origen que definimos en setToScreenEnd()
+        getSpr().setPosition(x - getSpr().getOriginX(), y - getSpr().getOriginY());
     }
     
     private void setToScreenEnd() {
@@ -64,17 +70,25 @@ public class LaserBeam extends Projectile {
         largo = (tMin == Float.POSITIVE_INFINITY) ? Math.max(W, H) : tMin;
         
         getSpr().setSize(largo, ancho);
+        
+        getSpr().setOrigin(0f, ancho / 2f);
     }
     
     public void setTransform(float x, float y, float angulo) {
-        setX(x);
+    	setX(x);
         setY(y);
-        this.angle = angulo;
+        this.angle = angulo-90f;
 
         getSpr().setRotation(angulo);
-        getSpr().setPosition(x, y - ancho / 2f); // (Asumo que quieres centrarlo)
 
-        setToScreenEnd();
+        setToScreenEnd(); // Esto recalcula el largo y re-establece el origen
+        
+        // CAMBIA ESTA LÍNEA:
+        // getSpr().setPosition(x - getSpr().getWidth() / 2, y - getSpr().getHeight() / 2);
+        
+        // POR ESTA LÍNEA:
+        // Posiciona el sprite basado en su origen (que ahora es (0, ancho/2))
+        getSpr().setPosition(x - getSpr().getOriginX(), y - getSpr().getOriginY());
     }
 
     // Llamado por Laser.disparar cada frame mientras la tecla (Z) siga presionada
@@ -91,6 +105,9 @@ public class LaserBeam extends Projectile {
     
     @Override
     public void update(float delta, Player p) {
+    	float muzzle[] = calcularMuzzle(p, false);
+    	setTransform(muzzle[0], muzzle[1], muzzle[2]);
+    	
         if (isDestroyed()) return;
 
         // Lógica de tiempo de vida
@@ -109,52 +126,4 @@ public class LaserBeam extends Projectile {
     	// TODO Auto-generated method stub
     	
     }
-    /*
-    public void update(float delta) {
-        if (destroyed) return;
-
-        // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
-        float ang = nave.getRotation() + 90f;
-        float[] muzzle = calcularMuzzle(nave, ang);
-        // TODO 
-        //getHitbox().setTransform(muzzle[0], muzzle[1], ang);
-
-        // Apagar si no se refrescó (la tecla se soltó)
-        tiempoRestanteEncendido -= delta;
-        if (tiempoRestanteEncendido <= 0f) {
-            destroy();
-        }
-    }*/
-
-    /*@Override
-    public void draw(SpriteBatch batch) {
-        if (!destroyed) draw(batch);
-    }*/
-
-    public void destroy() {
-        destroyed = true;
-        //hitbox.setActivo(false);
-    }
-
-    public boolean isDestroyed() {
-        return destroyed;
-    }
-
-    
-    /*
-	@Override
-	public void update(float delta, Rectangle r, float rotation) {
-		if (destroyed) return;
-
-        // Seguir a la nave y estirarse hasta borde (RayHitbox ya lo hace en setTransform)
-        float ang = rotation;
-        //float[] muzzle = calcularMuzzle(nave, ang);
-        //getHitbox().setTransform(muzzle[0], muzzle[1], ang);
-
-        // Apagar si no se refrescó (la tecla se soltó)
-        tiempoRestanteEncendido -= delta;
-        if (tiempoRestanteEncendido <= 0f) {
-            destroy();
-        }
-	}*/
 }
