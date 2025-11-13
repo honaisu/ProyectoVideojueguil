@@ -9,6 +9,7 @@ import pantallas.*;
 import pantallas.juego.GameOverScreen;
 import pantallas.juego.GameScreen;
 import pantallas.juego.PauseScreen;
+import pantallas.juego.LevelTransitionScreen;
 import pantallas.menus.ConfigurationScreen;
 import pantallas.menus.CustomizationScreen;
 import pantallas.menus.MainMenuScreen;
@@ -33,7 +34,6 @@ public class ScreenManager {
         pantallas.put(EScreenType.CONFIGURACION, 	new ConfigurationScreen(game));
         pantallas.put(EScreenType.PAUSA, new PauseScreen(game));
         pantallas.put(EScreenType.TUTORIAL, new TutorialScreen(game));
-
     }
     
     public void cambiarPantalla(EScreenType tipoPantalla) {
@@ -48,7 +48,21 @@ public class ScreenManager {
             game.setScreen(nuevaPantallaJuego);
             return;
         }
+        
+        //codigo específico para la transicion de niveles
+        if (tipoPantalla.equals(EScreenType.TRANSICION)) {
+            // Desechamos la pantalla antigua si existe
+            BaseScreen antiguaPantalla = pantallas.get(EScreenType.TRANSICION);
+            if (antiguaPantalla != null) antiguaPantalla.dispose();
 
+            // Creamos una INSTANCIA NUEVA que lee el nivel correcto
+            LevelTransitionScreen nuevaPantallaTransicion = new LevelTransitionScreen(game);
+            pantallas.put(EScreenType.TRANSICION, nuevaPantallaTransicion);
+            game.setScreen(nuevaPantallaTransicion);
+            return;
+        }
+        
+        
         BaseScreen screen = pantallas.get(tipoPantalla);
         if (screen != null) {
             game.setScreen(screen);

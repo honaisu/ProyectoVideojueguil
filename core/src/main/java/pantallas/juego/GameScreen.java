@@ -5,8 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+//para el fondo
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 
 import enumeradores.EScreenType;
+import enumeradores.recursos.EBackgroundType;
+import factories.SpriteFactory;
 import logica.GameWorld;
 import logica.MainGame;
 import pantallas.BaseScreen;
@@ -17,51 +22,67 @@ import pantallas.BaseScreen;
 public class GameScreen extends BaseScreen {
 	private final GameWorld world;
 	private final HUDLayout hud = new HUDLayout();
-
+	
+	//cosas utiles para el tema del fondo 
+	private Sprite backgroundSprite; // El sprite que usaremos para el fondo
+    
 	public GameScreen(MainGame game) {
 		super(game);
-		this.world = new GameWorld();
+		this.world = new GameWorld(game.getNextLevelToLoad());
+		
+		EBackgroundType background = world.getBackground();
+		this.backgroundSprite = SpriteFactory.create(background);
+        this.backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
-		
-		
-		/*world.getGameLogicHandler().update(
-				delta, 
-				world.getPlayer()
-				);
-		*/
-		//para cuando muere
+
+	    // Chqeuamos la transicion
+	    if (world.isLevelComplete()) {
+	        // le decimoa  amin game cual es el siguiente nivel
+	        getGame().setNextLevelToLoad(world.getNextLevelIndex());
+	        getGame().getPantallaManager().cambiarPantalla(EScreenType.TRANSICION);
+	        return;
+	    }
+	    
+	    if (world.gameWon()) {
+	    	// TODO Implementar pantalla de ganada :D
+	    	getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
+	    }
+
+	    // Y el update si muere o pausa
 		if (world.getPlayer().isDead()) {
-			
-			// Asumo que tienes una pantalla llamada EScreenType.GAME_OVER
 			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
-			
-			// Detenemos la ejecución de este update para no chequear la pausa
 			return; 
 		}
 		
-		
-		// Sistema de Pausa
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			getGame().getPantallaManager().cambiarPantalla(EScreenType.PAUSA);
 		}
-
 	}
-
+	
 	@Override
 	protected void draw(SpriteBatch batch, BitmapFont font) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        // Le preguntamos al GameWorld por AMBOS strings
+        String levelName = world.getCurrentLevelName();
+		String roundName = world.getCurrentRoundName();
+        
+		batch.begin();
+		
+		//dibujarmos el fondo ahora si
+		backgroundSprite.draw(batch);
 		
 		//ahora antes de "dibujar" le preguntamos al GameWorld//
-		String currentRoundName = world.getCurrentRoundName();
-		batch.begin();
-		world.getPlayer().draw(batch);				//TODO ⇧⇩ para que el player superponga las balas de las armas
+		//String currentRoundName = world.getCurrentRoundName();
+		//batch.begin();
+		world.getPlayer().draw(batch);
 		world.getGameLogicHandler().render(batch);
-		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
-		
+		//hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
+		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), levelName, roundName);
 		
 		batch.end();
 	}

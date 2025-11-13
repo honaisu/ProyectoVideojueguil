@@ -21,6 +21,9 @@ public class MainGame extends Game {
 	private Volumen volumen;
     private ScreenManager pantallaManager;
     
+    //para el cambio de nivel
+    private int nextLevelToLoad = 0; // Empezamos en 0 (Nivel 1)
+    
 	/**
 	 * Método encargado de crear el juego
 	 * Crea una camara y UNA pantalla. 
@@ -72,4 +75,21 @@ public class MainGame extends Game {
 	public ScreenManager getPantallaManager() {
 		return pantallaManager;
 	}
+	
+	
+	//Para el cambio de niveles 
+	/**
+     * Guarda el índice del *próximo* nivel que debe ser cargado.
+     */
+    public void setNextLevelToLoad(int levelIndex) {
+        this.nextLevelToLoad = levelIndex;
+    }
+
+    /**
+     * Devuelve el índice del nivel que toca cargar.
+     */
+    public int getNextLevelToLoad() {
+        return nextLevelToLoad;
+    }
+	
 }
