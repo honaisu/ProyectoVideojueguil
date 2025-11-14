@@ -1,9 +1,8 @@
 package armas.proyectiles;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-
-import hitboxes.ArcHitbox;
+import entidades.Player;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 
 public class Swing extends Projectile {
 	// tiempo que dura activo el golpe
@@ -14,29 +13,35 @@ public class Swing extends Projectile {
     
     private float radio;
 
-    public Swing(float x, float y, float rotation, float radio) {
-    	// la colision es de tipo arqueada
-    	super(new ArcHitbox(x, y, rotation));
-    	// distancia del ataque
+    public Swing(float x, float y, float rotation, float radio, Player p) {
+    	super(x, y, SpriteFactory.create(EProjectileType.SWING, 96, 64), p);
+    	
+    	getSpr().setBounds(x, y, 120, 60);
+        getSpr().setOriginCenter();
+        getSpr().setRotation(rotation-90);
+        getSpr().setPosition(x - getSpr().getWidth() / 2, y - getSpr().getHeight() / 2);
+        
     	this.radio = radio;
     }
     
     @Override
-    public void update(float delta, Rectangle r, float rotation) {
-    	float centerX = r.getX() + r.getWidth() / 2;
-        float centerY = r.getY() + r.getHeight() / 2;
+    public void update(float delta, Player p) {
+        float centerX = p.getSpr().getBoundingRectangle().getX() + p.getSpr().getBoundingRectangle().getWidth() / 2;
+        float centerY = p.getSpr().getBoundingRectangle().getY() + p.getSpr().getBoundingRectangle().getHeight() / 2;
     	
-    	//actualiza el movimiento de la colision con el movimiento de la nave
-    	getHitbox().mover(centerX, centerY, rotation, radio);
-        
-        //un breve periodo de tiempo hasta que se destruye automaticamente
+    	
+        mover(centerX, centerY, p.getRotation(), radio);
+        if (isDestroyed()) return;
+
         tiempoActivo += delta;
         if (tiempoActivo > duracion) {
             destroy();
         }
     }
+    //TODO
 	@Override
-	public void draw(SpriteBatch batch) {
-		getHitbox().draw(batch);
+	public void update(float delta) {
+		// TODO Auto-generated method stub
+		
 	}
 }

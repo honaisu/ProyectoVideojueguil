@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
+import entidades.Player;
 import managers.EnemyManager;
 import managers.CollisionManager;
 import managers.DropManager;
 import managers.ProjectileManager;
-import personajes.Player;
 
 /**
  * Clase encargada de mantener instancias de otros managers encargados de la lógica del juego.
@@ -50,8 +50,8 @@ public class GameLogicHandler {
 		dropManager.render(batch);
 	}
 	
-	public void update(float delta, Rectangle r, float rotation) {
-		proyectilManager.update(delta, r, rotation);
+	public void update(float delta, Player player) {
+		proyectilManager.update(delta, player);
 		enemyManager.update(delta);
 		dropManager.update(delta);
 	}

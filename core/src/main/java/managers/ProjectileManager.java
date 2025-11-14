@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
+import entidades.Player;
 
 public class ProjectileManager {
 	private final List<Projectile> proyectiles = new ArrayList<>();
@@ -31,7 +31,7 @@ public class ProjectileManager {
 		return proyectiles.get(0);
 	}
 	
-	public void update(float delta, Rectangle r, float rotation) {
+	public void update(float delta, Player player) {
 		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
 		Iterator<Projectile> iterator = proyectiles.iterator();
 
@@ -41,7 +41,7 @@ public class ProjectileManager {
 	        	iterator.remove();
 	        	continue;
 	        }
-	        proyectil.update(delta, r, rotation);
+	        proyectil.update(delta, player);
 	        if (proyectil.isDestroyed()) {
 	            iterator.remove();
 	        }

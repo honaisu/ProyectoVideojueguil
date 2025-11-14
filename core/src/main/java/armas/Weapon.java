@@ -2,10 +2,11 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
 
-import managers.AssetManager;
+import entidades.Player;
+import enumeradores.recursos.EGameSound;
 import managers.ProjectileManager;
+import managers.assets.AssetManager;
 
 //Clase Abstracta Arma generica
 public abstract class Weapon {
@@ -31,8 +32,14 @@ public abstract class Weapon {
         this.soundBala = soundBala;
         this.tiempoUltDisp = cadencia; //para que dispare instantaneamente el primer disparo
     }
+    
+    public Weapon(String nombre, int damage, float cadencia, int municionMax) {
+    	// Para que tenga un sonido generico
+    	this(nombre, damage, cadencia, municionMax, AssetManager.getInstancia().getSound(EGameSound.SHOOT));
+    }
+    
     // metodo abstracto para crear el proyectil para cada arma
-    public abstract void crearProyectil(Rectangle r, float rotation, ProjectileManager manager);
+    public abstract void crearProyectil(Player p, ProjectileManager manager);
     // metodo abstracto para crear la textura del drop
     public abstract Texture getDropTexture();
     // metodo abstracto para crear es sonido del drop
@@ -40,14 +47,14 @@ public abstract class Weapon {
     
     // metodo abstracto para disparar un arma
     //public abstract void disparar(Player nave, GameWorld juego, float delta);
-    public void atacar(float delta, Rectangle r, float rotation, ProjectileManager manager) {
+    public void atacar(float delta, Player p, ProjectileManager manager) {
     	actualizar(delta);
     	if (!puedeDisparar()) return;
         if (getMunicion() <= 0) return;
         
         restarMunicion(delta);
         if (puedeDisparar()) reiniciarCooldown();
-        crearProyectil(r, rotation, manager);
+        crearProyectil(p, manager);
     }
     
     

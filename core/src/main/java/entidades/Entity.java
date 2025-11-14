@@ -1,21 +1,29 @@
-package hitboxes;
+package entidades;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 
-public abstract class Hitbox {
+/**
+ * Clase abstracta que define una <i>entidad</i> dentro de nuestro juego.
+ * <p>
+ * Cada entidad va a ser como un "objeto" que existe en el plano (pantalla),
+ * veáse ejemplos como Jugador, Bala, Enemigo...
+ */
+public abstract class Entity {
 	private float x;
 	private float y;
 	private Sprite sprite;
 	
-	public Hitbox(float x, float y) {
+	private boolean destroyed = false;
+	
+	public Entity(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}
 	
-	public Hitbox(float x, float y, Sprite sprite) {
+	public Entity(float x, float y, Sprite sprite) {
 		this(x, y);
 		this.sprite = sprite;
 	}
@@ -35,7 +43,7 @@ public abstract class Hitbox {
 	 * @param BallHitbox -> puede ser un asteroide
 	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
 	 */
-	public boolean checkCollision(Hitbox b2) {
+	public boolean checkCollision(Entity b2) {
 		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(b2.getSpr()));
 	}
 	
@@ -62,6 +70,14 @@ public abstract class Hitbox {
 	    p.setRotation(spr.getRotation());
 	    return p;
 	}
+	
+	/**
+     * Actualiza la lógica de la entidad
+     */
+    public abstract void update(float delta); 
+    
+    public void destroy() { destroyed = true; }
+	public boolean isDestroyed() { return destroyed; }
 
 	public float getX() { return x; }
 	public void setX(float x) {	this.x = x;	}

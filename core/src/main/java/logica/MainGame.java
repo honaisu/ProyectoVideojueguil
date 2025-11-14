@@ -8,8 +8,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import enumeradores.EScreenType;
-import managers.AssetManager;
 import managers.ScreenManager;
+import managers.assets.AssetManager;
 
 public class MainGame extends Game {	
 	private SpriteBatch batch;

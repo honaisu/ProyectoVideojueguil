@@ -3,25 +3,20 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import personajes.Player;
+import entidades.Player;
+import enumeradores.EScreenType;
+import enumeradores.recursos.EBackgroundType;
+import factories.LevelFactory;
 
 //coso para los enemigos y el cambio de ronda
 import java.util.ArrayList; //no c que tan necesario
-import java.util.List; // no c si rompa lo e Strategy      
-//import personajes.Enemy; antes con logica de enemigos y rondas
-//ahora con la logica de los niveles
-import logica.levels.Level; 
-import logica.levels.LevelFactory; 
+import java.util.List; // no c si rompa lo e Strategy
 
+import logica.levels.Level; 
 
 public class GameWorld {
 	private final Player player;
 	private final GameLogicHandler gameLogicHandler;
-	
-	//para rondas y demás
-	/*private List<Round> allRounds;          // Lista de todas las Rondas
-    private int currentRoundIndex;          // Indetificador pa que ver en que ronda avamos
-    private boolean waitingForNextRound;*/ //cambiamos todo para que level gestione esto
 	
 	private List<Level> allLevels;       // Lista de Niveles
     private int currentLevelIndex;       // Índice para saber en qué nivel vamos
@@ -55,19 +50,11 @@ public class GameWorld {
 	
 	public void update(float delta) {
 		this.handleInput(delta);
-		
 		player.update(delta);
 		
 		//logica que el propio GameWolrd deebria manejar, no GameScreen
 		gameLogicHandler.getEnemyManager().update(delta);
-	    gameLogicHandler.getProyectilManager().update(
-	            delta, 
-	            player.getSpr().getBoundingRectangle(), 
-	            player.getRotation()
-	            );
-		
-		
-		
+	    gameLogicHandler.getProyectilManager().update(delta, player);
 		gameLogicHandler.handleCollisions(player);
 		
 		//Chekeamos que este completo
@@ -116,6 +103,7 @@ public class GameWorld {
 	 * (Este es el método que reemplaza la idea de 'initializeRounds').
 	 */
 	private void startNextLevel() {
+
 	    currentLevelIndex++; // Avanzamos al siguiente nivel
 
 	    if (currentLevelIndex < allLevels.size()) {
@@ -128,6 +116,7 @@ public class GameWorld {
 	    // ¡El 'else' que imprimía "GANASTE" se elimina!
 	    // 'checkCompletion' ahora se encarga de la victoria.
 	}
+
 	
 	//para comporbar si todos los enemigos fueron derrotados
 	/**
@@ -172,7 +161,6 @@ public class GameWorld {
         }
     }
 	
-	
 	/**
      * Devuelve el nombre del NIVEL actual (ej: "Nivel 1: El Espacio")
      */
@@ -194,21 +182,9 @@ public class GameWorld {
         }
         return ""; // Vacío mientras carga
     }
-	
     
-    
-    /**
-     * Devuelve el path de la textura de fondo del nivel actual
-     * para que GameScreen sepa qué dibujar.
-     */
-    //creo que sirve apra el tema de los fondos//pude que de error
-    public String getCurrentBackgroundPath() {
-        if (currentLevel != null) {
-            return currentLevel.getBackgroundAssetPath();
-        }
-        // Devuelve un fondo "default" si todo falla
-        // (Asegúrate que este archivo exista)
-        return "fondos/fondoNivelUno.png"; 
+    public EBackgroundType getBackground() {
+    	return currentLevel.getBackground();
     }
     
     /**
@@ -225,6 +201,7 @@ public class GameWorld {
         // currentLevelIndex es el que *acabamos* de terminar
         return currentLevelIndex + 1;
     }
+
     
     //para pantalla de victoria
     /**
@@ -234,4 +211,5 @@ public class GameWorld {
         return gameWon;
     }
     
+
 }

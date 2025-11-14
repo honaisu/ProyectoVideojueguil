@@ -1,27 +1,24 @@
-package logica.levels;
+package factories;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import entidades.Enemy;
+import enumeradores.recursos.EBackgroundType;
 // Imports de tus otras clases
-import interfaces.IRoundStrategy;
 import logica.Round;
-import personajes.Enemy; 
+import logica.levels.Level;
 
 /**
  * Aquí definimos todos los niveles del juego.
  * Mantenemos la lógica de creación de niveles separada de GameWorld.
  */
 public class LevelFactory {
-
     /**
      * Crea y devuelve el Nivel 1.
      */
     public static Level createLevelOne() {
         List<Round> levelOneRounds = new ArrayList<>();
-        
-        // --- Definición de Rondas para el Nivel 1 ---
-        // (Esto es tu antiguo 'initializeRounds')
 
         levelOneRounds.add(new Round("Ronda 1", (em) -> {
             em.spawnEnemies(3);
@@ -38,8 +35,7 @@ public class LevelFactory {
             em.add(new Enemy(550, 650, 100f, 0.05f, 50, 10));
         }));
         
-        // Creamos el Nivel 1//puede que esto de error 
-        return new Level("Nivel 1: El Espacio", "fondos/fondoNivelUno.png", levelOneRounds);
+        return new Level("Nivel 1: El Espacio", EBackgroundType.ONE, levelOneRounds);
     }
 
     /**
@@ -66,7 +62,7 @@ public class LevelFactory {
         }));
         
         // Creamos el Nivel 2
-        return new Level("Nivel 2: Planeta Tóxico", "fondos/fondoNivelDos.png", levelTwoRounds);
+        return new Level("Nivel 2: Planeta Tóxico", EBackgroundType.TWO, levelTwoRounds);
     }
     
     //por el momento probemos con 2 niveles y vamos viendo si alfinal creo la clase levelOne o similar

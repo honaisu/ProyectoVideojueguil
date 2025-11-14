@@ -1,6 +1,8 @@
 package logica.levels;
 
 import java.util.List;
+
+import enumeradores.recursos.EBackgroundType;
 import logica.GameLogicHandler;
 import logica.Round;
 
@@ -11,16 +13,16 @@ import logica.Round;
  * - Su nombre.
  */
 public class Level {
-
     private final String levelName;
-    private final String backgroundAssetPath; // Path para la textura de fondo
-    private final List<Round> rounds;         // ¡La lista de rondas de este nivel!
-    
-    private int currentRoundIndex; // Para saber qué ronda toca
+    private final EBackgroundType background;
+    // ¡La lista de rondas de este nivel!
+    private final List<Round> rounds;    
+    // Para saber qué ronda toca
+    private int currentRoundIndex; 
 
-    public Level(String levelName, String backgroundAssetPath, List<Round> rounds) {
+    public Level(String levelName, EBackgroundType background, List<Round> rounds) {
         this.levelName = levelName;
-        this.backgroundAssetPath = backgroundAssetPath;
+        this.background = background;
         this.rounds = rounds;
         this.currentRoundIndex = -1; // Empieza en -1, listo para la primera ronda
     }
@@ -54,14 +56,11 @@ public class Level {
         return true; // El nivel SÍ ha terminado (no hay más rondas)
     }
 
-    // --- Getters ---
-    // (Para que GameWorld y GameScreen los usen)
-
     public String getLevelName() { 
         return levelName; 
     }
     
-    public String getBackgroundAssetPath() { 
-        return backgroundAssetPath; 
+    public EBackgroundType getBackground() { 
+        return background; 
     }
 }
