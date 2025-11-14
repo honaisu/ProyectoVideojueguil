@@ -35,7 +35,7 @@ public class LaserCannon extends Weapon {
 		Swing rayo = new Swing(muzzle,
 				length,
 				p,
-				SpriteFactory.create(EProjectileType.LASER_CANNON, 96, 64),
+				SpriteFactory.create(EProjectileType.LASER_CANNON),
 				width, 			// width
 				height, 		// height
 				duration, 		// duracion

@@ -12,10 +12,10 @@ import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EEnemyType;
 import enumeradores.recursos.EPlayerSkin;
 import enumeradores.recursos.EProjectileType;
-import interfaces.IAssetRoute;
+import interfaces.ITexture;
 
 public class TextureManager implements Disposable {
-	private Map<IAssetRoute, Texture> textures = new HashMap<>();
+	private Map<ITexture, Texture> textures = new HashMap<>();
     
     public TextureManager() {}
     
@@ -33,9 +33,9 @@ public class TextureManager implements Disposable {
      * 
      * @param elements Los elementos del enumerador
      */
-    private void loadFromEnum(IAssetRoute[] elements) {
+    private void loadFromEnum(ITexture[] elements) {
     	// ITera sobre todos los valores del IASSETROUTE
-    	for (IAssetRoute element : elements) {
+    	for (ITexture element : elements) {
     		// Crea una textura en base al método que sabe que implementará (getRuta)
     		Texture textura = new Texture(Gdx.files.internal(element.getRuta()));
     		// Se guarda en el mapa de enumeradores
@@ -43,7 +43,7 @@ public class TextureManager implements Disposable {
     	}
     }
     
-    public Texture get(IAssetRoute asset) {
+    public Texture get(ITexture asset) {
     	return textures.get(asset);
     }
 

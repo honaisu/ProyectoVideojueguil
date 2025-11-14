@@ -42,7 +42,7 @@ public class Melee extends Weapon {
         swingActual = new Swing(muzzle,
         		length,
         		p,
-        		SpriteFactory.create(EProjectileType.SWING, 96, 64),
+        		SpriteFactory.create(EProjectileType.SWING),
         		width, height, 
         		duration,
         		false,

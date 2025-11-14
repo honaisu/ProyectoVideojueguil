@@ -25,14 +25,14 @@ public class GameScreen extends BaseScreen {
 	
 	//cosas utiles para el tema del fondo 
 	private Sprite backgroundSprite; // El sprite que usaremos para el fondo
-    
+	
 	public GameScreen(MainGame game) {
 		super(game);
-		this.world = new GameWorld(game.getNextLevelToLoad());
+		this.world = new GameWorld(game.getNextLevelToLoad(), game.getPlayerSkin());
 		
 		EBackgroundType background = world.getBackground();
-		this.backgroundSprite = SpriteFactory.create(background);
-        this.backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		backgroundSprite = SpriteFactory.create(background);
+		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -79,8 +79,8 @@ public class GameScreen extends BaseScreen {
 		//ahora antes de "dibujar" le preguntamos al GameWorld//
 		//String currentRoundName = world.getCurrentRoundName();
 		//batch.begin();
-		world.getPlayer().draw(batch);
 		world.getGameLogicHandler().render(batch);
+		world.getPlayer().draw(batch);
 		//hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
 		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), levelName, roundName);
 		

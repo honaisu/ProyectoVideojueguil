@@ -51,6 +51,7 @@ public class Player extends Entity {
 		super(x, y, SpriteFactory.create(skin));
 		animation = AnimationFactory.createPlayer(skin);
 
+		//getSpr().scale(1f);
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	getSpr().setOriginCenter();
 	}

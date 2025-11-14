@@ -32,6 +32,7 @@ public class Swing extends Projectile {
 	   	getSpr().setRotation(muzzle[2]-90);
 	   	getSpr().setPosition(muzzle[0] - getSpr().getOriginX(), muzzle[1] - getSpr().getOriginY());
 	}
+
     
     @Override
     public void update(float delta, Player p) {

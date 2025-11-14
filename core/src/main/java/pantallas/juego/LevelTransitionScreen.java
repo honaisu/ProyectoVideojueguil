@@ -11,9 +11,7 @@ import logica.MainGame;
 import pantallas.BaseScreen;
 
 public class LevelTransitionScreen extends BaseScreen {
-
     private float timer;
-    
     
     private String completedLevelName; // El nombre del nivel que terminaste (ej: "Nivel 1")
     private String nextLevelName;      // El nombre del nivel que vas a cargar (ej: "Nivel 2")

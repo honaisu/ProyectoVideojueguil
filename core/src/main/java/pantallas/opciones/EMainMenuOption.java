@@ -3,24 +3,17 @@ package pantallas.opciones;
 import com.badlogic.gdx.Gdx;
 
 import enumeradores.EScreenType;
+import interfaces.IExecutableGame;
 import interfaces.INavigableOption;
 import interfaces.IScreenAction;
 import logica.MainGame;
 
-public enum EMainMenuOption implements INavigableOption {
-	INICIAR("Iniciar Juego", (manager) -> {
-		manager.cambiarPantalla(EScreenType.JUEGO);
-	}),
-	PERSONALIZAR("Personalizar Personaje", (manager) -> {
-		manager.cambiarPantalla(EScreenType.PERSONALIZACION);
-	}),
-	OPCIONES("Configuración", (manager) -> {
-		manager.cambiarPantalla(EScreenType.CONFIGURACION);
-	}),
-	TUTORIAL("Tutorial", (manager) -> {
-		manager.cambiarPantalla(EScreenType.TUTORIAL);
-	}),
-	SALIR("Salir del Juego", (manager) -> { Gdx.app.exit();});
+public enum EMainMenuOption implements INavigableOption, IExecutableGame {
+	INICIAR("Iniciar Juego", (m) -> m.cambiarPantalla(EScreenType.JUEGO)),
+	PERSONALIZAR("Personalizar Personaje", (m) -> m.cambiarPantalla(EScreenType.PERSONALIZACION)),
+	OPCIONES("Configuración", (m) -> m.cambiarPantalla(EScreenType.CONFIGURACION)),
+	TUTORIAL("Tutorial", (m) -> m.cambiarPantalla(EScreenType.TUTORIAL)),
+	SALIR("Salir del Juego", (m) -> Gdx.app.exit());
 	
 	private final String nombre;
 	private final IScreenAction accion;

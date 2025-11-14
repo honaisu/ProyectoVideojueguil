@@ -1,9 +1,9 @@
 package enumeradores.recursos;
 
-import interfaces.IAssetRoute;
+import interfaces.IAssetPath;
 
-public enum EGameMusic implements IAssetRoute {
-	MAIN("musicaDoom.mp3", true),
+public enum EGameMusic implements IAssetPath {
+	MAIN("doom.mp3", true),
 	TUTORIAL("tutorial.mp3", false);
 
 	private final String ruta;

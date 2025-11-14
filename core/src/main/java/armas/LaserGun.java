@@ -36,7 +36,7 @@ public class LaserGun extends Weapon {
 		Swing rayo = new Swing(muzzle,
 				length,
 				p,
-				SpriteFactory.create(EProjectileType.LASER_GUN, 96, 64),
+				SpriteFactory.create(EProjectileType.LASER_GUN),
 				width, 			// width
 				height, 		// height
 				duration, 		// duracion

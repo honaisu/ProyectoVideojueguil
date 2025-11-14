@@ -1,19 +1,27 @@
 package enumeradores.recursos;
 
-import interfaces.IAssetRoute;
+import interfaces.ITexture;
 
-public enum EBackgroundType implements IAssetRoute {
-	ONE("fondoNivelUno.png"),
-	TWO("fondoNivelDos.png");
+public enum EBackgroundType implements ITexture {
+	ONE("level_one.png", 887, 888),
+	TWO("level_two.png", 1083, 675);
+	
+	EBackgroundType(String ruta, int width, int height) {
+		this.ruta = "backgrounds/" + ruta;
+		this.width = width;
+		this.height = height;
+	}
 	
 	private final String ruta;
-	
-	EBackgroundType(String ruta) {
-		this.ruta = "fondos/" + ruta;
-	}
+	private final int width;
+	private final int height;
 
 	@Override
-	public String getRuta() {
-		return ruta;
-	}
+	public String getRuta() { return ruta; }
+	
+	@Override
+	public int getWidth() { return width; }
+
+	@Override
+	public int getHeight() { return height; }
 }
