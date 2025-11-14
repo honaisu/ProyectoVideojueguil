@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import personajes.WeaponDrop;
+import entidades.WeaponDrop;
 
 public class DropManager {
 

@@ -1,4 +1,4 @@
-package personajes;
+package entidades;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
-import enumeradores.ESkinJugador;
-import hitboxes.Entity;
-import logica.AnimationFactory;
-import managers.AssetManager;
+import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EPlayerSkin;
+import factories.AnimationFactory;
+import factories.SpriteFactory;
 import managers.ProjectileManager;
+import managers.assets.AssetManager;
 
 
 public class Player extends Entity {
@@ -20,36 +21,36 @@ public class Player extends Entity {
 	// Estado básico 
 	private int score = 0;
     private int round = 1;
-    private int life; // ANTES: lives
+    private int life = 100;
 
 	//fisica de si
-	private float xVel;
-	private float yVel;
-	private float rotation;
+	private float xVel = 0f;
+	private float yVel = 0f;
+	private float rotation = 0f;
 	
 	//Visual y audio
-	private Sound hurtSound = AssetManager.getInstancia().getHurtSound();
+	
+	private Sound hurtSound = AssetManager.getInstancia().getSound(EGameSound.HURT);
 	private Animation<TextureRegion> animation;
 	private float stateTime = 0f;
 		
 	//Lógica de Daño merge
-	private boolean hurted = false; // benjoid
+	private boolean hurted = false;
 	private int hurtTime;           //TODO
-	private float iFrames = 0f;     // si
+	private float iFrames = 0f;
 	  
 	//Arma inicial o por defecto
-	private Weapon weapon = new LaserGun();
+	private Weapon weapon = new LaserCannon();
 	
 	public Player(float x, float y) {
-		super(x, y, ESkinJugador.JUGADOR_ORIGINAL.crearSprite());
-		this.life = 100;
-		this.xVel = 0f;
-		this.yVel = 0f;
-		this.rotation = 0f;
-	    
-		// IMPLEMENTACIÓN DE LA ANIMACIÓN
-    	this.animation = AnimationFactory.createJugadorAnimation(ESkinJugador.JUGADOR_ORIGINAL);
-    	
+		// crea el player con skin original nomás
+		this(x, y, EPlayerSkin.ORIGINAL);
+	}
+	
+	public Player(float x, float y, EPlayerSkin skin) {
+		super(x, y, SpriteFactory.create(skin));
+		animation = AnimationFactory.createPlayer(skin);
+
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	getSpr().setOriginCenter();
 	}
@@ -59,7 +60,7 @@ public class Player extends Entity {
 	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
 	    if (isMoving) stateTime += delta;
 
-	    // Lógica de daño fusionada //o queda bien o se jode todo
+	    // Lógica de daño
 	    if (hurted) {
 	      hurtTime--;
 	      if (hurtTime <= 0) hurted = false;

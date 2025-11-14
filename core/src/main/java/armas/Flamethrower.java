@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-import managers.AssetManager;
 import managers.ProjectileManager;
+import managers.assets.AssetManager;
 
 public class Flamethrower extends Weapon {
 	public Flamethrower(int daño, float cadencia, int municion, Sprite spr) {

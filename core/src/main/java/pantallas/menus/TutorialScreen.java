@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.EScreenType;
+import enumeradores.recursos.EGameMusic;
 import logica.MainGame;
-import logica.assets.AssetManager;
+import managers.assets.AssetManager;
 import pantallas.BaseScreen;
-import pantallas.ScreenType;
 
 public class TutorialScreen extends BaseScreen {
 
@@ -29,7 +30,7 @@ public class TutorialScreen extends BaseScreen {
     public TutorialScreen(MainGame game) {
         super(game);
         // Ajusta el getter concreto según tus nombres
-        musicaTutorial = AssetManager.getInstancia().getTutorialSound();
+        musicaTutorial = AssetManager.getInstancia().getMusic(EGameMusic.TUTORIAL);
     }
 
     @Override public void show() {
@@ -86,7 +87,7 @@ public class TutorialScreen extends BaseScreen {
             case FIN:
                 if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)
                  || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-                    getGame().getPantallaManager().cambiarPantalla(ScreenType.MENU);
+                    getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
                 }
                 break;
         }

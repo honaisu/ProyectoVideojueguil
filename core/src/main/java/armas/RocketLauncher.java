@@ -1,18 +1,16 @@
 package armas;
 
 import com.badlogic.gdx.math.Rectangle;
-
-import managers.AssetManager;
+import enumeradores.recursos.EGameSound;
 import managers.ProjectileManager;
-
-
+import managers.assets.AssetManager;
 
 public class RocketLauncher extends Weapon {
 	public RocketLauncher() {
 		super("Rocket Launcher",
+				20,
 				0.3f,
-				4,
-				AssetManager.getInstancia().getDisparoSound());
+				4);
 	}
 
 	@Override

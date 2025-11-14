@@ -2,8 +2,7 @@ package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import managers.AssetManager;
-import personajes.Player;
+import entidades.Player;
 
 public class Swing extends Projectile {
 	// tiempo que dura activo el golpe
@@ -13,17 +12,26 @@ public class Swing extends Projectile {
     // para que desaparezca el swing	
     
     private float radio;
-
-    public Swing(float x, float y, float rotation, float radio, Player p) {
-    	super(x, y, new Sprite(AssetManager.getInstancia().getSwingHitboxTexture()), p);
-    	
-    	getSpr().setBounds(x, y, 120, 60);
-        getSpr().setOriginCenter();
-        getSpr().setRotation(rotation-90);
-        getSpr().setPosition(x - getSpr().getWidth() / 2, y - getSpr().getHeight() / 2);
-        
-    	this.radio = radio;
-    }
+    
+    public Swing(float muzzle[], float radio, Player p, Sprite spr, 
+            float width, float height, float duracion, boolean isBeam, boolean piercing) {
+	
+		super(muzzle[0], muzzle[1], spr, p, p.getWeapon().getDamage(), piercing); 
+		
+		this.duracion = duracion;
+		this.radio = radio;
+		
+		getSpr().setBounds(muzzle[0], muzzle[1], width, height); // Usa el ancho y alto recibidos
+	   
+		if (isBeam){//Lasers
+			getSpr().setOrigin(width / 2f, radio);
+		} else{//Melee
+	   		getSpr().setOriginCenter();
+		}
+		
+	   	getSpr().setRotation(muzzle[2]-90);
+	   	getSpr().setPosition(muzzle[0] - getSpr().getOriginX(), muzzle[1] - getSpr().getOriginY());
+	}
     
     @Override
     public void update(float delta, Player p) {

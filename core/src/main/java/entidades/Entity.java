@@ -1,12 +1,16 @@
-package hitboxes;
+package entidades;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 
-
-
+/**
+ * Clase abstracta que define una <i>entidad</i> dentro de nuestro juego.
+ * <p>
+ * Cada entidad va a ser como un "objeto" que existe en el plano (pantalla),
+ * veáse ejemplos como Jugador, Bala, Enemigo...
+ */
 public abstract class Entity {
 	private float x;
 	private float y;
@@ -30,7 +34,8 @@ public abstract class Entity {
 	    float nuevoX = centerX + (float) Math.cos(radians) * radio;
 	    float nuevoY = centerY + (float) Math.sin(radians) * radio;
 
-	    getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
+	    //getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
+	    getSpr().setPosition(nuevoX - getSpr().getOriginX(), nuevoY - getSpr().getOriginY());
 	    getSpr().setRotation(rot);
 	}
 	

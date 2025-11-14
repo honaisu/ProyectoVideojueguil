@@ -1,11 +1,10 @@
-package personajes;
+package entidades;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import hitboxes.Entity;
-import managers.AssetManager;
+import enumeradores.recursos.EEnemyType;
+import factories.SpriteFactory;
 
 public class Enemy extends Entity {
 
@@ -16,9 +15,8 @@ public class Enemy extends Entity {
 	private int healthPoints;
 	private float damage;
 	
-	// El sprite se asigna aquí, usando el AssetManager
 	public Enemy(float x, float y, float size, float rareDrop, int healthPoints, int damage) {
-		super(x, y, new Sprite(AssetManager.getInstancia().getEnemyTexture())); // Asumo que esta es la textura base
+		super(x, y, SpriteFactory.create(EEnemyType.GENERIC));
 		this.rareDrop = rareDrop;
 		this.healthPoints = healthPoints;
 		this.damage = damage;

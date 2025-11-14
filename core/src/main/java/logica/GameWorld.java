@@ -3,57 +3,61 @@ package logica;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import personajes.Player;
+import entidades.Player;
+import enumeradores.EScreenType;
+import enumeradores.recursos.EBackgroundType;
+import factories.LevelFactory;
 
 //coso para los enemigos y el cambio de ronda
 import java.util.ArrayList; //no c que tan necesario
-import java.util.List; // no c si rompa lo e Strategy      
-import personajes.Enemy;
+import java.util.List; // no c si rompa lo e Strategy
 
+import logica.levels.Level; 
 
 public class GameWorld {
 	private final Player player;
 	private final GameLogicHandler gameLogicHandler;
 	
-	//para rondas y demás
-	private List<Round> allRounds;          // Lista de todas las Rondas
-    private int currentRoundIndex;          // Indetificador pa que ver en que ronda avamos
-    private boolean waitingForNextRound;
-	
+	private List<Level> allLevels;       // Lista de Niveles
+    private int currentLevelIndex;       // Índice para saber en qué nivel vamos
+    private Level currentLevel;          // El objeto Nivel que estamos jugando AHORA
+    private boolean waitingForNextRound; // Esto se mantiene, pero ahora lo usa el Nivel
+    private boolean gameWon = false; //flag para ver si ya ganamos
+    private boolean levelComplete = false; //flag para ver si se completo el nivel (para avizar a GameScreen)
 	
 	private final float ROTATE_ANGLE = 5.0f;
 	private final float ACCELERATION = 0.2f;
 	private boolean estaEnPausa = false;
 	
-	public GameWorld() {
+	public GameWorld(int startingLevelIndex) {
 		this.player  = new Player(5, 5);
 		this.gameLogicHandler = new GameLogicHandler();
 		
-		//para rondas
-		this.currentRoundIndex = -1; // Empezamos en -1 para que la primera ronda sea la 0
-        this.waitingForNextRound = true; // Listo para empezar la primera ronda
+		//para niveles
+		this.allLevels = new ArrayList<>();
+		
+		//creamos y agregamos los 2 primeros niveles por el momento
+		this.allLevels.add(LevelFactory.createLevelOne());
+        this.allLevels.add(LevelFactory.createLevelTwo());
         
-        initializeRounds(); // Creamos las rondas
+        //nuevo para el tema de inciar los niveles
+        this.currentLevelIndex = startingLevelIndex -1;
+        this.waitingForNextRound = true;
+        
+        //y creamos el primer nivel
+        startNextLevel();
 	}
 	
 	public void update(float delta) {
 		this.handleInput(delta);
-		
 		player.update(delta);
 		
 		//logica que el propio GameWolrd deebria manejar, no GameScreen
-		gameLogicHandler.getEnemyManager().update(delta);
-	    gameLogicHandler.getProyectilManager().update(
-	            delta, 
-	            player
-	            );
-		
-		
-		
+	    gameLogicHandler.update(delta, player);
 		gameLogicHandler.handleCollisions(player);
 		
-		//para ronda
-		checkRoundCompletion(); // es apra ver si esta vacia la lista de enemigos, si lo está, avanza de ronda
+		//Chekeamos que este completo
+		checkCompletion(); // es apra ver si esta vacia la lista de enemigos, si lo está, avanza de ronda
 	}
 
 	private void handleInput(float delta) {
@@ -93,109 +97,106 @@ public class GameWorld {
 	}
 	
 	
-	//metodos apra que las "rondas" funcionen bien
-	private void initializeRounds() {
-        this.allRounds = new ArrayList<>();
+	/**
+	 * Carga el siguiente nivel de la lista.
+	 * (Este es el método que reemplaza la idea de 'initializeRounds').
+	 */
+	private void startNextLevel() {
+        currentLevelIndex++; // Avanzamos al siguiente nivel
         
-        // RONDAS SIMPLES (usan tu spawner aleatorio)
-        allRounds.add(new Round("Ronda 1: 5 Aleatorios", (em) -> {
-            // ¡Llama al método que acabamos de hacer público!
-            em.spawnEnemies(1); //son 5
-        }));
-        
-        allRounds.add(new Round("Ronda 2: 12 Aleatorios", (em) -> {
-            em.spawnEnemies(1); //son 12
-        }));
-
-        // RONDAS COMPLEJAS (usan el método 'add' para control total)
-        allRounds.add(new Round("Ronda 3: Formación en V", (em) -> {
-        	
-        	// Stats por defecto para enemigos manuales
-            float defaultSize = 100f; // El tamaño de la factory
-            float defaultDrop = 0.05f;  // 5% de drop
-            int defaultHealth = 50;   // 50 de vida
-            int defaultDamage = 10;   // 10 de daño
-        	
-            // Usamos 'new Enemy' para control total de la posición
-            em.add(new Enemy(500, 700, defaultSize, 1f, defaultHealth, defaultDamage));//centro
-            em.add(new Enemy(450, 650, defaultSize, 1f, defaultHealth, defaultDamage));//izquierda
-            em.add(new Enemy(550, 650, defaultSize, 1f, defaultHealth, defaultDamage));//derecha
-        }));
-        
-        // RONDAS HÍBRIDAS
-        allRounds.add(new Round("Ronda 4: Jefe con Escolta", (em) -> {
-            em.spawnEnemies(4); // 4 aleatorios
+        if (currentLevelIndex < allLevels.size()) {
+            // 1. Cargamos el objeto Nivel
+            currentLevel = allLevels.get(currentLevelIndex);
             
-            // Stats para el "Jefe"
-            float bossSize = 400f; // El tamaño 
-            float bossDrop = 0.5f;   // 50% drop
-            int bossHealth = 200;  // Más vida
-            int bossDamage = 25;   // Más daño
+            // 2. ¡¡AQUÍ CAMBIARÍAMOS EL FONDO!!
+            // (Hablaremos de esto en el Paso 2)
             
-            em.add(new Enemy(400, 1200, bossSize, bossDrop, bossHealth, bossDamage));
-        }));
+            // 3. Marcamos que estamos listos para la *primera ronda* de este nivel
+            this.waitingForNextRound = true;
+            return;
+        }
+        
+        // Terminan los niveles
+        this.gameWon = true; 
     }
 	
 	//para comporbar si todos los enemigos fueron derrotados
-	private void checkRoundCompletion() {
-        // Caso 1: Estamos en medio de una ronda
-        if (!waitingForNextRound) {
+	/**
+	 * Reemplaza a 'checkRoundCompletion' y 'startNextRound'.
+	 * Ahora DELEGA la lógica al Nivel actual.
+	 */
+	private void checkCompletion() {
+		
+		if (gameWon || levelComplete) return;
+        if (currentLevel == null) return; // Aún no ha cargado nada
+
+        // Si estamos esperando (para la 1ra ronda o la siguiente)
+        // Y la lista de enemigos está vacía...
+        if (waitingForNextRound && gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
             
-            // Comprobamos si la lista de enemigos está vacía
-            if (gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
-                
-                this.waitingForNextRound = true;
-                // (Opcional: poner un timer aquí antes de la siguiente ronda)
-                startNextRound(); 
+            // Le pedimos al NIVEL (currentLevel) que avance a su siguiente ronda
+            boolean levelFinished = currentLevel.advanceToNextRound(gameLogicHandler);
+
+            if (levelFinished) {
+                // El nivel nos dijo que se quedó sin rondas
+                // ¡Así que cargamos el siguiente NIVEL!
+            	this.levelComplete = true;
+            } else {
+                // El nivel aún tiene rondas.
+                // Acabamos de empezar una nueva, así que dejamos de esperar.
+                this.waitingForNextRound = false;
             }
         }
         
-        // Caso 2: Es el inicio del juego (primera ronda)
-        if (currentRoundIndex == -1 && waitingForNextRound) {
-            startNextRound();
+        // Si NO estamos esperando (estamos en media ronda)
+        // y la lista se vacía, nos preparamos para la siguiente.
+        else if (!waitingForNextRound && gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
+            this.waitingForNextRound = true; // Listo para la siguiente ronda
         }
     }
 	
-	
-	//logica de avanzar a lam siguiente ronda y respawnear los enemigos
-	private void startNextRound() {
-        currentRoundIndex++; // Avanzamos el índice de ronda
-        
-        if (currentRoundIndex < allRounds.size()) {
-            // Hay más rondas, ¡vamos!
-            
-            // 1. Obtenemos el objeto Round
-            Round nextRound = allRounds.get(currentRoundIndex);
-            
-            // 2. Ejecutamos su estrategia de spawn
-            // (le pasamos el manager, pero la lambda ya sabe qué hacer)
-            nextRound.executeSpawn(gameLogicHandler.getEnemyManager());
-            
-            // 3. (OPCIONAL) Actualizar HUD
-            // hud.setRoundText(nextRound.getName());
-            
-            // 4. Marcamos que el juego está en curso
-            this.waitingForNextRound = false; 
-            
-        } else {
-            // ¡Juego Ganado! No hay más rondas
-            //System.out.println("¡HAS GANADO EL JUEGO!");
-            
+	/**
+     * Devuelve el nombre del NIVEL actual (ej: "Nivel 1: El Espacio")
+     */
+	public String getCurrentLevelName() {
+        if (currentLevel != null) {
+            return currentLevel.getLevelName();
         }
+        return "Cargando...";
     }
 	
-	//esto sirve para conectar ls rondas con el HUDLayout (osea mostarlo y actulizarlo en el draw)
-	public String getCurrentRoundName() {
-                if (currentRoundIndex < 0) {
-            return "1"; // O "Preparando..."
+	
+	/**
+     * Devuelve el nombre de la RONDA actual (ej: "Ronda 1")
+     * (Ahora le pregunta al Nivel cuál es su ronda actual)
+     */
+    public String getCurrentRoundName() {
+        if (currentLevel != null) {
+            return currentLevel.getCurrentRoundName();
         }
-        
-        // Si estamos en una ronda válida
-        if (currentRoundIndex < allRounds.size()) {
-            return allRounds.get(currentRoundIndex).getName();
-        }
-        
-        // Si se acabaron las rondas
-        return "¡Sobreviviste!";
+        return ""; // Vacío mientras carga
     }
+    
+    public EBackgroundType getBackground() {
+    	return currentLevel.getBackground();
+    }
+    
+    /**
+     * Le avisa a GameScreen que el nivel terminó.
+     */
+    public boolean isLevelComplete() {
+        return levelComplete;
+    }
+
+    /**
+     * Le dice a GameScreen cuál es el *siguiente* nivel.
+     */
+    public int getNextLevelIndex() {
+        // currentLevelIndex es el que *acabamos* de terminar
+        return currentLevelIndex + 1;
+    }
+
+	public boolean gameWon() {
+		return gameWon;
+	}
 }

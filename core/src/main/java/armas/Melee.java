@@ -5,22 +5,26 @@ import com.badlogic.gdx.graphics.Texture;
 
 import armas.proyectiles.Projectile;
 import armas.proyectiles.Swing;
-import managers.AssetManager;
+import entidades.Player;
+import enumeradores.recursos.EDropType;
+import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 import managers.ProjectileManager;
-import personajes.Player;
+import managers.assets.AssetManager;
 
 //Clase para el arma cuerpo a cuerpo
 public class Melee extends Weapon {
 	//usa un proyectil arqueado
     private Swing swingActual;
 
-    public Melee() {
+    public Melee(){
 		super("Melee",
-				50,												// daño
-				1f, 											// cadencia
-				99999, 											// municion
-				AssetManager.getInstancia().getDisparoSound());	// sonido
-	}
+				50,
+				1f,
+				99999,
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT));
+    }
     
     public Swing getSwingActual() {
         return swingActual;
@@ -31,17 +35,29 @@ public class Melee extends Weapon {
         float length = p.getSpr().getBoundingRectangle().getHeight() / 2 + 20; 
         float[] muzzle = Projectile.calcularMuzzle(p, true);
         
-        swingActual = new Swing(muzzle[0], muzzle[1], muzzle[2], length, p);
+        float width = 120;
+        float height = 60;
+        float duration = 0.25f;
+        
+        swingActual = new Swing(muzzle,
+        		length,
+        		p,
+        		SpriteFactory.create(EProjectileType.SWING, 96, 64),
+        		width, height, 
+        		duration,
+        		false,
+        		true);
+        
         manager.add(swingActual);
 	}
 	
 	@Override
     public Texture getDropTexture() {
-        return AssetManager.getInstancia().getMTexture();
+        return AssetManager.getInstancia().getTexture(EDropType.MELEE);
     }
 
     @Override
     public Sound getPickupSound() {
-        return AssetManager.getInstancia().getMSound();
+        return AssetManager.getInstancia().getSound(EGameSound.DROP_MELEE);
     }
 }
