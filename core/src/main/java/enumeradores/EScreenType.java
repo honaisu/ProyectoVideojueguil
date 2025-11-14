@@ -8,5 +8,6 @@ public enum EScreenType {
 	TUTORIAL,
 	PAUSA,
 	TRANSICION,
-	GAME_OVER;
+	GAME_OVER,
+	VICTORIA;
 }

@@ -47,11 +47,18 @@ public class GameScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
+		
+		if (world.isGameWon()) {
+            
+            // ¡CAMBIADO! Ahora va a la pantalla de Victoria
+            getGame().getPantallaManager().cambiarPantalla(EScreenType.VICTORIA); 
+            return; // Detenemos el update
+        }
 
 	    // Chqeuamos la transicion
 	    if (world.isLevelComplete()) {
 
-	        // le decimoa  amin game cual es el siguiente nivel
+	        // le decimos a mi game cual es el siguiente nivel
 	        getGame().setNextLevelToLoad(world.getNextLevelIndex());
 
 	        // 2. Cambiamos a la pantalla de transición
@@ -61,7 +68,9 @@ public class GameScreen extends BaseScreen {
 
 	    // Y el update si muere o pausa
 		if (world.getPlayer().isDead()) {
+			getGame().setNextLevelToLoad(0);//cambiamos al nivel 1
 			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
+			
 			return; 
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

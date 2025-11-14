@@ -40,6 +40,7 @@ public class PauseScreen extends NavigableScreen {
         	if (opcionActual.ordinal() == EPauseOption.CONTINUAR.ordinal()) {	
         		this.resume();
         	} else {
+        		getGame().setNextLevelToLoad(0); // si sale al menu, se reinicia el nivel y las rondas
         		getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
                 this.dispose();
                 return;

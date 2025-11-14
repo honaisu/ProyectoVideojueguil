@@ -116,33 +116,21 @@ public class GameWorld {
 	 * (Este es el método que reemplaza la idea de 'initializeRounds').
 	 */
 	private void startNextLevel() {
-        currentLevelIndex++; // Avanzamos al siguiente nivel
-        
-        if (currentLevelIndex < allLevels.size()) {
-            // 1. Cargamos el objeto Nivel
-            currentLevel = allLevels.get(currentLevelIndex);
-            
-            // 2. ¡¡AQUÍ CAMBIARÍAMOS EL FONDO!!
-            // (Hablaremos de esto en el Paso 2)
-            
-            // 3. Marcamos que estamos listos para la *primera ronda* de este nivel
-            this.waitingForNextRound = true; 
-            
-        } else {
-            // ¡Juego Ganado! No hay más niveles
-        	if (!gameWon) { 
-                System.out.println("¡HAS GANADO EL JUEGO!");
-                this.gameWon = true; // ¡Activamos la bandera!
+	    currentLevelIndex++; // Avanzamos al siguiente nivel
 
-                // TODO: Aquí llamarías a la pantalla de Victoria
-                // getGame().getPantallaManager().cambiarPantalla(EScreenType.VICTORIA);
-            }
-        }
-    }
+	    if (currentLevelIndex < allLevels.size()) {
+	        // 1. Cargamos el objeto Nivel
+	        currentLevel = allLevels.get(currentLevelIndex);
+
+	        // 2. Marcamos que estamos listos para la *primera ronda*
+	        this.waitingForNextRound = true; 
+	    }
+	    // ¡El 'else' que imprimía "GANASTE" se elimina!
+	    // 'checkCompletion' ahora se encarga de la victoria.
+	}
 	
 	//para comporbar si todos los enemigos fueron derrotados
 	/**
-	 * Reemplaza a 'checkRoundCompletion' y 'startNextRound'.
 	 * Ahora DELEGA la lógica al Nivel actual.
 	 */
 	private void checkCompletion() {
@@ -159,11 +147,20 @@ public class GameWorld {
 
             if (levelFinished) {
                 // El nivel nos dijo que se quedó sin rondas
-                // ¡Así que cargamos el siguiente NIVEL!
-            	this.levelComplete = true;
+            	// ¡¡AQUÍ CHEQUEAMOS SI EL JUEGO TERMINÓ!!
+                int nextLevelIdx = currentLevelIndex + 1;
+
+                if (nextLevelIdx >= allLevels.size()) {
+                    // ¡Ganó el juego! No hay más niveles.
+                    this.gameWon = true; 
+                    System.out.println("¡HAS GANADO EL JUEGO!"); // (Lo movemos aquí)
+
+                } else {
+                    // No ha ganado, solo pasa de nivel
+                    this.levelComplete = true; 
+                }
             } else {
                 // El nivel aún tiene rondas.
-                // Acabamos de empezar una nueva, así que dejamos de esperar.
                 this.waitingForNextRound = false;
             }
         }
@@ -228,4 +225,13 @@ public class GameWorld {
         // currentLevelIndex es el que *acabamos* de terminar
         return currentLevelIndex + 1;
     }
+    
+    //para pantalla de victoria
+    /**
+     * Le avisa a GameScreen que el juego ha sido completado.
+     */
+    public boolean isGameWon() {
+        return gameWon;
+    }
+    
 }

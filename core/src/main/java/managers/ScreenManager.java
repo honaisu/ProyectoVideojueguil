@@ -10,6 +10,7 @@ import pantallas.juego.GameOverScreen;
 import pantallas.juego.GameScreen;
 import pantallas.juego.PauseScreen;
 import pantallas.juego.LevelTransitionScreen;
+import pantallas.juego.WinScreen;
 import pantallas.menus.ConfigurationScreen;
 import pantallas.menus.CustomizationScreen;
 import pantallas.menus.MainMenuScreen;
@@ -34,6 +35,7 @@ public class ScreenManager {
         pantallas.put(EScreenType.CONFIGURACION, 	new ConfigurationScreen(game));
         pantallas.put(EScreenType.PAUSA, new PauseScreen(game));
         pantallas.put(EScreenType.TUTORIAL, new TutorialScreen(game));
+        pantallas.put(EScreenType.VICTORIA, new WinScreen(game));//pantalla para la victoria
     }
     
     public void cambiarPantalla(EScreenType tipoPantalla) {

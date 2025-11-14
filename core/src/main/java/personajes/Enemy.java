@@ -8,7 +8,7 @@ import hitboxes.BallHitbox;
 import managers.AssetManager;
 
 public class Enemy extends BallHitbox {
-  // Velocidad local (no toca campos internos de BallHitbox)
+  // Velocidad local 
   //mio
   private float vx = 0f, vy = 0f;
   //benjoid
