@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
 import entidades.Player;
+import enumeradores.recursos.EPlayerSkin;
 import managers.EnemyManager;
 import managers.CollisionManager;
 import managers.DropManager;

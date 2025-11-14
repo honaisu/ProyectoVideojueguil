@@ -5,12 +5,12 @@ import logica.MainGame;
 /**
  * Una interfaz encargada de poder proveer métodos que identifiquen a una Opción como "navegable".
  * <p>
- * A su vez, provee un método opcional encargado de poder ejecutar alguna acción dentro del juego.
+ * A su vez, provee un método <b>opcional</b> encargado de poder ejecutar alguna acción dentro del juego.
  * (Casos como, por ejemplo, cambiar la pantalla actual).
  */
-public interface INavigableOption {
+public interface INavigableOption extends IExecutableGame {
 	public String getNombre();
 	public int ordinal();
 	
-	default public void ejecutar(MainGame game) {}
+	public default void ejecutar(MainGame game) {}
 }

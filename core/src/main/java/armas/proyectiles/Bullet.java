@@ -16,11 +16,11 @@ public class Bullet extends Projectile {
 	private float ySpeed;
 
 	public Bullet(float x, float y, float width, float rotation, float speed, Player p) {
-		super(x, y, SpriteFactory.create(EProjectileType.BULLET_TEMPLATE), p);
+		super(x, y, SpriteFactory.create(EProjectileType.REDWIRE), p);
 		
 		getSpr().setBounds(x, y, width, width);
         getSpr().setOriginCenter();
-        getSpr().setRotation(rotation);
+        getSpr().setRotation(rotation - 90);
 
         // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
 		float radians = (float) Math.toRadians(rotation);

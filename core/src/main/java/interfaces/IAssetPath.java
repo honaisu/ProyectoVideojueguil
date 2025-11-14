@@ -5,6 +5,6 @@ package interfaces;
  * <p>
  * Sirve, de ejemplo, para los enumeradores que proveen rutas a algún asset específico.
  */
-public interface IAssetRoute {
+public interface IAssetPath {
 	public String getRuta();
 }

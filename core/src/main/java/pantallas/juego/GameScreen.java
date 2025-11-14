@@ -25,14 +25,14 @@ public class GameScreen extends BaseScreen {
 	
 	//cosas utiles para el tema del fondo 
 	private Sprite backgroundSprite; // El sprite que usaremos para el fondo
-    
+	
 	public GameScreen(MainGame game) {
 		super(game);
-		this.world = new GameWorld(game.getNextLevelToLoad());
+		this.world = new GameWorld(game.getNextLevelToLoad(), game.getPlayerSkin());
 		
 		EBackgroundType background = world.getBackground();
-		this.backgroundSprite = SpriteFactory.create(background);
-        this.backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		backgroundSprite = SpriteFactory.create(background);
+		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override

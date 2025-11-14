@@ -14,7 +14,7 @@ public class Swing extends Projectile {
     private float radio;
 
     public Swing(float x, float y, float rotation, float radio, Player p) {
-    	super(x, y, SpriteFactory.create(EProjectileType.SWING, 96, 64), p);
+    	super(x, y, SpriteFactory.create(EProjectileType.SWING), p);
     	
     	getSpr().setBounds(x, y, 120, 60);
         getSpr().setOriginCenter();

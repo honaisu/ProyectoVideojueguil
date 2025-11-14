@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
 import enumeradores.recursos.EPlayerSkin;
 import enumeradores.recursos.EProjectileType;
+import interfaces.IAssetPath;
+import interfaces.ITexture;
 import managers.assets.AssetManager;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,23 +42,18 @@ public class AnimationFactory {
 		return animacion;
 	}
 	
-	public static Animation<TextureRegion> createPlayer(EPlayerSkin skin) {
-		Texture jugadorSheet = AssetManager.getInstancia().getTexture(skin);
-		int filas = 1;
-		int columnas = 4;
-		float duracionFrames = 0.2f;
-		
-		Animation<TextureRegion> animacionJugador = createAnimation(jugadorSheet, filas, columnas, duracionFrames);
+	public static Animation<TextureRegion> create(ITexture asset, int filas, int columnas, float frameDuration) {
+		Texture sheet = AssetManager.getInstancia().getTexture(asset);
+		Animation<TextureRegion> animacionJugador = createAnimation(sheet, filas, columnas, frameDuration);
 		return animacionJugador;
 	}
 	
+	public static Animation<TextureRegion> createPlayer(EPlayerSkin skin) {
+		return create(skin, 1, 4, 0.25f);
+	}
+	
 	public static Animation<TextureRegion> createSwing() {
-		Texture ataqueSheet = AssetManager.getInstancia().getTexture(EProjectileType.SWING);
-		int filas = 1;
-		int columnas = 8;
-		float duracionFrames = 0.25f;
-		
-		Animation<TextureRegion> animacionAtaque = createAnimation(ataqueSheet, filas, columnas, duracionFrames);
+		Animation<TextureRegion> animacionAtaque = create(EProjectileType.SWING, 1, 8, 0.25f);
 	    animacionAtaque.setPlayMode(PlayMode.NORMAL); 
 		return animacionAtaque;
 	}

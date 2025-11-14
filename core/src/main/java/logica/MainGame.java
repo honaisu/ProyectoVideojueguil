@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import enumeradores.EScreenType;
+import enumeradores.recursos.EPlayerSkin;
 import managers.ScreenManager;
 import managers.assets.AssetManager;
 
@@ -19,6 +20,8 @@ public class MainGame extends Game {
 	
     // Volúmenes globales (0.0f a 1.0f)
 	private Volumen volumen;
+	// NO sabia mas donde dejarlo :c
+	private EPlayerSkin playerSkin = EPlayerSkin.ORIGINAL;
     private ScreenManager pantallaManager;
     
     //para el cambio de nivel
@@ -49,14 +52,16 @@ public class MainGame extends Game {
 		batch.dispose();
 		font.dispose();
 		pantallaManager.dispose();
-		// Cuando lo probé daba error de lo que recuerdo xd
-		//assets.dispose();
+		AssetManager.getInstancia().dispose();
 	}
-
-    @Override 
-    public void render() { 
-    	super.render();
-    }
+	
+	public EPlayerSkin getPlayerSkin() {
+		return playerSkin;
+	}
+	
+	public void setPlayerSkin(EPlayerSkin skin) {
+		playerSkin = skin;
+	}
     
     public SpriteBatch getBatch() { return batch; }
     public BitmapFont getFont() { return font; }
