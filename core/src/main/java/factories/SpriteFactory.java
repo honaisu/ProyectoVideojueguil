@@ -18,7 +18,11 @@ public class SpriteFactory {
 	private SpriteFactory() {}
 	
 	private static Sprite create(Texture texture, int width, int height) {
-		Sprite sprite = new Sprite(texture, width, height);
+		//Sprite sprite = new Sprite(texture, width, height); esto recorta //antiguo
+		//probar esto
+		Sprite sprite = new Sprite(texture); 
+		sprite.setSize(width, height);
+		
 		return sprite;
 	}
 	

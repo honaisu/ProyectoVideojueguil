@@ -4,7 +4,8 @@ import interfaces.IAssetRoute;
 
 public enum EBackgroundType implements IAssetRoute {
 	ONE("fondoNivelUno.png"),
-	TWO("fondoNivelDos.png");
+	TWO("fondoNivelDos.png"),
+	THREE("fondoNivelTres.png");
 	
 	private final String ruta;
 	

@@ -39,6 +39,7 @@ public class GameWorld {
 		//creamos y agregamos los 2 primeros niveles por el momento
 		this.allLevels.add(LevelFactory.createLevelOne());
         this.allLevels.add(LevelFactory.createLevelTwo());
+        this.allLevels.add(LevelFactory.createLevelThree());
         
         //nuevo para el tema de inciar los niveles
         this.currentLevelIndex = startingLevelIndex -1;

@@ -31,8 +31,12 @@ public class GameScreen extends BaseScreen {
 		this.world = new GameWorld(game.getNextLevelToLoad());
 		
 		EBackgroundType background = world.getBackground();
-		this.backgroundSprite = SpriteFactory.create(background);
-        this.backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		//this.backgroundSprite = SpriteFactory.create(background);
+        //his.backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        
+        //esto nachoid
+        backgroundSprite = SpriteFactory.create(background, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        
 	}
 
 	@Override
