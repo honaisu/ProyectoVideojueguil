@@ -22,7 +22,7 @@ public class EnemyFactory {
 		float y = 50 + RNG.nextInt(h - 50);
 			
 		float rareDrop = RNG.nextFloat() * 0.15f; 
-		int healthPoints = 50 + RNG.nextInt(51); 
+		int healthPoints = 100; //+ RNG.nextInt(51); 
 		int damage = 10 + RNG.nextInt(11);
 			
 		//logica de la velocidad

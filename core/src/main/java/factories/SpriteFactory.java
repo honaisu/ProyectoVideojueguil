@@ -24,4 +24,5 @@ public class SpriteFactory {
 		Texture texture = AssetManager.getInstancia().getTexture(asset);
 		return create(texture, asset.getWidth(), asset.getHeight());
 	}
+	
 }

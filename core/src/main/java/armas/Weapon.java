@@ -57,6 +57,13 @@ public abstract class Weapon implements IDisparable{
         restarMunicion(delta);
         if (puedeDisparar()) reiniciarCooldown();
         crearProyectil(p, manager);
+        
+        playSound();
+    }
+    
+    //TODO VER SONIDO DE LASERGUN
+    public void playSound() {
+    	soundBala.play();
     }
     
     

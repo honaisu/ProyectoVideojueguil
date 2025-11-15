@@ -1,7 +1,7 @@
 package logica;
 
-import interfaces.IRoundStrategy; // Implementa la interface de Round
-import managers.EnemyManager;     // posiblemnte sirva
+import interfaces.IRoundStrategy;
+import managers.EnemyManager;
 
 public class Round {
     private final String name;

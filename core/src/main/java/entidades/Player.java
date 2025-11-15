@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import armas.HeavyMachineGun;
+import armas.LaserCannon;
 import armas.Melee;
 import armas.Weapon;
 import enumeradores.recursos.EGameSound;
@@ -16,31 +16,30 @@ import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
-
 public class Player extends Entity {
 	private final float MAX_VELOCITY = 250.0f;
 	// Estado básico
 	private int score = 0;
     private int round = 1;
-    private int life = 100; // ANTES: lives
+    private int life = 100;
 
 	//fisica de si
     private Vector2 velocity = new Vector2(0, 0);
-	private float rotation = 90f;
+	private float rotation = 0f;
 	
 	//Visual y audio
 	private Sound hurtSound = AssetManager.getInstancia().getSound(EGameSound.HURT);
 	private AnimationHandler animation;
 		
 	//Lógica de Daño merge
-	private boolean hurted = false; // benjoid
-	private int hurtTime;           //TODO
-	private float iFrames = 0f;     // si
+	private boolean hurted = false;
+	private int hurtTime;
+	private float iFrames = 0f;
 	
 	boolean isMoving = false;
 	  
 	//Arma inicial o por defecto
-	private Weapon weapon = new HeavyMachineGun();
+	private Weapon weapon = new LaserCannon();
 	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
@@ -51,7 +50,6 @@ public class Player extends Entity {
 		super(x, y, SpriteFactory.create(skin));
 		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		
-		getSpr().scale(1f);
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	getSpr().setRotation(rotation);
     	getSpr().setOriginCenter();
@@ -65,7 +63,7 @@ public class Player extends Entity {
 	    isMoving = !velocity.isZero(0.1f);
 		if (isMoving) animation.updateStateTime(delta);;
 
-	    // Lógica de daño fusionada //o queda bien o se jode todo
+	    // Lógica de daño
 	    if (hurted) {
 	      hurtTime--;
 	      if (hurtTime <= 0) hurted = false;
@@ -116,15 +114,15 @@ public class Player extends Entity {
 	public boolean isDead() {
 		return life <= 0;
 	}
+	
 	//TODO revisar tema de la vida//
-
 	public void rotate(float amount) {
         this.rotation += amount;
     }
 
     public void accelerate(float amount) {
-    	Vector2 acceleration = new Vector2(1, 0);
-    	acceleration.setAngleDeg(rotation);
+    	Vector2 acceleration = new Vector2(0, 1);
+    	acceleration.setAngleDeg(rotation + 90);
     	acceleration.scl(amount);
     	
     	velocity.add(acceleration);
@@ -166,49 +164,20 @@ public class Player extends Entity {
 	public void setWeapon(Weapon newWeapon) {
         this.weapon = newWeapon;
     }
-/*
-  private void borderBounce(float positionX, float positionY) {
-    // Rebote horizontal
-    if (positionX < 0f || (positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
-      xVel *= -1f;
-      // Corrige posición para no salir
-      if (positionX < 0f) positionX = 0f;
-      else positionX = Gdx.graphics.getWidth() - getSpr().getWidth();
-    }
-    // Rebote vertical
-    if (positionY < 0f || (positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
-      yVel *= -1f;
-      if (positionY < 0f) positionY = 0f;
-      else positionY = Gdx.graphics.getHeight() - getSpr().getHeight();
-    }
-    // Aplica corrección local
-    getSpr().setPosition(positionX, positionY);
-  }
-  */
-/*
-  // Llamado por el CollisionManager al detectar choque con Enemy
-  public void onHitByEnemy(personajes.Enemy e) {
-    if (iFrames > 0f) return;   // invulnerable
-    damage(1);
-    iFrames = 0.5f;             // medio segundo de invulnerabilidad
-    hurted = true;
-    hurtTime = 30;              // frames de parpadeo, ajusta si usas delta
-    if (hurtSound != null) hurtSound.play();
-  }*/
+	
+	public void damage(int amount) {
+	    life -= amount;
+	    if (life < 0) life = 0;
+	}
 
-  public void damage(int amount) {
-    life -= amount;
-    if (life < 0) life = 0;
-  }
-
-  // Getters básicos
-  public float getRotation() { return rotation; }
-  public Weapon getWeapon() { return weapon; }
-  public int getRound() { return round; }
-  public int getScore() { return score; }
-  public int getLife() { return life; }
-
-  public boolean hasWeapon() {
-    return weapon.getMunicion() > 0;
-  }
+	// Getters básicos
+	public float getRotation() { return rotation; }
+	public Weapon getWeapon() { return weapon; }
+	public int getRound() { return round; }
+	public int getScore() { return score; }
+	public int getLife() { return life; }
+	
+	public boolean hasWeapon() {
+		return weapon.getMunicion() > 0;
+	}
 }

@@ -1,36 +1,44 @@
 package entidades.proyectiles;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+
 import entidades.Player;
-import enumeradores.recursos.EProjectileType;
-import factories.SpriteFactory;
 
 public class Swing extends Projectile {
 	// tiempo que dura activo el golpe
-    private float duracion = 0.25f;     
+    private float duracion = 0.25f;
     // Contador
-    private float tiempoActivo = 0f;  	
+    private float tiempoActivo = 0f;
     // para que desaparezca el swing	
     
     private float radio;
+    
+    public Swing(float muzzle[], float radio, Player p, Sprite spr, 
+            float width, float height, float duracion, boolean isBeam, boolean piercing) {
+	
+		super(muzzle[0], muzzle[1], spr, p, p.getWeapon().getDamage(), piercing); 
+		
+		this.duracion = duracion;
+		this.radio = radio;
+		
+		getSpr().setBounds(muzzle[0], muzzle[1], width, height); // Usa el ancho y alto recibidos
+	   
+		if (isBeam){//Lasers
+			getSpr().setOrigin(width / 2f, radio);
+		} else{//Melee
+	   		getSpr().setOriginCenter();
+		}
+		
+	   	getSpr().setRotation(muzzle[2]-90);
+	   	getSpr().setPosition(muzzle[0] - getSpr().getOriginX(), muzzle[1] - getSpr().getOriginY());
+	}
 
-    public Swing(float x, float y, float rotation, float radio, Player p) {
-    	super(x, y, SpriteFactory.create(EProjectileType.SWING), p);
-    	
-    	getSpr().setBounds(x, y, 120, 60);
-        getSpr().setOriginCenter();
-        getSpr().setRotation(rotation-90);
-        getSpr().setPosition(x - getSpr().getWidth() / 2, y - getSpr().getHeight() / 2);
-        
-    	this.radio = radio;
-    }
     
     @Override
     public void update(float delta, Player p) {
-        float centerX = p.getSpr().getBoundingRectangle().getX() + p.getSpr().getBoundingRectangle().getWidth() / 2;
-        float centerY = p.getSpr().getBoundingRectangle().getY() + p.getSpr().getBoundingRectangle().getHeight() / 2;
+    	float muzzle[] = calcularMuzzle(p, false);
     	
-    	
-        mover(centerX, centerY, p.getRotation(), radio);
+        mover(muzzle[0], muzzle[1], muzzle[2]-90, radio);
         if (isDestroyed()) return;
 
         tiempoActivo += delta;
