@@ -1,22 +1,21 @@
-package armas.proyectiles;
+package entidades.proyectiles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import entidades.Player;
-import enumeradores.recursos.EProjectileType;
-import factories.SpriteFactory;
 
 //Clase que representa una balla dentro del juego
 
 public class Bullet extends Projectile {
-	// velocidad de la bala eje x
+	
 	private float xSpeed;
-	// velocidad de la bala eje y
 	private float ySpeed;
 	
-	public Bullet(float x, float y, float width, float rotation, float speed, Player p, boolean piercing) {
-		super(x, y, SpriteFactory.create(EProjectileType.BULLET_TEMPLATE), p, p.getWeapon().getDamage(), piercing);
+	private float lifespan = -1f;
+	
+	public Bullet(float x, float y, float width, float rotation, float speed, Player p, Sprite spr, boolean piercing) {
+		super(x, y, spr, p, p.getWeapon().getDamage(), piercing);
 
 		
 		getSpr().setBounds(x, y, width, width);
@@ -29,20 +28,36 @@ public class Bullet extends Projectile {
         this.ySpeed = (float) Math.sin(radians) * speed;
 	}
 	
+	//Para una explosión
+	public Bullet(float x, float y, float width, float rotation, float speed, Player p, Sprite spr, boolean piercing, float lifespan) {
+        this(x, y, width, rotation, speed, p, spr, piercing); 
+        this.lifespan = lifespan; 
+    }
+	
     //movimiento de la bala y colision con el borde de la ventana
     @Override
     public void update(float delta, Player player) {
         if (isDestroyed()) return;
+        
+        
+        if (lifespan > 0) {
+            lifespan -= delta;
+            if (lifespan <= 0) {
+                destroy();
+                return;
+            }
+        }
 
-        // Mueve el sprite (que es ESTA entidad)
-        Sprite spr = getSpr(); // getSpr() es heredado de Entity
+        Sprite spr = getSpr();
         
         spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
 
         // Comprueba límites
-        if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() ||
-            spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
-            destroy();
+        if(lifespan != -1f) {
+        	if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() ||
+        			spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
+        		destroy();
+        	}        	
         }
     }
 

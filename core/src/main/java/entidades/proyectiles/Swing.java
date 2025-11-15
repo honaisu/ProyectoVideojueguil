@@ -1,4 +1,4 @@
-package armas.proyectiles;
+package entidades.proyectiles;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 

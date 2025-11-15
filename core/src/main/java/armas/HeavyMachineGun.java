@@ -3,11 +3,13 @@ package armas;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import armas.proyectiles.Bullet;
-import armas.proyectiles.Projectile;
 import entidades.Player;
+import entidades.proyectiles.Bullet;
+import entidades.proyectiles.Projectile;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
@@ -19,7 +21,8 @@ public class HeavyMachineGun extends Weapon {
 		super("Heavy Machine Gun",
 				25,												// daño
 				0.2f, 											// cadencia
-				30); 											// municion
+				30, 											// municion
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT));
 	}
     
     //crea la bala de la metralleta con direccion respecto al jugador
@@ -29,8 +32,14 @@ public class HeavyMachineGun extends Weapon {
         float width = 30f;
         float vel = 10f;
         
-        Bullet bala = new Bullet(muzzle[0], muzzle[1], width, muzzle[2], vel, p,true);
-        manager.add(bala);
+        Bullet bullet = new Bullet(muzzle[0], muzzle[1],
+        		width,
+        		muzzle[2],
+        		vel,
+        		p,
+        		SpriteFactory.create(EProjectileType.REDWIRE),
+        		false);
+        manager.add(bullet);
     }
     @Override
     public Texture getDropTexture() {

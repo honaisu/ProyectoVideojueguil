@@ -3,10 +3,11 @@ package armas;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import armas.proyectiles.Projectile;
-import armas.proyectiles.Swing;
+
 import managers.ProjectileManager;
 import entidades.Player;
+import entidades.proyectiles.Projectile;
+import entidades.proyectiles.Swing;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EProjectileType;

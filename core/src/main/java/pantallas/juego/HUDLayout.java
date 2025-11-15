@@ -18,11 +18,11 @@ public class HUDLayout {
 		font.draw(batch, "Vidas: " + player.getLife() + " " + roundName, 10, 30);
         font.draw(batch, "HighScore: " + highScore, Gdx.graphics.getWidth() / 2 - 100, 30);
         
-        font.draw(batch, "Arma: " + player.getWeapon().getNombre() ,
+        font.draw(batch, "Arma: " + player.getWeapon().getName() ,
                 Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 20);
         if (player.hasWeapon() && !(player.getWeapon() instanceof  Melee)) {
-            int mun = player.getWeapon().getMunicion();
-            int max = player.getWeapon().getMunicionMax();
+            int mun = player.getWeapon().getAmmo();
+            int max = player.getWeapon().getMaxAmmo();
             font.draw(batch, "Municion: " + mun + " / " + max,
                     Gdx.graphics.getWidth() - 350, Gdx.graphics.getHeight() - 60);
         }

@@ -11,7 +11,8 @@ public enum EProjectileType implements ITexture {
 	REDWIRE("redwire.png", 32, 32),
 	SWING("swing.png", 96, 64),
 	FLAME("flame.png", 32, 32),
-	;
+	RAYGUN("raypulse.png", 32, 32),
+	ROCKET("rocket.png", 64, 64);
 	
 	EProjectileType(String ruta, int width, int height) {
 		this.ruta = "textures/projectiles/" + ruta; 

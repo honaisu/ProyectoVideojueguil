@@ -6,16 +6,17 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import armas.proyectiles.Projectile;
 import entidades.Player;
+import entidades.proyectiles.Projectile;
 
 public class ProjectileManager {
 	private final List<Projectile> proyectiles = new ArrayList<>();
+	private final List<Projectile> toAdd = new ArrayList<>();
 	
 	public void add(Projectile proyectil) {
 		if (proyectil == null) return;
 
-		proyectiles.add(proyectil);
+		toAdd.add(proyectil);
 	}
 	
 	public boolean remove(Projectile proyectil) {
@@ -32,6 +33,10 @@ public class ProjectileManager {
 	}
 	
 	public void update(float delta, Player player) {
+		if (!toAdd.isEmpty()) {
+			proyectiles.addAll(toAdd);
+			toAdd.clear();
+		}
 		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
 		Iterator<Projectile> iterator = proyectiles.iterator();
 

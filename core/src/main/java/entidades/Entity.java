@@ -44,8 +44,8 @@ public abstract class Entity {
 	 * @param BallHitbox -> puede ser un asteroide
 	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
 	 */
-	public boolean checkCollision(Entity b2) {
-		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(b2.getSpr()));
+	public boolean checkCollision(Entity e) {
+		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(e.getSpr()));
 	}
 	
 	public void draw(SpriteBatch batch) {

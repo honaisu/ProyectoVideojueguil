@@ -6,11 +6,14 @@ import java.util.Random;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import armas.proyectiles.Bullet;
-import armas.proyectiles.Projectile;
+
 import entidades.Player;
+import entidades.proyectiles.Bullet;
+import entidades.proyectiles.Projectile;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
@@ -36,17 +39,17 @@ public class Shotgun extends Weapon {
         int spread = 15;
 
         for (int i = 0; i < pellets; i++) {
-            // Ángulo con desviación aleatoria
             float angle = muzzle[2] + (ra.nextFloat() * spread * 2 - spread);
 
-            Bullet bala = new Bullet(
+            Bullet bullet = new Bullet(
             		muzzle[0], muzzle[1],	// posicion de la bala
                 width,                    	// escala de la bala
                 angle,						// angulo de la bala
                 vel + ra.nextInt(4),     	// velocidad levemente aleatoria
                 p,
+                SpriteFactory.create(EProjectileType.ROUNDNOSE),
                 false);
-            manager.add(bala);
+            manager.add(bullet);
         }
   
 	}

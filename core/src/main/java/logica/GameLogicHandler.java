@@ -2,9 +2,8 @@ package logica;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import armas.proyectiles.Projectile;
 import entidades.Player;
-import enumeradores.recursos.EPlayerSkin;
+import entidades.proyectiles.Projectile;
 import managers.EnemyManager;
 import managers.CollisionManager;
 import managers.DropManager;

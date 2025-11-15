@@ -9,7 +9,9 @@ public enum EDropType implements ITexture {
 	ROCKET_LAUNCHER("rocket.png"),
 	MELEE("melee.png"),
 	LASER_CANNON("laser_gun.png"),
-	LASER_GUN("laser_gun.png");
+	LASER_GUN("laser_gun.png"),
+	FLAME_SHOT("flame.png"),
+	RAY_GUN("ray_gun.png");
 	
 	EDropType(String ruta) {
 		this.ruta = "textures/drops/" + ruta;

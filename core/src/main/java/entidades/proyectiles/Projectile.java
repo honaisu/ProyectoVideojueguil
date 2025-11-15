@@ -1,4 +1,4 @@
-package armas.proyectiles;
+package entidades.proyectiles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +40,6 @@ public abstract class Projectile extends Entity {
 		}
 
 	}
-	/*
-	public boolean hasHit(Enemy enemy) {
-		return this.enemiesHit.contains(enemy);
-	}
-
-	// NUEVO: Método para registrar un golpe
-	public void registerHit(Enemy enemy) {
-		if (!hasHit(enemy)) {
-			this.enemiesHit.add(enemy);
-		}
-	}*/
 
 	public static float[] calcularMuzzle(Player p, boolean b) {
 		Rectangle playerRectangle = p.getSpr().getBoundingRectangle();

@@ -16,6 +16,8 @@ public enum EGameSound implements IAssetPath {
 	DROP_MELEE("drops/melee.mp3"),
 	DROP_LC("drops/laser_cannon.mp3"),
 	DROP_LG("drops/laser_gun.mp3"),
+	DROP_FS("drops/flame_shot.mp3"),
+	DROP_RG("drops/ray_gun.mp3"),
 	// Weapons
 	SHOOT("weapons/shoot.mp3"),
 	SHOOT_LASER_CANNON("weapons/laser_cannon.mp3"),

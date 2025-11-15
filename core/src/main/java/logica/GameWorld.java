@@ -26,6 +26,7 @@ public class GameWorld {
     private boolean levelComplete = false; //flag para ver si se completo el nivel (para avizar a GameScreen)
 	
 	private final float ROTATE_ANGLE = 5.0f;
+	private final float ROTATE_ANGLE_SLOW = 1.0f;
 	private final float ACCELERATION = 0.2f;
 	private boolean estaEnPausa = false;
 	
@@ -61,8 +62,13 @@ public class GameWorld {
 	}
 
 	private void handleInput(float delta) {
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) player.rotate(ROTATE_ANGLE);
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) player.rotate(-ROTATE_ANGLE);
+		if ((Gdx.input.isKeyPressed(Input.Keys.C))){	//Mayor precision
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) player.rotate(ROTATE_ANGLE_SLOW);
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) player.rotate(-ROTATE_ANGLE_SLOW);
+		}else { //Movimiento normal
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) player.rotate(ROTATE_ANGLE);
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) player.rotate(-ROTATE_ANGLE);
+		}
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) player.accelerate(ACCELERATION);
 		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.accelerate(-ACCELERATION);
