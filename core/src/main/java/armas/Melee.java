@@ -8,6 +8,8 @@ import armas.proyectiles.Swing;
 import entidades.Player;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
+import factories.SpriteFactory;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
@@ -16,12 +18,12 @@ public class Melee extends Weapon {
 	//usa un proyectil arqueado
     private Swing swingActual;
 
-    public Melee(int dano, float cadencia, int municion) {
-		super("Melee", dano, cadencia, municion);
-    }
-    
-    public Melee() {
-    	this(50, 1f, 1);
+    public Melee(){
+		super("Melee",
+				50,
+				1f,
+				99999,
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT));
     }
     
     public Swing getSwingActual() {
@@ -33,7 +35,19 @@ public class Melee extends Weapon {
         float length = p.getSpr().getBoundingRectangle().getHeight() / 2 + 20; 
         float[] muzzle = Projectile.calcularMuzzle(p, true);
         
-        swingActual = new Swing(muzzle[0], muzzle[1], muzzle[2], length, p);
+        float width = 120;
+        float height = 60;
+        float duration = 0.25f;
+        
+        swingActual = new Swing(muzzle,
+        		length,
+        		p,
+        		SpriteFactory.create(EProjectileType.SWING),
+        		width, height, 
+        		duration,
+        		false,
+        		true);
+        
         manager.add(swingActual);
 	}
 	
@@ -47,4 +61,3 @@ public class Melee extends Weapon {
         return AssetManager.getInstancia().getSound(EGameSound.DROP_MELEE);
     }
 }
-

@@ -32,9 +32,9 @@ public class LevelFactory {
         // Ronda 3: Formación 
         levelOneRounds.add(new Round("Ronda 3 (Formación)", (em) -> {
             // Stats por defecto (¡Usando el constructor de 6 args que arreglamos!)
-            em.add(new Enemy(500, 700, 100f, 0.05f, 50, 10));
-            em.add(new Enemy(450, 650, 100f, 0.05f, 50, 10));
-            em.add(new Enemy(550, 650, 100f, 0.05f, 50, 10));
+            em.add(new Enemy(500, 700, 100f, 0.05f, 100, 10));
+            em.add(new Enemy(450, 650, 100f, 0.05f, 100, 10));
+            em.add(new Enemy(550, 650, 100f, 0.05f, 100, 10));
         }));
         
         // Ronda 4: Emboscada (4 enemigos) ---

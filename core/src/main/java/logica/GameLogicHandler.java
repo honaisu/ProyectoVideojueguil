@@ -1,10 +1,10 @@
 package logica;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
 import entidades.Player;
+import enumeradores.recursos.EPlayerSkin;
 import managers.EnemyManager;
 import managers.CollisionManager;
 import managers.DropManager;
@@ -15,11 +15,9 @@ import managers.ProjectileManager;
  */
 public class GameLogicHandler {
     private final CollisionManager collisionManager;
-    // TODO cambiar a EnemyManager o algo (yo creo)
-    // Pensaba que pertenecía a los otros managers y nada que ver
-    // Son los enemigos xD
+    
     private final EnemyManager enemyManager;
-    // No es un strategy :c
+    
     private final ProjectileManager proyectilManager;
     
     private final DropManager dropManager;
@@ -43,6 +41,9 @@ public class GameLogicHandler {
     public CollisionManager getCollisionManager() {
     	return collisionManager;
     }
+    public DropManager getDropManager() {
+    	return dropManager;
+    }
 
 	public void render(SpriteBatch batch) {
 		enemyManager.render(batch);
@@ -60,7 +61,7 @@ public class GameLogicHandler {
 		// TODO Eliminar listas. O ver alternativas para manejar las colisiones
 		// (No se me ocurre ninguna por el momento)
 		collisionManager.handleCollisions(player, proyectilManager.getProjectiles(), enemyManager.getEnemies(), dropManager);
-		collisionManager.handlePlayerVsDrops(player, dropManager);
+		//collisionManager.handlePlayerVsDrops(player, dropManager);
 	}
 
 	public void addProjectile(Projectile projectile) {

@@ -29,7 +29,7 @@ public class HeavyMachineGun extends Weapon {
         float width = 30f;
         float vel = 10f;
         
-        Bullet bala = new Bullet(muzzle[0], muzzle[1], width, muzzle[2], vel, p);
+        Bullet bala = new Bullet(muzzle[0], muzzle[1], width, muzzle[2], vel, p,true);
         manager.add(bala);
     }
     @Override

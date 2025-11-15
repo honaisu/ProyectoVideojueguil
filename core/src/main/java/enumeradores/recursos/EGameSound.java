@@ -1,6 +1,6 @@
 package enumeradores.recursos;
 
-import interfaces.IAssetRoute;
+import interfaces.IAssetPath;
 
 /**
  * Enumerador encargado de todos los sonidos provenientes del juego.
@@ -8,23 +8,23 @@ import interfaces.IAssetRoute;
  * Cada sonido va a estar localizado en la carpeta <i>"assets/audios/sfx"</i> 
  * del proyecto (<b>Requerimiento</b>).
  */
-public enum EGameSound implements IAssetRoute {
+public enum EGameSound implements IAssetPath {
 	// Drops
-	DROP_HMG("drops/HeavyMachineGun.mp3"),
-	DROP_SHOTGUN("drops/Shotgun.mp3"),
-	DROP_RL("drops/RocketLauncher.mp3"),
-	DROP_MELEE("drops/Melee.mp3"),
-	DROP_LC("drops/LaserCannon.mp3"),
-	DROP_LG("drops/LaserGun.mp3"),
+	DROP_HMG("drops/heavy_machine_gun.mp3"),
+	DROP_SHOTGUN("drops/shotgun.mp3"),
+	DROP_RL("drops/rocket_launcher.mp3"),
+	DROP_MELEE("drops/melee.mp3"),
+	DROP_LC("drops/laser_cannon.mp3"),
+	DROP_LG("drops/laser_gun.mp3"),
 	// Weapons
-	SHOOT("weapons/popSound.mp3"),
-	SHOOT_LASER_CANNON("weapons/canonLaserSound.mp3"),
-	SHOOT_LASER("weapons/laserSound.mp3"),
+	SHOOT("weapons/shoot.mp3"),
+	SHOOT_LASER_CANNON("weapons/laser_cannon.mp3"),
+	SHOOT_LASER("weapons/laser.mp3"),
 	// Enemies
-	EXPLOSION("enemies/explosionSound.ogg"),
+	EXPLOSION("enemies/explosion.ogg"),
 	// Player
-	HURT("player/danoSound.mp3"),
-	DEATH("player/muerteSound.mp3");
+	HURT("player/hurt.mp3"),
+	DEATH("player/death.mp3");
 	
 	private String ruta;
 	

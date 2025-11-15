@@ -44,8 +44,8 @@ public class Shotgun extends Weapon {
                 width,                    	// escala de la bala
                 angle,						// angulo de la bala
                 vel + ra.nextInt(4),     	// velocidad levemente aleatoria
-                p
-            );
+                p,
+                false);
             manager.add(bala);
         }
   

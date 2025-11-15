@@ -3,7 +3,7 @@ package factories;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import interfaces.IAssetRoute;
+import interfaces.ITexture;
 import managers.assets.AssetManager;
 
 /**
@@ -13,8 +13,6 @@ import managers.assets.AssetManager;
  * para poder crear un sprite acorde.
  */
 public class SpriteFactory {
-	private static int DEFAULT_SIZE = 64;
-	
 	private SpriteFactory() {}
 	
 	private static Sprite create(Texture texture, int width, int height) {
@@ -26,12 +24,9 @@ public class SpriteFactory {
 		return sprite;
 	}
 	
-	public static Sprite create(IAssetRoute asset) {
-		return create(asset, DEFAULT_SIZE, DEFAULT_SIZE);
+	public static Sprite create(ITexture asset) {
+		Texture texture = AssetManager.getInstancia().getTexture(asset);
+		return create(texture, asset.getWidth(), asset.getHeight());
 	}
 	
-	public static Sprite create(IAssetRoute asset, int width, int height) {
-		Texture texture = AssetManager.getInstancia().getTexture(asset);
-		return create(texture, width, height);
-	}
 }

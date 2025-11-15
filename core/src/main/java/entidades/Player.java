@@ -21,7 +21,7 @@ public class Player extends Entity {
 	// Estado básico 
 	private int score = 0;
     private int round = 1;
-    private int life = 100; // ANTES: lives
+    private int life = 100;
 
 	//fisica de si
 	private float xVel = 0f;
@@ -35,12 +35,12 @@ public class Player extends Entity {
 	private float stateTime = 0f;
 		
 	//Lógica de Daño merge
-	private boolean hurted = false; // benjoid
+	private boolean hurted = false;
 	private int hurtTime;           //TODO
-	private float iFrames = 0f;     // si
+	private float iFrames = 0f;
 	  
 	//Arma inicial o por defecto
-	private Weapon weapon = new HeavyMachineGun();
+	private Weapon weapon = new LaserCannon();
 	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
@@ -51,6 +51,7 @@ public class Player extends Entity {
 		super(x, y, SpriteFactory.create(skin));
 		animation = AnimationFactory.createPlayer(skin);
 
+		//getSpr().scale(1f);
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	getSpr().setOriginCenter();
 	}
@@ -60,7 +61,7 @@ public class Player extends Entity {
 	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
 	    if (isMoving) stateTime += delta;
 
-	    // Lógica de daño fusionada //o queda bien o se jode todo
+	    // Lógica de daño
 	    if (hurted) {
 	      hurtTime--;
 	      if (hurtTime <= 0) hurted = false;

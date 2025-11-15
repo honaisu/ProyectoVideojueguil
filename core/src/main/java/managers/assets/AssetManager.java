@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import enumeradores.recursos.EGameMusic;
 import enumeradores.recursos.EGameSound;
-import interfaces.IAssetRoute;
+import interfaces.ITexture;
 
 /**
  * Clase encargada de poder tener todas las texturas, sonidos y música del juego.
@@ -50,7 +50,7 @@ public class AssetManager {
     	musics.dispose();
     }
     
-    public Texture getTexture(IAssetRoute texture) {
+    public Texture getTexture(ITexture texture) {
     	return textures.get(texture);
     }
 	

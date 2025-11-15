@@ -34,7 +34,8 @@ public abstract class Entity {
 	    float nuevoX = centerX + (float) Math.cos(radians) * radio;
 	    float nuevoY = centerY + (float) Math.sin(radians) * radio;
 
-	    getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
+	    //getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
+	    getSpr().setPosition(nuevoX - getSpr().getOriginX(), nuevoY - getSpr().getOriginY());
 	    getSpr().setRotation(rot);
 	}
 	

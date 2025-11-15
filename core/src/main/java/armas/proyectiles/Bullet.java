@@ -14,13 +14,14 @@ public class Bullet extends Projectile {
 	private float xSpeed;
 	// velocidad de la bala eje y
 	private float ySpeed;
+	
+	public Bullet(float x, float y, float width, float rotation, float speed, Player p, boolean piercing) {
+		super(x, y, SpriteFactory.create(EProjectileType.BULLET_TEMPLATE), p, p.getWeapon().getDamage(), piercing);
 
-	public Bullet(float x, float y, float width, float rotation, float speed, Player p) {
-		super(x, y, SpriteFactory.create(EProjectileType.BULLET_TEMPLATE), p);
 		
 		getSpr().setBounds(x, y, width, width);
         getSpr().setOriginCenter();
-        getSpr().setRotation(rotation);
+        getSpr().setRotation(rotation - 90);
 
         // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
 		float radians = (float) Math.toRadians(rotation);

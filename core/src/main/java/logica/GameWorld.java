@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import entidades.Player;
-import enumeradores.EScreenType;
 import enumeradores.recursos.EBackgroundType;
+import enumeradores.recursos.EPlayerSkin;
 import factories.LevelFactory;
 
 //coso para los enemigos y el cambio de ronda
@@ -15,8 +15,8 @@ import java.util.List; // no c si rompa lo e Strategy
 import logica.levels.Level; 
 
 public class GameWorld {
-	private final Player player;
 	private final GameLogicHandler gameLogicHandler;
+	private final Player player;
 	
 	private List<Level> allLevels;       // Lista de Niveles
     private int currentLevelIndex;       // Índice para saber en qué nivel vamos
@@ -29,8 +29,8 @@ public class GameWorld {
 	private final float ACCELERATION = 0.2f;
 	private boolean estaEnPausa = false;
 	
-	public GameWorld(int startingLevelIndex) {
-		this.player  = new Player(5, 5);
+	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
+		this.player  = new Player(5, 5, skin);
 		this.gameLogicHandler = new GameLogicHandler();
 		
 		//para niveles
@@ -54,8 +54,7 @@ public class GameWorld {
 		player.update(delta);
 		
 		//logica que el propio GameWolrd deebria manejar, no GameScreen
-		gameLogicHandler.getEnemyManager().update(delta);
-	    gameLogicHandler.getProyectilManager().update(delta, player);
+	    gameLogicHandler.update(delta, player);
 		gameLogicHandler.handleCollisions(player);
 		
 		//Chekeamos que este completo

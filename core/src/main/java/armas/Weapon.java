@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 
 import entidades.Player;
 import enumeradores.recursos.EGameSound;
+import interfaces.IDisparable;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
 //Clase Abstracta Arma generica
-public abstract class Weapon {
+public abstract class Weapon implements IDisparable{
 	private String nombre;
 	
 	private int damage;
@@ -47,6 +48,7 @@ public abstract class Weapon {
     
     // metodo abstracto para disparar un arma
     //public abstract void disparar(Player nave, GameWorld juego, float delta);
+    @Override
     public void atacar(float delta, Player p, ProjectileManager manager) {
     	actualizar(delta);
     	if (!puedeDisparar()) return;
@@ -55,6 +57,13 @@ public abstract class Weapon {
         restarMunicion(delta);
         if (puedeDisparar()) reiniciarCooldown();
         crearProyectil(p, manager);
+        
+        playSound();
+    }
+    
+    //TODO VER SONIDO DE LASERGUN
+    public void playSound() {
+    	soundBala.play();
     }
     
     

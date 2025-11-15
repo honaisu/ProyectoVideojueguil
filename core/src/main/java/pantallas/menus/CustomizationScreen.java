@@ -9,13 +9,16 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
 import enumeradores.recursos.EPlayerSkin;
+import factories.SpriteFactory;
 import interfaces.INavigableOption;
 import logica.MainGame;
-import managers.assets.AssetManager;
 
 public class CustomizationScreen extends NavigableScreen {
+	private EPlayerSkin temporalSkin;
+	
     public CustomizationScreen(MainGame game) {
         super(game, EPlayerSkin.values());
+        temporalSkin = game.getPlayerSkin();
     }
 
 	@Override
@@ -25,7 +28,7 @@ public class CustomizationScreen extends NavigableScreen {
 
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-        	// TODO Volver a poner el poder elegir skin
+        	getGame().setPlayerSkin(temporalSkin);
         	getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
             return;
         }
@@ -50,6 +53,8 @@ public class CustomizationScreen extends NavigableScreen {
         font.getData().setScale(1.5f);
         int x = 360, y = 300;
         final float PREVIEW_HW = 128f;
+        float previewX = x - PREVIEW_HW/2f;
+        float previewY = y - PREVIEW_HW/2f;
         
 		INavigableOption opcionActual = navegador.getCurrentSelection();
         
@@ -60,16 +65,16 @@ public class CustomizationScreen extends NavigableScreen {
 
         	// Mensaje al estar apretando en uno
         	mensajeSeleccionado = "[" + i + "]";
-        	if (seleccionado) mensajeSeleccionado += " SELECCIONADO";
+        	if (seleccionado) {
+        		mensajeSeleccionado += " SELECCIONADO";
+        		temporalSkin = skin;
+        	}
         	
         	// Nombre de la skin
-        	font.draw(batch, skin.getNombre(),
-        			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f + 200);
+        	font.draw(batch, skin.getNombre(), previewX, previewY + 200);
         	
         	// Sprite de la skin
-        	batch.draw(AssetManager.getInstancia().getTexture(skin),
-        			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f, 
-        			PREVIEW_HW, PREVIEW_HW);
+        	batch.draw(SpriteFactory.create(skin), previewX, previewY, PREVIEW_HW, PREVIEW_HW);
         	
         	// Sólo imprime el mensaje original :D
             font.draw(batch, mensajeSeleccionado, x - 100, y - 70);
