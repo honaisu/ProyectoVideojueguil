@@ -2,8 +2,8 @@ package armas;
 
 import com.badlogic.gdx.math.Rectangle;
 
-import armas.proyectiles.LaserBeam;
-import armas.proyectiles.Projectile;
+import entidades.proyectiles.LaserBeam;
+import entidades.proyectiles.Projectile;
 import entidades.Player;
 import enumeradores.recursos.EGameSound;
 import logica.GameWorld;

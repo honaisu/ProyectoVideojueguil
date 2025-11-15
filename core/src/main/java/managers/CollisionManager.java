@@ -7,7 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import java.util.Random;
 
 import armas.*;
-import armas.proyectiles.Projectile;
+import entidades.proyectiles.Projectile;
 import entidades.Enemy;
 import entidades.Player;
 import entidades.WeaponDrop;

@@ -1,4 +1,4 @@
-package armas.proyectiles;
+package entidades.proyectiles;
 
 import entidades.Player;
 import enumeradores.recursos.EProjectileType;

@@ -2,42 +2,42 @@ package entidades;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
-import armas.*;
+import armas.HeavyMachineGun;
+import armas.Melee;
+import armas.Weapon;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
 import factories.SpriteFactory;
+import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
 
 public class Player extends Entity {
-	private final float MAX_VELOCITY = 10.0f;
-	// Estado básico 
+	private final float MAX_VELOCITY = 250.0f;
+	// Estado básico
 	private int score = 0;
     private int round = 1;
     private int life = 100; // ANTES: lives
 
 	//fisica de si
-	private float xVel = 0f;
-	private float yVel = 0f;
-	private float rotation = 0f;
+    private Vector2 velocity = new Vector2(0, 0);
+	private float rotation = 90f;
 	
 	//Visual y audio
-	
 	private Sound hurtSound = AssetManager.getInstancia().getSound(EGameSound.HURT);
-	private Animation<TextureRegion> animation;
-	private float stateTime = 0f;
+	private AnimationHandler animation;
 		
 	//Lógica de Daño merge
 	private boolean hurted = false; // benjoid
 	private int hurtTime;           //TODO
 	private float iFrames = 0f;     // si
+	
+	boolean isMoving = false;
 	  
 	//Arma inicial o por defecto
 	private Weapon weapon = new HeavyMachineGun();
@@ -49,17 +49,21 @@ public class Player extends Entity {
 	
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(x, y, SpriteFactory.create(skin));
-		animation = AnimationFactory.createPlayer(skin);
-
+		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		
 		getSpr().scale(1f);
     	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+    	getSpr().setRotation(rotation);
     	getSpr().setOriginCenter();
+    	
+    	animation = new AnimationHandler(AnimationFactory.createPlayer(skin), getSpr());
 	}
 	 
 	@Override
 	public void update(float delta) {
-	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
-	    if (isMoving) stateTime += delta;
+		// el 0.1f es un margen de error
+	    isMoving = !velocity.isZero(0.1f);
+		if (isMoving) animation.updateStateTime(delta);;
 
 	    // Lógica de daño fusionada //o queda bien o se jode todo
 	    if (hurted) {
@@ -67,83 +71,28 @@ public class Player extends Entity {
 	      if (hurtTime <= 0) hurted = false;
 	    }
 	    if (iFrames > 0f) iFrames -= delta;
-
-	    xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
-	    yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
-
-	    float positionX = getSpr().getX() + xVel;
-	    float positionY = getSpr().getY() + yVel;
-
-	    // Logica de rebote 
-	    borderBounce(positionX, positionY);
 	    
-	    getSpr().setPosition(positionX, positionY);
+	    velocity.limit(MAX_VELOCITY);
+	    
+	    Vector2 position = getPosition().cpy().add(velocity.cpy().scl(delta));
+	    
+	    // Logica de rebote
+	    borderBounce(position);
+	    getPosition().set(position);
+	    
+	    getSpr().setPosition(position.x, position.y);
 	    getSpr().setRotation(rotation);
 
 	    weapon.actualizar(delta);
-	  }
-
- /*TODO
-	public void draw(SpriteBatch batch) {
-	    TextureRegion currentFrame;
-	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
-
-	    currentFrame = isMoving ? animation.getKeyFrame(stateTime, true)
-	                            : animation.getKeyFrame(0f, true);
-
-	    if (hurted) {
-	      if ((hurtTime % 10) < 5) return; // Parpadeo
-	    }
-
-	    batch.draw(
-	      currentFrame,
-	      getSpr().getX(), getSpr().getY(),
-	      getSpr().getOriginX(), getSpr().getOriginY(),
-	      getSpr().getWidth(), getSpr().getHeight(),
-	      getSpr().getScaleX(), getSpr().getScaleY(),
-	      getSpr().getRotation()
-	    );
-	  }
-
-
-        // Rebote en bordes
-        float positionX = getSpr().getX() + xVel;
-    	float positionY = getSpr().getY() + yVel;
-        this.borderBounce(positionX, positionY);
-
-        // Aplicar velocidad a la posición
-        getSpr().setPosition(positionX, positionY);
-        getSpr().setRotation(rotation);
-
-        // Actualizar el arma
-        weapon.actualizar(delta);
-    }
-	*/
+	}
+	
 	@Override
 	public void draw(SpriteBatch batch) {
- 		TextureRegion currentFrame;
- 		boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
-
- 	    if (isMoving) {
- 	        currentFrame = animation.getKeyFrame(stateTime, true);
- 	    } else {
- 	        currentFrame = animation.getKeyFrame(0, true);
- 	    }
-         
         // Si está herido, se podría aplicar un efecto de parpadeo con el color del batch
-        if (hurted) {
-            // Lógica simple de parpadeo
-            if (hurtTime % 10 < 5) {
-                return;
-            }
-        }
-
-	    batch.draw(currentFrame,
-	    		getSpr().getX(), getSpr().getY(),
-	    		getSpr().getOriginX(), getSpr().getOriginY(),
-	    		getSpr().getWidth(), getSpr().getHeight(),
-	    		getSpr().getScaleX(), getSpr().getScaleY(),
-	    		getSpr().getRotation());
+        if (hurted && hurtTime % 10 < 5) return;
+        
+        animation.updateSprite(getSpr());
+        animation.handle(batch, isMoving, true);
 	}
 	
 	//TODO revisar tema de la vida//
@@ -174,31 +123,43 @@ public class Player extends Entity {
     }
 
     public void accelerate(float amount) {
-        xVel -= (float) Math.sin(Math.toRadians(rotation)) * amount;
-        yVel += (float) Math.cos(Math.toRadians(rotation)) * amount;
+    	Vector2 acceleration = new Vector2(1, 0);
+    	acceleration.setAngleDeg(rotation);
+    	acceleration.scl(amount);
+    	
+    	velocity.add(acceleration);
     }
 
     public void applyFriction(float friction) {
-        xVel *= friction;
-        yVel *= friction;
+    	velocity.scl(friction);
     }
     
     public void shoot(float delta, ProjectileManager manager) {    	
     	weapon.atacar(delta, this, manager);
     	
-    	if (weapon.getMunicion() == 0) {
+    	if (weapon.getMunicion() == 0) 
     		weapon = new Melee();
-    	}
     }
     
-    private void borderBounce(float positionX, float positionY) {
-    	if ((positionX) < 0 || 
-    		(positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
-    		xVel *= -1;
+    private void borderBounce(Vector2 position) {
+    	if (position.x < 0) {
+    		// Invierte velocidad X
+    		velocity.x *= -1; 
+    		// Fija la posición al borde
+    		position.x = 0;        
     	}
-        if ((positionY) < 0 || 
-        	(positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
-        	yVel *= -1;
+        else if ((position.x + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
+        	velocity.x *= -1;
+    		position.x = Gdx.graphics.getWidth() - getSpr().getWidth();
+    	}
+    	
+    	if (position.y < 0) {
+        	velocity.y *= -1; // Invierte velocidad Y
+        	position.y = 0;        // Fija la posición al borde
+        }
+        else if ((position.y + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
+        	velocity.y *= -1;
+        	position.y = Gdx.graphics.getHeight() - getSpr().getHeight();
         }
     }
 	

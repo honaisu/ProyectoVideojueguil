@@ -6,8 +6,8 @@ import java.util.Random;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import armas.proyectiles.Bullet;
-import armas.proyectiles.Projectile;
+import entidades.proyectiles.Bullet;
+import entidades.proyectiles.Projectile;
 import entidades.Player;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;

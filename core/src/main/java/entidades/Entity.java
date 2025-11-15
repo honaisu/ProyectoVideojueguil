@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
 
 /**
  * Clase abstracta que define una <i>entidad</i> dentro de nuestro juego.
@@ -12,15 +13,13 @@ import com.badlogic.gdx.math.Polygon;
  * veáse ejemplos como Jugador, Bala, Enemigo...
  */
 public abstract class Entity {
-	private float x;
-	private float y;
+	private Vector2 position;
 	private Sprite sprite;
 	
 	private boolean destroyed = false;
 	
 	public Entity(float x, float y) {
-		this.x = x;
-		this.y = y;
+		position = new Vector2(x, y);
 	}
 	
 	public Entity(float x, float y, Sprite sprite) {
@@ -28,14 +27,14 @@ public abstract class Entity {
 		this.sprite = sprite;
 	}
 	
-	public void mover(float centerX, float centerY, float rot, float radio) {
-		float radians = (float) Math.toRadians(rot + 90);
+	public void mover(float centerX, float centerY, float rotation, float radio) {
+		Vector2 center = new Vector2(centerX, centerY);
+		Vector2 offset = new Vector2(radio, 0);
+		offset.setAngleDeg(rotation + 90);
+		Vector2 newPosition = center.add(offset);
 
-	    float nuevoX = centerX + (float) Math.cos(radians) * radio;
-	    float nuevoY = centerY + (float) Math.sin(radians) * radio;
-
-	    getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
-	    getSpr().setRotation(rot);
+	    sprite.setPosition(newPosition.x - sprite.getWidth() / 2, newPosition.y - sprite.getHeight() / 2);
+	    sprite.setRotation(rotation);
 	}
 	
 	/**
@@ -43,8 +42,8 @@ public abstract class Entity {
 	 * @param BallHitbox -> puede ser un asteroide
 	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
 	 */
-	public boolean checkCollision(Entity b2) {
-		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(b2.getSpr()));
+	public boolean checkCollision(Entity entity) {
+		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(entity.getSpr()));
 	}
 	
 	public void draw(SpriteBatch batch) {
@@ -79,12 +78,15 @@ public abstract class Entity {
     public void destroy() { destroyed = true; }
 	public boolean isDestroyed() { return destroyed; }
 
-	public float getX() { return x; }
-	public void setX(float x) {	this.x = x;	}
+	public float getX() { return position.x; }
+	public void setX(float x) {	position.x = x;	}
 	
-	public float getY() { return y;	}
-	public void setY(float y) {	this.y = y;	}
-
+	public float getY() { return position.y;	}
+	public void setY(float y) {	position.y = y;	}
+	
+	public Vector2 getPosition() { return position; }
+	public void setPosition(Vector2 position) { this.position = position; }
+	
 	public Sprite getSpr() { return sprite; }
 	public void setSpr(Sprite spr) { this.sprite = spr; }
 }

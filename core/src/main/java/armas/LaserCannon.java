@@ -3,8 +3,8 @@ package armas;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import armas.proyectiles.LaserBeam;
-import armas.proyectiles.Projectile;
+import entidades.proyectiles.LaserBeam;
+import entidades.proyectiles.Projectile;
 import entidades.Player;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;

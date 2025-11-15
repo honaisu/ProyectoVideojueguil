@@ -3,7 +3,7 @@ package logica;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-import armas.proyectiles.Projectile;
+import entidades.proyectiles.Projectile;
 import entidades.Player;
 import enumeradores.recursos.EPlayerSkin;
 import managers.EnemyManager;
