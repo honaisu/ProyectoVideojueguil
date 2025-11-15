@@ -1,131 +1,112 @@
 package armas;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 
 import entidades.Player;
+import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
 import interfaces.IDisparable;
+import interfaces.ITexture;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
 //Clase Abstracta Arma generica
-public abstract class Weapon implements IDisparable{
-	private String nombre;
+public abstract class Weapon implements IDisparable {
+	protected final Sound bulletSound;
+	protected final EDropType dropType;
+	protected final WeaponStats stats;
+	protected final String name;
 	
-	private int damage;
-	//tiempo que dura un ataque despues de otro
-	private float cadencia;
-	//contador para que se cumpla la cadencia
-    private float tiempoUltDisp;	
-    //municion actual que tiene un arma
-    private int municion;
-    //municion máxima que puede poseer un arma
-    private int municionMax;
-    private Sound soundBala;
-    
-    public Weapon(String nombre, int damage, float cadencia, int municionMax, Sound soundBala) {
-    	this.nombre = nombre;
-    	this.damage = damage;
-    	this.cadencia = cadencia;
-        this.municionMax = municionMax;
-        this.municion = municionMax;
-        this.soundBala = soundBala;
-        this.tiempoUltDisp = cadencia; //para que dispare instantaneamente el primer disparo
-    }
-    
-    public Weapon(String nombre, int damage, float cadencia, int municionMax) {
-    	// Para que tenga un sonido generico
-    	this(nombre, damage, cadencia, municionMax, AssetManager.getInstancia().getSound(EGameSound.SHOOT));
-    }
-    
-    // metodo abstracto para crear el proyectil para cada arma
-    public abstract void crearProyectil(Player p, ProjectileManager manager);
-    // metodo abstracto para crear la textura del drop
-    public abstract Texture getDropTexture();
-    // metodo abstracto para crear es sonido del drop
-    public abstract Sound getPickupSound();
-    
-    // metodo abstracto para disparar un arma
-    //public abstract void disparar(Player nave, GameWorld juego, float delta);
-    @Override
-    public void atacar(float delta, Player p, ProjectileManager manager) {
-    	actualizar(delta);
-    	if (!puedeDisparar()) return;
-        if (getMunicion() <= 0) return;
-        
-        restarMunicion(delta);
-        if (puedeDisparar()) reiniciarCooldown();
-        crearProyectil(p, manager);
-        
-        playSound();
-    }
-    
-    //TODO VER SONIDO DE LASERGUN
-    public void playSound() {
-    	soundBala.play();
-    }
-    
-    
-    public void restarMunicion(float delta) {
-    	tiempoUltDisp += delta;
-        if (tiempoUltDisp >= cadencia) {
-            municion -= 1;
-            tiempoUltDisp = 0;
-        }
-    }
-    
-    //actualiza el timer entre disparo y disparo
-    public void actualizar(float delta) {
-    	if (tiempoUltDisp < cadencia) {
-            tiempoUltDisp += delta;
-        }
-    }
-    
-    //verifica si puede disparar cuando se haya cumplido el tiempo entre disparo y disparo
-    protected boolean puedeDisparar() {
-        return tiempoUltDisp >= cadencia;
-    }
-    
-    //reinicia el tiempo entre el disparo y el siguente
-    protected void reiniciarCooldown() {
-        tiempoUltDisp = 0;
-    }
-    
-    //Getters y Setters
-    public int getDamage() {return damage; }
-    
-    public int getMunicion() { return municion; }
+	public Weapon(String nombre, WeaponStats stats, Sound bulletSound, EDropType dropType) {
+		this.name = nombre;
+		this.stats = stats;
+		this.bulletSound = bulletSound;
+		this.dropType = dropType;
+	}
 
-    public int getMunicionMax() { return municionMax; }
+	public Weapon(String nombre, int damage, float cadencia, int municionMax, Sound bulletSound, EDropType dropType) {
+		this.name = nombre;
+		this.stats = new WeaponStats(cadencia, municionMax, damage);
+		this.bulletSound = bulletSound;
+		this.dropType = dropType;
+	}
 
-	public float getCadencia() { return cadencia; }
+	public Weapon(String nombre, int damage, float cadencia, int municionMax, EDropType dropType) {
+		// Para que tenga un sonido generico
+		this(nombre, damage, cadencia, municionMax, AssetManager.getInstancia().getSound(EGameSound.SHOOT), dropType);
+	}
 
-	public float getTiempoUltDisp() { return tiempoUltDisp; }
-
-	public Sound getSoundBala() { return soundBala;	}
-
-	public String getNombre() {	return nombre; }
+	/**
+	 * Método para crear el proyectil de cada arma
+	 */
+	public abstract void crearProyectil(Player p, ProjectileManager manager);
 	
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
+	// metodo abstracto para crear es sonido del drop
+	public abstract Sound getPickupSound();
+	
+	@Override
+	public void atacar(float delta, Player p, ProjectileManager manager) {
+		actualizar(delta);
+		if (!puedeDisparar())
+			return;
+		if (stats.getAmmo() <= 0)
+			return;
+
+		restarMunicion(delta);
+		//if (puedeDisparar())
+			//reiniciarCooldown();
+		crearProyectil(p, manager);
+
+		playSound();
 	}
 
-	public void setCadencia(float cadencia) { this.cadencia = cadencia;	}
-
-	public void setTiempoUltDisp(float tiempoUltDisp) {
-		this.tiempoUltDisp = tiempoUltDisp;
+	// TODO VER SONIDO DE LASERGUN
+	public void playSound() {
+		bulletSound.play();
 	}
 
-	public void setMunicion(int municion) {
-		this.municion = municion;
+	public void restarMunicion(float delta) {
+		stats.setLastShot(stats.getLastShot() + delta);
+		if (puedeDisparar()) {
+			stats.setAmmo(stats.getAmmo() - 1);
+			reiniciarCooldown();
+		}
 	}
 
-	public void setMunicionMax(int municionMax) {
-		this.municionMax = municionMax;
+	// actualiza el timer entre disparo y disparo
+	public void actualizar(float delta) {
+		if (!puedeDisparar())
+			stats.setLastShot(stats.getLastShot() + delta);
 	}
 
-	public void setSoundBala(Sound soundBala) {
-		this.soundBala = soundBala;
+	// verifica si puede disparar cuando se haya cumplido el tiempo entre disparo y
+	// disparo
+	protected boolean puedeDisparar() {
+		return stats.getLastShot() >= stats.fireRate;
+	}
+
+	// reinicia el tiempo entre el disparo y el siguente
+	protected void reiniciarCooldown() {
+		stats.setLastShot(0);
+	}
+
+	// Getters y Setters
+	public WeaponStats getStats() {
+		return stats;
+	}
+	
+	/**
+	 * metodo abstracto para crear la textura del drop
+	 */
+	public ITexture getDropTexture() {
+		return dropType;
+	}
+
+	public Sound getBulletSound() {
+		return bulletSound;
+	}
+
+	public String getNombre() {
+		return name;
 	}
 }

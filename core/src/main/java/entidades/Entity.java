@@ -1,10 +1,15 @@
 package entidades;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+
+import factories.SpriteFactory;
+import interfaces.ITexture;
 
 /**
  * Clase abstracta que define una <i>entidad</i> dentro de nuestro juego.
@@ -13,24 +18,16 @@ import com.badlogic.gdx.math.Vector2;
  * veáse ejemplos como Jugador, Bala, Enemigo...
  */
 public abstract class Entity {
-	private Vector2 position;
-	private Sprite sprite;
-	private int totalHp;
-	private int hp;
+	protected Sprite sprite;
+	protected Vector2 velocity = new Vector2();
+	protected Vector2 position;
+	protected float rotation = 0f;
 
-	private boolean destroyed = false;
+	protected boolean destroyed = false;
 
-	public Entity(float x, float y) {
-		position = new Vector2(x, y);
-	}
-
-	public Entity(float x, float y, Sprite sprite) {
-		this(x, y);
-		this.sprite = sprite;
-	}
-
-	public Entity() {
-
+	public Entity(Vector2 position, ITexture asset) {
+		this.position = position;
+		this.sprite = SpriteFactory.create(asset);
 	}
 
 	public void mover(Vector2 center, float rotation, float radio) {
@@ -47,13 +44,10 @@ public abstract class Entity {
 	}
 
 	/**
-	 * Verifica la colision de un objeto de tipo BallHitbox
-	 * 
-	 * @param BallHitbox -> puede ser un asteroide
-	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
+	 * Verifica la colision con una entidad
 	 */
 	public boolean checkCollision(Entity entity) {
-		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(entity.getSpr()));
+		return Intersector.overlapConvexPolygons(getRotatedPolygon(this.sprite), getRotatedPolygon(entity.getSprite()));
 	}
 
 	public void draw(SpriteBatch batch) {
@@ -62,12 +56,9 @@ public abstract class Entity {
 
 	/**
 	 * Hace un poligono auxiliar para que la Hitbox al rotar cumpla con su tamaño
-	 * 
-	 * @param Sprite del objeto
-	 * @return
 	 */
 	public Polygon getRotatedPolygon(Sprite spr) {
-		float[] vertices = new float[] { 0, 0, spr.getWidth(), 0, spr.getWidth(), spr.getHeight(), 0, spr.getHeight() };
+		float[] vertices = { 0, 0, spr.getWidth(), 0, spr.getWidth(), spr.getHeight(), 0, spr.getHeight() };
 
 		Polygon p = new Polygon(vertices);
 		p.setOrigin(spr.getOriginX(), spr.getOriginY());
@@ -77,7 +68,35 @@ public abstract class Entity {
 	}
 
 	/**
-	 * Actualiza la lógica de la entidad
+	 * Método estático encargado de poder verificar si una entidad se encuentra
+	 * dentro de la "pantalla", modificando sus stats si es necesario.
+	 */
+	public static boolean isInBounds(Entity entity) {
+		float w = entity.getSprite().getWidth(), h = entity.getSprite().getHeight();
+		float maxX = Gdx.graphics.getWidth() - w;
+		float maxY = Gdx.graphics.getHeight() - h;
+		
+		Vector2 copy = entity.getPosition().cpy();
+		Vector2 position = entity.getPosition();
+		Vector2 velocity = entity.getVelocity();
+
+		position.x = MathUtils.clamp(position.x, 0, maxX);
+		if (position.x != copy.x) {
+			velocity.x = -velocity.x;
+			return false;			
+		}
+
+		position.y = MathUtils.clamp(position.y, 0, maxY);
+		if (position.y != copy.y) {
+			velocity.y = -velocity.y;			
+			return false;
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Método abstracto encargado de poder actualizar la lógica de la entidad.
 	 */
 	public abstract void update(float delta);
 
@@ -89,22 +108,6 @@ public abstract class Entity {
 		return destroyed;
 	}
 
-	public float getX() {
-		return position.x;
-	}
-
-	public void setX(float x) {
-		position.x = x;
-	}
-
-	public float getY() {
-		return position.y;
-	}
-
-	public void setY(float y) {
-		position.y = y;
-	}
-
 	public Vector2 getPosition() {
 		return position;
 	}
@@ -113,11 +116,24 @@ public abstract class Entity {
 		this.position = position;
 	}
 
-	public Sprite getSpr() {
-		return sprite;
+	public Vector2 getVelocity() {
+		return velocity;
 	}
 
-	public void setSpr(Sprite spr) {
-		this.sprite = spr;
+	public void setVelocity(float speed, float angleDeg) {
+		this.velocity.set(speed, 0);
+		this.velocity.setAngleDeg(angleDeg);
+	}
+
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
+	}
+
+	public Sprite getSprite() {
+		return sprite;
+	}
+	
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 }

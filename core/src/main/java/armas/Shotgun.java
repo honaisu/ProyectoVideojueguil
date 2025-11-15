@@ -11,6 +11,7 @@ import entidades.proyectiles.Projectile;
 import entidades.Player;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
+import interfaces.ITexture;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
@@ -19,13 +20,12 @@ public class Shotgun extends Weapon {
 		super("Shotgun",
 				10,												// daño
 				2.5f, 											// cadencia
-				8, 												// municion
-				AssetManager.getInstancia().getSound(EGameSound.SHOOT));	// sonido
+				8,
+				EDropType.SHOTGUN);	// sonido
 	}
 
 	@Override
 	public void crearProyectil(Player p, ProjectileManager manager) {
-        float[] muzzle = Projectile.calcularMuzzle(p, false);
         float width = 20f;
         float vel = 10f;
         
@@ -37,23 +37,18 @@ public class Shotgun extends Weapon {
 
         for (int i = 0; i < pellets; i++) {
             // Ángulo con desviación aleatoria
-            float angle = muzzle[2] + (ra.nextFloat() * spread * 2 - spread);
+            float angle = (ra.nextFloat() * spread * 2 - spread);
 
             Bullet bala = new Bullet(
-            		muzzle[0], muzzle[1],	// posicion de la bala
-                width,                    	// escala de la bala
-                angle,						// angulo de la bala
-                vel + ra.nextInt(4),     	// velocidad levemente aleatoria
-                p,
+            		p.getPosition().x, p.getPosition().y, width, angle,
+                vel + ra.nextInt(4),
+                stats.getDamage(),
                 false);
+            
             manager.add(bala);
         }
   
 	}
-	@Override
-    public Texture getDropTexture() {
-        return AssetManager.getInstancia().getTexture(EDropType.SHOTGUN);
-    }
 
     @Override
     public Sound getPickupSound() {

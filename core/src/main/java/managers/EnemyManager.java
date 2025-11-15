@@ -8,55 +8,72 @@ import entidades.Enemy;
 import factories.EnemyFactory;
 
 public class EnemyManager {
-	//mio
+	// mio
 	private final List<Enemy> enemies = new ArrayList<>();
 	private static final float MIN_SEPARATION = 72f;
-	
-	//vacio para las rondas creo
-	public EnemyManager() { }
-	  
-	//mio //sgeun gemini mejor e mio xd// Tu spawner con lógica 'isFar'. Es mejor.
-	  
+
+	// vacio para las rondas creo
+	public EnemyManager() {
+	}
+
+	// mio //sgeun gemini mejor e mio xd// Tu spawner con lógica 'isFar'. Es mejor.
+
 	// Anselmo que chucha es esto
 	public void spawnEnemies(int cant) {
-	    final int triesPerEnemy = 24;
-	    for (int i = 0; i < cant; i++) {
-	        Enemy cand = null;
-	        boolean placed = false;
-	        for (int t = 0; t < triesPerEnemy && !placed; t++) {
-	            cand = EnemyFactory.createRandomBasic();
-	            if (isFar(cand.getX(), cand.getY(), MIN_SEPARATION)) {
-	                enemies.add(cand);
-	                placed = true;
-	            }
-	        }
-	        if (!placed && cand != null) enemies.add(cand);
-	    }
-	}	
-	
+		final int triesPerEnemy = 24;
+		for (int i = 0; i < cant; i++) {
+			Enemy cand = null;
+			boolean placed = false;
+			for (int t = 0; t < triesPerEnemy && !placed; t++) {
+				cand = EnemyFactory.createRandomBasic();
+				if (isFar(cand.getPosition().x, cand.getPosition().y, MIN_SEPARATION)) {
+					enemies.add(cand);
+					placed = true;
+				}
+			}
+			if (!placed && cand != null)
+				enemies.add(cand);
+		}
+	}
+
 	private boolean isFar(float x, float y, float min) {
 		float m2 = min * min;
 		for (Enemy e : enemies) {
-			float dx = e.getX() - x, dy = e.getY() - y;
-			if (dx * dx + dy * dy < m2) return false;
+			float dx = e.getPosition().x - x, dy = e.getPosition().y - y;
+			if (dx * dx + dy * dy < m2)
+				return false;
 		}
 		return true;
 	}
-	
-	public void update(float delta) { for (Enemy e : enemies) e.update(delta); }
-	public void render(SpriteBatch batch) { for (Enemy e : enemies) e.draw(batch); }
-	
-	public List<Enemy> getEnemies() { return enemies; }
-	public int size() { return enemies.size(); }
-	public boolean isEmpty() { return enemies.isEmpty(); }
-	  
-	  
-	//creado para ronda
-	public void add(Enemy e) {
-	    enemies.add(e);
+
+	public void update(float delta) {
+		for (Enemy e : enemies)
+			e.update(delta);
 	}
-	  
-	//benjoid // Método útil
+
+	public void render(SpriteBatch batch) {
+		for (Enemy e : enemies)
+			e.draw(batch);
+	}
+
+	public List<Enemy> getEnemies() {
+		return enemies;
+	}
+
+	public int size() {
+		return enemies.size();
+	}
+
+	public boolean isEmpty() {
+		return enemies.isEmpty();
+	}
+
+	// creado para ronda
+	public void add(Enemy e) {
+		enemies.add(e);
+	}
+
+	// benjoid // Método útil
 	public boolean remove(Enemy enemy) {
 		return enemies.remove(enemy);
 	}

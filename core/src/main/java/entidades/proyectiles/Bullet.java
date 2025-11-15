@@ -1,55 +1,44 @@
 package entidades.proyectiles;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-
+import entidades.Entity;
 import entidades.Player;
 import enumeradores.recursos.EProjectileType;
-import factories.SpriteFactory;
 
 //Clase que representa una balla dentro del juego
 
 public class Bullet extends Projectile {
-	// velocidad de la bala eje x
-	private float xSpeed;
-	// velocidad de la bala eje y
-	private float ySpeed;
-	
-	public Bullet(float x, float y, float width, float rotation, float speed, Player p, boolean piercing) {
-		super(x, y, SpriteFactory.create(EProjectileType.BULLET_TEMPLATE), p, p.getWeapon().getDamage(), piercing);
+	public Bullet(float x, float y, float width, float rotation, float speed, int damage, boolean piercing) {
+		super(x, y, EProjectileType.HOLLOWPOINT, damage, piercing);
 
-		
-		getSpr().setBounds(x, y, width, width);
-        getSpr().setOriginCenter();
-        getSpr().setRotation(rotation - 90);
+		sprite.setBounds(x, y, width, width);
+		sprite.setOriginCenter();
+		sprite.setRotation(rotation - 90);
 
-        // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
 		float radians = (float) Math.toRadians(rotation);
-        this.xSpeed = (float) Math.cos(radians) * speed;
-        this.ySpeed = (float) Math.sin(radians) * speed;
+		velocity.scl(speed);
+		velocity.setAngleRad(radians);
 	}
-	
-    //movimiento de la bala y colision con el borde de la ventana
-    @Override
-    public void update(float delta, Player player) {
-        if (isDestroyed()) return;
 
-        // Mueve el sprite (que es ESTA entidad)
-        Sprite spr = getSpr(); // getSpr() es heredado de Entity
-        
-        spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
+	// movimiento de la bala y colision con el borde de la ventana
+	@Override
+	public void update(float delta, Player player) {
+		if (destroyed) return;
 
-        // Comprueba límites
-        if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() ||
-            spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
-            destroy();
-        }
-    }
+		// Mueve el sprite (que es ESTA entidad)
+		sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
+		
+		// Comprueba límites
+		if (!Entity.isInBounds(this)) destroy();
+	}
 
 	@Override
 	public void update(float delta) {
-		// TODO Auto-generated method stub
-		
-	} 
+		if (destroyed) return;
 
+		// Mueve el sprite (que es ESTA entidad)
+		sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
+
+		// Comprueba límites
+		if (!Entity.isInBounds(this)) destroy();
+	}
 }

@@ -5,26 +5,21 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import armas.LaserCannon;
+import armas.HeavyMachineGun;
 import armas.Melee;
 import armas.Weapon;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
-import factories.SpriteFactory;
 import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
-public class Player extends Entity {
+public class Player extends Creature {
 	private final float MAX_VELOCITY = 250.0f;
 	// Estado básico
 	private int score = 0;
     private int round = 1;
-    private int life = 100;
-
-	//fisica de si
-    private Vector2 velocity = new Vector2(0, 0);
 	private float rotation = 0f;
 	
 	//Visual y audio
@@ -39,7 +34,7 @@ public class Player extends Entity {
 	boolean isMoving = false;
 	  
 	//Arma inicial o por defecto
-	private Weapon weapon = new LaserCannon();
+	private Weapon weapon = new HeavyMachineGun();
 	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
@@ -47,14 +42,15 @@ public class Player extends Entity {
 	}
 	
 	public Player(float x, float y, EPlayerSkin skin) {
-		super(x, y, SpriteFactory.create(skin));
-		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		
-    	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-    	getSpr().setRotation(rotation);
-    	getSpr().setOriginCenter();
+		super(new Vector2(x, y), skin, 100);
+		// Lo pone al centro
+		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
     	
-    	animation = new AnimationHandler(AnimationFactory.createPlayer(skin), getSpr());
+		sprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+    	sprite.setRotation(rotation);
+    	sprite.setOriginCenter();
+    	
+    	animation = new AnimationHandler(AnimationFactory.createPlayer(skin), sprite);
 	}
 	 
 	@Override
@@ -74,12 +70,11 @@ public class Player extends Entity {
 	    
 	    Vector2 position = getPosition().cpy().add(velocity.cpy().scl(delta));
 	    
-	    // Logica de rebote
-	    borderBounce(position);
-	    getPosition().set(position);
+	    this.position.set(position);
+	    Entity.isInBounds(this);
 	    
-	    getSpr().setPosition(position.x, position.y);
-	    getSpr().setRotation(rotation);
+	    sprite.setPosition(position.x, position.y);
+	    sprite.setRotation(rotation);
 
 	    weapon.actualizar(delta);
 	}
@@ -89,7 +84,7 @@ public class Player extends Entity {
         // Si está herido, se podría aplicar un efecto de parpadeo con el color del batch
         if (hurted && hurtTime % 10 < 5) return;
         
-        animation.updateSprite(getSpr());
+        animation.updateSprite(getSprite());
         animation.handle(batch, isMoving, true);
 	}
 	
@@ -98,21 +93,17 @@ public class Player extends Entity {
 		// Solo recibe daño si no está herido (invulnerable)
 		if (hurted) return;
 		
-		this.life -= damage; //
+		this.hp -= damage;
 		this.hurted = true;
-		this.hurtTime = 120; // Invulnerable por 120 frames (aprox 2 segundos)
+		// Invulnerable por 120 frames (aprox 2 segundos)
+		this.hurtTime = 120; 
 		
-		if (hurtSound != null) {
+		if (hurtSound != null)
 			hurtSound.play();
-		}
 	}
 	
 	public boolean isHurt() {
 		return hurted;
-	}
-	
-	public boolean isDead() {
-		return life <= 0;
 	}
 	
 	//TODO revisar tema de la vida//
@@ -135,49 +126,19 @@ public class Player extends Entity {
     public void shoot(float delta, ProjectileManager manager) {    	
     	weapon.atacar(delta, this, manager);
     	
-    	if (weapon.getMunicion() == 0) 
+    	if (weapon.getStats().getAmmo() == 0) 
     		weapon = new Melee();
-    }
-    
-    private void borderBounce(Vector2 position) {
-    	if (position.x < 0) {
-    		// Invierte velocidad X
-    		velocity.x *= -1; 
-    		// Fija la posición al borde
-    		position.x = 0;        
-    	}
-        else if ((position.x + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
-        	velocity.x *= -1;
-    		position.x = Gdx.graphics.getWidth() - getSpr().getWidth();
-    	}
-    	
-    	if (position.y < 0) {
-        	velocity.y *= -1; // Invierte velocidad Y
-        	position.y = 0;        // Fija la posición al borde
-        }
-        else if ((position.y + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
-        	velocity.y *= -1;
-        	position.y = Gdx.graphics.getHeight() - getSpr().getHeight();
-        }
     }
 	
 	public void setWeapon(Weapon newWeapon) {
         this.weapon = newWeapon;
     }
-	
-	public void damage(int amount) {
-	    life -= amount;
-	    if (life < 0) life = 0;
-	}
 
 	// Getters básicos
 	public float getRotation() { return rotation; }
 	public Weapon getWeapon() { return weapon; }
 	public int getRound() { return round; }
 	public int getScore() { return score; }
-	public int getLife() { return life; }
 	
-	public boolean hasWeapon() {
-		return weapon.getMunicion() > 0;
-	}
+	public boolean hasWeapon() { return weapon.getStats().getDamage() > 0; }
 }

@@ -4,7 +4,8 @@ import interfaces.ITexture;
 
 public enum EEnemyType implements ITexture {
 	GENERIC("generic.png"),
-	POINTED("pointed.png");
+	POINTED("pointed.png"),
+	WATER("water.png");
 	
 	EEnemyType(String ruta) {
 		this.ruta = "textures/enemies/" + ruta;

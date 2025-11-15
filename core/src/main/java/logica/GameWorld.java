@@ -66,7 +66,7 @@ public class GameWorld {
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) player.accelerate(ACCELERATION);
 		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.accelerate(-ACCELERATION);
-		else player.applyFriction(0.2f);
+		else player.applyFriction(0.9f);
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
 			player.shoot(delta, gameLogicHandler.getProyectilManager());
