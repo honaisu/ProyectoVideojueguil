@@ -1,79 +1,55 @@
 package entidades.proyectiles;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import entidades.Player;
+import entidades.Entity;
 import enumeradores.recursos.EProjectileType;
 
 public class Swing extends Projectile {
-	// tiempo que dura activo el golpe
-	private float duracion = 0.25f;
-	// Contador
-	private float tiempoActivo = 0f;
-	// para que desaparezca el swing
+	/**
+	 *  Tiempo que dura activo el golpe
+	 */
+	private float duration = 0.25f;
+	/**
+	 *  Contador
+	 */
+	private float activeTime = 0f;
+	/**
+	 * para que desaparezca el swing
+	 */
+	private float ratio;
+	/**
+	 * Entidad de la que saldrá el swing
+	 */
+	private final Entity entity;
 
-	private float radio;
-
-	public Swing(Rectangle r, int damage, float radio, float rotation, float duration, boolean piercing) {
-		super(new Vector2(r.x, r.y), EProjectileType.SWING, damage, piercing);
-		this.duracion = duration;
-		this.radio = radio;
-
-		Projectile.calcularMuzzle(position, r, rotation, piercing);
-
-		sprite.setRotation(rotation);
-		sprite.setPosition(position.x + sprite.getOriginX(), position.y + sprite.getOriginY());
+	public Swing(Entity e, int damage, float ratio, float duration, boolean piercing) {
+		this(e, EProjectileType.SWING, damage, ratio, duration, piercing);
 	}
 	
-	public Swing(Rectangle r, EProjectileType type, int damage, float radio, float rotation, float duration, boolean piercing) {
-		super(new Vector2(r.x, r.y), type, damage, piercing);
-		this.duracion = duration;
-		this.radio = radio;
+	public Swing(Entity e, EProjectileType type, int damage, float radio, float duration, boolean piercing) {
+		super(new Vector2(e.getPosition().x, e.getPosition().y), type, damage, piercing);
+		this.entity = e;
+		this.duration = duration;
+		this.ratio = radio;
+		this.rotation = e.getRotation();
 
-		Projectile.calcularMuzzle(position, r, rotation, piercing);
+		Projectile.calcularMuzzle(position, e, piercing);
 
 		sprite.setRotation(rotation);
 		sprite.setPosition(position.x + sprite.getOriginX(), position.y + sprite.getOriginY());
-	}
-
-	public Swing(float muzzle[], float radio, Player p, float width, float height, float duracion,
-			boolean isBeam, boolean piercing) {
-
-		super(muzzle[0], muzzle[1], EProjectileType.SWING, p.getWeapon().getStats().getDamage(), piercing);
-
-		this.duracion = duracion;
-		this.radio = radio;
-
-		sprite.setBounds(muzzle[0], muzzle[1], width, height); // Usa el ancho y alto recibidos
-
-		if (isBeam) {// Lasers
-			sprite.setOrigin(width / 2f, radio);
-		} else {// Melee
-			sprite.setOriginCenter();
-		}
-
-		sprite.setRotation(muzzle[2] - 90);
-		sprite.setPosition(muzzle[0] - getSprite().getOriginX(), muzzle[1] - getSprite().getOriginY());
-	}
-
-	@Override
-	public void update(float delta, Player p) {
-		float rotation = calcularMuzzle(getPosition(), false, p);
-
-		mover(position, rotation - 90, radio);
-		if (isDestroyed())
-			return;
-
-		tiempoActivo += delta;
-		if (tiempoActivo > duracion) {
-			destroy();
-		}
 	}
 
 	@Override
 	public void update(float delta) {
-		// TODO Auto-generated method stub
+		this.rotation = entity.getRotation();
+		Projectile.calcularMuzzle(position, entity, piercing);
+		sprite.setRotation(this.rotation);
+		sprite.setPosition(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
 		
+		if (destroyed) return;
+		activeTime += delta;
+		if (activeTime > duration)
+			destroy();
 	}
 }

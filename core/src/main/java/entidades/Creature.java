@@ -9,7 +9,7 @@ import interfaces.ITexture;
  * <p>
  * Las criaturas tienen la posibilidad de tener una vida asociada.
  */
-public abstract class Creature extends Entity {
+public abstract class Creature extends Entity implements IRenderizable {
 	// La vida de la entidad :)
 	public final int totalHp;
 	protected int hp;
@@ -19,11 +19,7 @@ public abstract class Creature extends Entity {
 		this.totalHp = hp;
 		this.hp = hp;
 	}
-
-	public int getHp() {
-		return hp;
-	}
-
+	
 	/**
 	 * Reduce la vida del enemigo al recibir daño.
 	 */
@@ -37,4 +33,8 @@ public abstract class Creature extends Entity {
 	public boolean isDead() {
 		return this.hp <= 0;
 	}
+	public int getHp() {
+		return hp;
+	}
+
 }

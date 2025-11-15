@@ -4,14 +4,11 @@ package armas;
 import java.util.Random;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 
 import entidades.proyectiles.Bullet;
-import entidades.proyectiles.Projectile;
-import entidades.Player;
+import entidades.Entity;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
-import interfaces.ITexture;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
@@ -25,7 +22,7 @@ public class Shotgun extends Weapon {
 	}
 
 	@Override
-	public void crearProyectil(Player p, ProjectileManager manager) {
+	public void crearProyectil(Entity p, ProjectileManager manager) {
         float width = 20f;
         float vel = 10f;
         
@@ -42,7 +39,7 @@ public class Shotgun extends Weapon {
             Bullet bala = new Bullet(
             		p.getPosition().x, p.getPosition().y, width, angle,
                 vel + ra.nextInt(4),
-                stats.getDamage(),
+                state.getDamage(),
                 false);
             
             manager.add(bala);

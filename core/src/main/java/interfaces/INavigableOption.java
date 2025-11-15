@@ -11,6 +11,6 @@ import logica.MainGame;
 public interface INavigableOption extends IExecutableGame {
 	public String getNombre();
 	public int ordinal();
-	
+	@Override
 	public default void ejecutar(MainGame game) {}
 }

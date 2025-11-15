@@ -5,15 +5,27 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.Enemy;
+import entidades.IRenderizable;
 import factories.EnemyFactory;
 
-public class EnemyManager {
+public class EnemyManager implements IRenderizable {
 	// mio
 	private final List<Enemy> enemies = new ArrayList<>();
 	private static final float MIN_SEPARATION = 72f;
 
 	// vacio para las rondas creo
-	public EnemyManager() {
+	public EnemyManager() {}
+	
+	@Override
+	public void update(float delta) {
+		for (Enemy e : enemies)
+			e.update(delta);
+	}
+
+	@Override
+	public void draw(SpriteBatch batch) {
+		for (Enemy e : enemies)
+			e.draw(batch);
 	}
 
 	// mio //sgeun gemini mejor e mio xd// Tu spawner con lógica 'isFar'. Es mejor.
@@ -46,16 +58,8 @@ public class EnemyManager {
 		return true;
 	}
 
-	public void update(float delta) {
-		for (Enemy e : enemies)
-			e.update(delta);
-	}
-
-	public void render(SpriteBatch batch) {
-		for (Enemy e : enemies)
-			e.draw(batch);
-	}
-
+	// TODO ELIMINAR
+	@Deprecated
 	public List<Enemy> getEnemies() {
 		return enemies;
 	}

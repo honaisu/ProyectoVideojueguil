@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import entidades.proyectiles.Swing;
 import managers.ProjectileManager;
+import entidades.Entity;
 import entidades.Player;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
@@ -22,15 +23,15 @@ public class LaserGun extends Weapon {
     }
     
     @Override
-    public void crearProyectil(Player p, ProjectileManager manager) {
+    public void crearProyectil(Entity p, ProjectileManager manager) {
     	float width = 10f;
     	float height = 1000f;
     	Rectangle r = new Rectangle(p.getSprite().getX(), p.getSprite().getY(), width, height);
 		float duration = 0.25f;
 		
-		Swing rayo = new Swing(r, EProjectileType.LASER_GUN,
-				stats.getDamage(),
-				0, p.getRotation(),
+		Swing rayo = new Swing(p, EProjectileType.LASER_GUN,
+				state.getDamage(),
+				0,
 				duration, true);
 
 		manager.add(rayo);

@@ -1,7 +1,6 @@
 package entidades.proyectiles;
 
 import entidades.Entity;
-import entidades.Player;
 import enumeradores.recursos.EProjectileType;
 
 //Clase que representa una balla dentro del juego
@@ -19,26 +18,19 @@ public class Bullet extends Projectile {
 		velocity.setAngleRad(radians);
 	}
 
-	// movimiento de la bala y colision con el borde de la ventana
-	@Override
-	public void update(float delta, Player player) {
-		if (destroyed) return;
-
-		// Mueve el sprite (que es ESTA entidad)
-		sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
-		
-		// Comprueba límites
-		if (!Entity.isInBounds(this)) destroy();
-	}
-
+	/**
+	 * movimiento de la bala y colision con el borde de la ventana
+	 */
 	@Override
 	public void update(float delta) {
-		if (destroyed) return;
+		if (destroyed)
+			return;
 
 		// Mueve el sprite (que es ESTA entidad)
 		sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
 
 		// Comprueba límites
-		if (!Entity.isInBounds(this)) destroy();
+		if (!Entity.isInBounds(this))
+			destroy();
 	}
 }

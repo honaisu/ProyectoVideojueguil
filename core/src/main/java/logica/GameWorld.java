@@ -52,8 +52,7 @@ public class GameWorld {
 		this.handleInput(delta);
 		player.update(delta);
 		
-		//logica que el propio GameWolrd deebria manejar, no GameScreen
-	    gameLogicHandler.update(delta, player);
+	    gameLogicHandler.update(delta);
 		gameLogicHandler.handleCollisions(player);
 		
 		//Chekeamos que este completo

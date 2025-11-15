@@ -2,31 +2,31 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 
-import entidades.Player;
+import entidades.Entity;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
-import interfaces.IDisparable;
+import interfaces.IAtacable;
 import interfaces.ITexture;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
 //Clase Abstracta Arma generica
-public abstract class Weapon implements IDisparable {
+public abstract class Weapon implements IAtacable {
 	protected final Sound bulletSound;
 	protected final EDropType dropType;
-	protected final WeaponStats stats;
+	protected final WeaponState state;
 	protected final String name;
 	
-	public Weapon(String nombre, WeaponStats stats, Sound bulletSound, EDropType dropType) {
+	public Weapon(String nombre, WeaponState state, Sound bulletSound, EDropType dropType) {
 		this.name = nombre;
-		this.stats = stats;
+		this.state = state;
 		this.bulletSound = bulletSound;
 		this.dropType = dropType;
 	}
 
 	public Weapon(String nombre, int damage, float cadencia, int municionMax, Sound bulletSound, EDropType dropType) {
 		this.name = nombre;
-		this.stats = new WeaponStats(cadencia, municionMax, damage);
+		this.state = new WeaponState(cadencia, municionMax, damage);
 		this.bulletSound = bulletSound;
 		this.dropType = dropType;
 	}
@@ -37,24 +37,23 @@ public abstract class Weapon implements IDisparable {
 	}
 
 	/**
-	 * Método para crear el proyectil de cada arma
+	 * Método para crear el proyectil de cada arma, dependiendo de una entidad
 	 */
-	public abstract void crearProyectil(Player p, ProjectileManager manager);
+	public abstract void crearProyectil(Entity p, ProjectileManager manager);
 	
-	// metodo abstracto para crear es sonido del drop
+	/**
+	 * Método abstracto para crear es sonido del drop
+	 * @return
+	 */
 	public abstract Sound getPickupSound();
 	
 	@Override
-	public void atacar(float delta, Player p, ProjectileManager manager) {
-		actualizar(delta);
-		if (!puedeDisparar())
-			return;
-		if (stats.getAmmo() <= 0)
-			return;
-
-		restarMunicion(delta);
-		//if (puedeDisparar())
-			//reiniciarCooldown();
+	public void atacar(float delta, Entity p, ProjectileManager manager) {
+		state.update(delta);
+		if (!state.canShoot()) return;
+		
+		state.recordShot();
+		
 		crearProyectil(p, manager);
 
 		playSound();
@@ -65,38 +64,13 @@ public abstract class Weapon implements IDisparable {
 		bulletSound.play();
 	}
 
-	public void restarMunicion(float delta) {
-		stats.setLastShot(stats.getLastShot() + delta);
-		if (puedeDisparar()) {
-			stats.setAmmo(stats.getAmmo() - 1);
-			reiniciarCooldown();
-		}
-	}
-
-	// actualiza el timer entre disparo y disparo
-	public void actualizar(float delta) {
-		if (!puedeDisparar())
-			stats.setLastShot(stats.getLastShot() + delta);
-	}
-
-	// verifica si puede disparar cuando se haya cumplido el tiempo entre disparo y
-	// disparo
-	protected boolean puedeDisparar() {
-		return stats.getLastShot() >= stats.fireRate;
-	}
-
-	// reinicia el tiempo entre el disparo y el siguente
-	protected void reiniciarCooldown() {
-		stats.setLastShot(0);
-	}
-
 	// Getters y Setters
-	public WeaponStats getStats() {
-		return stats;
+	public WeaponState getState() {
+		return state;
 	}
 	
 	/**
-	 * metodo abstracto para crear la textura del drop
+	 * Metodo para devolver la textura esperada del drop
 	 */
 	public ITexture getDropTexture() {
 		return dropType;
