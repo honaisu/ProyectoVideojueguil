@@ -37,10 +37,20 @@ public class Bullet extends Projectile {
     }
 
     // para la explosion
-    public Bullet(Entity e, EProjectileType type, int damage, float speed, int scale, boolean piercing,
+    public Bullet(Vector2 spawnPosition, EProjectileType type, int damage, int scale, boolean piercing,
             float lifespan) {
-        this(e, type, damage, speed, scale, piercing);
+    	super(spawnPosition, type, damage, piercing);
         this.lifespan = lifespan;
+        
+        this.rotation = 0; // Las explosiones no giran
+
+        
+        sprite.setPosition(position.x, position.y);
+        sprite.setOriginCenter();
+
+        sprite.setBounds(position.x - (scale / 2f), position.y - (scale / 2f), scale, scale);
+
+        velocity.set(0, 0);
     }
 
 	/**

@@ -33,8 +33,8 @@ public class Rocket extends Projectile {
         velocity.setAngleRad(radians);
         
         this.currentSpeed = speed;
-        this.maxSpeed = 300f;
-        this.acceleration = 8f;
+        this.maxSpeed = 1600f;
+        this.acceleration = 800f;
 	}
 
 	@Override
@@ -53,12 +53,19 @@ public class Rocket extends Projectile {
         
         // Calcular velocidad X/Y basada en la velocidad actual
         //velocity.scl(currentSpeed);
-        velocity.add(position.cpy().nor().scl(currentSpeed));
+        float distanceThisFrame = currentSpeed * delta;
         
-        velocity.setAngleRad(radians);
+        float moveX = (float)Math.cos(radians) * distanceThisFrame;
+        float moveY = (float)Math.sin(radians) * distanceThisFrame;
+        
+        sprite.setPosition(sprite.getX() + moveX, sprite.getY() + moveY);
+        
+        //velocity.add(position.cpy().nor().scl(currentSpeed));
+        
+        //velocity.setAngleRad(radians);
         
         // Usamos delta para el movimiento
-        sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
+        //sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
 		
         if (!Entity.isInBounds(this))
 			destroy();
@@ -75,20 +82,21 @@ public class Rocket extends Projectile {
 	
 	private void spawnExplosion() {
         if (manager == null) return; // Seguridad //TODO
-
-        float explosionX = sprite.getX() + sprite.getWidth() / 2;
-        float explosionY = sprite.getY() + sprite.getHeight() / 2;
         
         // --- PARÁMETROS DE LA EXPLOSIÓN ---
-        int explosionSize = 350; 
-        float explosionSpeed = 0f; 
+        int explosionSize = 350;
         boolean isPiercing = true;
         float explosionLifespan = 0.8f;
 
+        float cX = sprite.getX();// + sprite.getWidth() / 2;
+        float cY = sprite.getY();// + sprite.getHeight() / 2;
+        Vector2 spawnPoint = new Vector2(cX, cY);
         
-        Bullet explosion = new Bullet(this, EProjectileType.FLAME, 100, explosionSpeed, explosionSize, isPiercing,
+
+        
+        Bullet explosion = new Bullet(spawnPoint, EProjectileType.FLAME, 100, explosionSize, isPiercing,
         		explosionLifespan);
-        explosion.setPosition(new Vector2(explosionX,explosionY));
+        //explosion.setPosition(new Vector2(explosionX + explosion.getSprite().getWidth()/2 , explosionY +explosion.getSprite().getHeight()/2));
 
         manager.add(explosion); 
     }

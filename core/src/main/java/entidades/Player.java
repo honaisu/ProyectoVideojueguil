@@ -31,7 +31,7 @@ public class Player extends Creature {
 	boolean isMoving = false;
 
 	// Arma inicial o por defecto
-	private Weapon weapon = new Melee();
+	private Weapon weapon = new RocketLauncher();
 
 	
 	public Player(float x, float y) {

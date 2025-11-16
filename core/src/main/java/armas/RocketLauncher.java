@@ -1,49 +1,31 @@
 package armas;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 
-import entidades.Player;
-import entidades.proyectiles.Bullet;
-import entidades.proyectiles.Projectile;
+import entidades.Entity;
 import entidades.proyectiles.Rocket;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
-import enumeradores.recursos.EProjectileType;
-import factories.SpriteFactory;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
 public class RocketLauncher extends Weapon {
 	public RocketLauncher() {
-		super("Ray Gun",
-				100, // daño
+		super("Ray Gun", 100, // daño
 				1.5f, // cadencia
 				5, // municion
-				AssetManager.getInstancia().getSound(EGameSound.SHOOT));
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT),
+				EDropType.ROCKET_LAUNCHER);
 	}
 
 	@Override
-	public void crearProyectil(Player p, ProjectileManager manager) {
-		float[] muzzle = Projectile.calcularMuzzle(p, false);
-		float width = 30f;
-		float vel = 0.02f;
+	public void crearProyectil(Entity p, ProjectileManager manager) {
+		int width = 30;
+		float vel = 30f;
 
-		Rocket rocket = new Rocket(muzzle[0], muzzle[1],
-				width,
-				muzzle[2],
-				vel,
-				p,
-				SpriteFactory.create(EProjectileType.ROCKET),
-				manager,
-				false);
+		Rocket rocket = new Rocket(p, state.getDamage(), width, vel, manager, false);
 		manager.add(rocket);
 
-	}
-
-	@Override
-	public Texture getDropTexture() {
-		return AssetManager.getInstancia().getTexture(EDropType.ROCKET_LAUNCHER);
 	}
 
 	@Override

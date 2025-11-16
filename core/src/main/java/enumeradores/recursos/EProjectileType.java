@@ -14,7 +14,7 @@ public enum EProjectileType implements ITexture {
 	ROUNDNOSE("roundnose.png"),
 	REDWIRE("redwire.png"),
 	RAYGUN("raypulse.png"),
-	ROCKET("rocket.png"),
+	ROCKET("rocket.png",64,64), //TODO perdon nacho hice es sprite 64x64 y con el DEFAULT_SIZE lo deja como 1/4 de la textura XD
 	FLAME("flame.png");
 	
 	EProjectileType(String ruta, int width, int height) {
