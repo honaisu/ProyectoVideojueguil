@@ -1,11 +1,9 @@
 package entidades.proyectiles;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
-import entidades.Player;
+import entidades.Entity;
 import enumeradores.recursos.EProjectileType;
-import factories.SpriteFactory;
 
 public class Flame extends Projectile {
 
@@ -17,36 +15,35 @@ public class Flame extends Projectile {
 	private float maxDistance;
 	private float finalScale;
 
-	public Flame(float x, float y, float width, float rotation, float speed, Player p, boolean piercing,
-			float maxDistance, float finalScale) {
-		super(x, y, SpriteFactory.create(EProjectileType.FLAME), p, p.getWeapon().getDamage(), piercing);
-		getSpr().setBounds(x, y, width, width);
-		getSpr().setOriginCenter();
-		getSpr().setRotation(rotation - 90);
+	public Flame(Entity e, int damage, float rotation, float speed, float scale, boolean piercing, float maxDistance,
+			float finalScale) {
+		super(Projectile.calcularMuzzle(new Vector2(), e, false), EProjectileType.FLAME, damage, piercing);
+
+		sprite.setBounds(position.x, position.y, scale, scale);
+		sprite.setOriginCenter();
+		sprite.setRotation(rotation - 90);
 
 		// Calcular velocidad en X e Y según el ángulo y la velocidad dadas
 		float radians = (float) Math.toRadians(rotation);
 		this.xSpeed = (float) Math.cos(radians) * speed;
 		this.ySpeed = (float) Math.sin(radians) * speed;
 
-		this.startX = x;
-		this.startY = y;
+		this.startX = position.x;
+		this.startY = position.y;
 		this.maxDistance = maxDistance;
 		this.finalScale = finalScale;
 	}
 
 	// movimiento de la bala y colision con el borde de la ventana
 	@Override
-	public void update(float delta, Player player) {
+	public void update(float delta) {
 		if (isDestroyed())
 			return;
 
-		Sprite spr = getSpr();
+		sprite.setPosition(sprite.getX() + xSpeed, sprite.getY() + ySpeed);
 
-		spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
-
-		float currentX = spr.getX();
-		float currentY = spr.getY();
+		float currentX = sprite.getX();
+		float currentY = sprite.getY();
 
 		// Calcular la distancia maxima de la flama
 		float distanceSq = (currentX - startX) * (currentX - startX) + (currentY - startY) * (currentY - startY);
@@ -62,18 +59,10 @@ public class Flame extends Projectile {
 		float travelPercent = currentDistance / maxDistance;
 
 		float currentScale = 1.0f + (finalScale - 1.0f) * travelPercent;
-		spr.setScale(currentScale);
+		sprite.setScale(currentScale);
 
-		if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() || spr.getY() < 0
-				|| spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
+		if (!Entity.isInBounds(this))
 			destroy();
-		}
-	}
-
-	@Override
-	public void update(float delta) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

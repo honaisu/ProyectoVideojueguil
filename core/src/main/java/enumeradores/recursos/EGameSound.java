@@ -11,22 +11,22 @@ import interfaces.IAssetPath;
 public enum EGameSound implements IAssetPath {
 	// Drops
 	DROP_HMG("drops/heavy_machine_gun.mp3"),
-	DROP_SHOTGUN("drops/shotgun.mp3"),
 	DROP_RL("drops/rocket_launcher.mp3"),
-	DROP_MELEE("drops/melee.mp3"),
 	DROP_LC("drops/laser_cannon.mp3"),
-	DROP_LG("drops/laser_gun.mp3"),
+	DROP_SHOTGUN("drops/shotgun.mp3"),
 	DROP_FS("drops/flame_shot.mp3"),
+	DROP_LG("drops/laser_gun.mp3"),
+	DROP_MELEE("drops/melee.mp3"),
 	DROP_RG("drops/ray_gun.mp3"),
 	// Weapons
-	SHOOT("weapons/shoot.mp3"),
 	SHOOT_LASER_CANNON("weapons/laser_cannon.mp3"),
 	SHOOT_LASER("weapons/laser.mp3"),
+	SHOOT("weapons/shoot.mp3"),
 	// Enemies
 	EXPLOSION("enemies/explosion.ogg"),
 	// Player
-	HURT("player/hurt.mp3"),
-	DEATH("player/death.mp3");
+	DEATH("player/death.mp3"),
+	HURT("player/hurt.mp3");
 	
 	private String ruta;
 	

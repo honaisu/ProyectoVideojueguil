@@ -3,11 +3,9 @@ package armas;
 import java.util.Random;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 
-import entidades.Player;
+import entidades.Entity;
 import entidades.proyectiles.Flame;
-import entidades.proyectiles.Projectile;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
 import managers.ProjectileManager;
@@ -15,13 +13,12 @@ import managers.assets.AssetManager;
 
 public class FlameShot extends Weapon {
 	public FlameShot() {
-		super("Flamethrower", 5, 0.08f, 120, AssetManager.getInstancia().getSound(EGameSound.SHOOT));
+		super("Flamethrower", 5, 0.08f, 120, AssetManager.getInstancia().getSound(EGameSound.SHOOT), EDropType.FLAME_SHOT);
 	}
 
 	@Override
-	public void crearProyectil(Player p, ProjectileManager manager) {
-		float[] muzzle = Projectile.calcularMuzzle(p, false);
-		float width = 20f;
+	public void crearProyectil(Entity p, ProjectileManager manager) {
+		float scale = 20;
 		float vel = 4f;
 
 		// simula una dispersion del fuego
@@ -32,22 +29,19 @@ public class FlameShot extends Weapon {
         float finalScale = 5.0f;
 
 		// Ángulo con desviación aleatoria
-		float angle = muzzle[2] + (ra.nextFloat() * spread * 2 - spread);
+		float angle = p.getRotation() + 90 + (ra.nextFloat() * spread * 2 - spread);
+		vel += ra.nextInt(2); 
 
-		Flame fire = new Flame(muzzle[0], muzzle[1], // posicion de la bala
-				width, // escala de la bala
-				angle, // angulo de la bala
-				vel + ra.nextInt(4),
-				p, true,
+		Flame fire = new Flame(p, // posicion de la bala
+				state.getDamage(), // escala de la bala
+				angle,
+				vel, // angulo de la bala
+				scale,
+				true,
 				maxDistance,
 				finalScale);
 		manager.add(fire);
 
-	}
-
-	@Override
-	public Texture getDropTexture() {
-		return AssetManager.getInstancia().getTexture(EDropType.FLAME_SHOT);
 	}
 
 	@Override

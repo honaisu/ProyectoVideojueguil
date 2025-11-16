@@ -5,13 +5,13 @@ import interfaces.ITexture;
 public enum EDropType implements ITexture {
 	// Drops
 	HEAVY_MACHINE_GUN("heavy.png"),
-	SHOTGUN("shotgun.png"),
 	ROCKET_LAUNCHER("rocket.png"),
-	MELEE("melee.png"),
 	LASER_CANNON("laser_gun.png"),
 	LASER_GUN("laser_gun.png"),
 	FLAME_SHOT("flame.png"),
-	RAY_GUN("ray_gun.png");
+	RAY_GUN("ray_gun.png"),
+	SHOTGUN("shotgun.png"),
+	MELEE("melee.png");
 	
 	EDropType(String ruta) {
 		this.ruta = "textures/drops/" + ruta;

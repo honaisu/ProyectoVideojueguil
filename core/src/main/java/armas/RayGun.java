@@ -3,7 +3,7 @@ package armas;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
-import entidades.Player;
+import entidades.Entity;
 import entidades.proyectiles.Bullet;
 import entidades.proyectiles.Projectile;
 import enumeradores.recursos.EDropType;
@@ -20,30 +20,18 @@ public class RayGun extends Weapon {
 				20,												// daño
 				0.4f, 											// cadencia
 				25, 											// municion
-				AssetManager.getInstancia().getSound(EGameSound.SHOOT));
+				EDropType.RAY_GUN);
 	}
 
 	@Override
-	public void crearProyectil(Player p, ProjectileManager manager) {
-		float[] muzzle = Projectile.calcularMuzzle(p, false);
-        float width = 30f;
-        float vel = 30f;
+	public void crearProyectil(Entity p, ProjectileManager manager) {
+        int width = 30;
+        int vel = 15;
         
-        Bullet bullet = new Bullet(muzzle[0], muzzle[1],
-        		width,
-        		muzzle[2],
-        		vel,
-        		p,
-        		SpriteFactory.create(EProjectileType.RAYGUN),
-        		true);
+        Bullet bullet = new Bullet(p, EProjectileType.RAYGUN, state.getDamage(), vel, width, true);
         manager.add(bullet);
 	}
-
-	@Override
-	public Texture getDropTexture() {
-		return AssetManager.getInstancia().getTexture(EDropType.RAY_GUN);
-	}
-
+	
 	@Override
 	public Sound getPickupSound() {
 		return AssetManager.getInstancia().getSound(EGameSound.DROP_RG);

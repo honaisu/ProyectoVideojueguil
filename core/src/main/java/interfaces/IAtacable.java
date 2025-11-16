@@ -13,5 +13,5 @@ public interface IAtacable {
 	 * @param e       Entidad donde spawneará el proyectil
 	 * @param manager Manager de proyectiles // TODO Revisar
 	 */
-	public void atacar(float delta, Entity e, ProjectileManager manager);
+	public void attack(Entity e, ProjectileManager manager);
 }
