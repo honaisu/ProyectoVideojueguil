@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import java.util.Random;
 
 import armas.*;
+
 import entidades.Enemy;
 import entidades.Player;
 import entidades.WeaponDrop;
@@ -103,7 +104,7 @@ public class CollisionManager {
         // Lógica de Drop
         if (Math.random() < enemy.getRareDropProbability()) {
             Weapon weaponToDrop = createRandomWeapon(); 
-            WeaponDrop drop = new WeaponDrop(enemy.getX(), enemy.getY(), weaponToDrop);
+            WeaponDrop drop = new WeaponDrop(enemy.getPosition().x, enemy.getPosition().y, weaponToDrop);
             dropManager.add(drop); 
         }
         
@@ -112,8 +113,8 @@ public class CollisionManager {
     }
 	
 	private Weapon createRandomWeapon() {
-        // Genera un número aleatorio basado en cuántas armas tienes
-        int weaponType = r.nextInt(7); // 0, 1, 2, 3
+        int weaponType = r.nextInt(6);
+
 
         switch (weaponType) {
             case 0:
@@ -123,13 +124,13 @@ public class CollisionManager {
             case 2:
                 return new Melee();
             case 3:
-            	return new LaserCannon();
+            	return new RocketLauncher();
             case 4:
             	return new FlameShot();
             case 5:
             	return new RayGun();
             case 6:
-            	return new RocketLauncher();
+            	return new LaserCannon();
             default:
                 return new Melee();
         }

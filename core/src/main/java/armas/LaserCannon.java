@@ -2,8 +2,12 @@ package armas;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 
+import entidades.proyectiles.Projectile;
+import entidades.proyectiles.Swing;
+import entidades.Entity;
 import entidades.Player;
 import entidades.proyectiles.Projectile;
 import entidades.proyectiles.Swing;
@@ -11,6 +15,7 @@ import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EProjectileType;
 import factories.SpriteFactory;
+import interfaces.ITexture;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
@@ -21,34 +26,22 @@ public class LaserCannon extends Weapon {
 				25,													// daño
 				0.9f, 												// cadencia
 				15, 												// municion
-				AssetManager.getInstancia().getSound(EGameSound.SHOOT_LASER_CANNON));	// sonido
+				AssetManager.getInstancia().getSound(EGameSound.SHOOT_LASER_CANNON),
+				EDropType.LASER_CANNON);	// sonido
     }
 
 	@Override
-	public void crearProyectil(Player p, ProjectileManager manager) {
-		float muzzle[] = Projectile.calcularMuzzle(p, true);
-		float width = 20f;
-		float height = 1000f;
+	public void crearProyectil(Entity p, ProjectileManager manager) {
 		float duration = 0.25f;
 		
-		float length = p.getSpr().getBoundingRectangle().getHeight() / 2f + 15f; // (Usando tu fix de la pregunta anterior)
-		
-		Swing rayo = new Swing(muzzle,
-				length,
-				p,
-				SpriteFactory.create(EProjectileType.LASER_CANNON),
-				width, 			// width
-				height, 		// height
-				duration, 		// duracion
-				true, 			// isBeam = true
-				true);
+		Swing rayo = new Swing(p, EProjectileType.LASER_GUN, state.getDamage(), 0, duration, true);
 
 		manager.add(rayo);
 	}
 
 	@Override
-	public Texture getDropTexture() {
-		return AssetManager.getInstancia().getTexture(EDropType.LASER_CANNON); //TODO
+	public ITexture getDropTexture() {
+		return EDropType.LASER_CANNON; //TODO
 	}
 
 	@Override

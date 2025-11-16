@@ -1,55 +1,60 @@
 package entidades.proyectiles;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
-import entidades.Player;
+import entidades.Entity;
+import enumeradores.recursos.EProjectileType;
 
 public class Swing extends Projectile {
-	// tiempo que dura activo el golpe
-    private float duracion = 0.25f;
-    // Contador
-    private float tiempoActivo = 0f;
-    // para que desaparezca el swing	
-    
-    private float radio;
-    
-    public Swing(float muzzle[], float radio, Player p, Sprite spr, 
-            float width, float height, float duracion, boolean isBeam, boolean piercing) {
+	/**
+	 *  Tiempo que dura activo el golpe
+	 */
+	private float lifespan = 0.25f;
+	/**
+	 *  Contador
+	 */
+	private float activeTime = 0f;
+	/**
+	 * distancia de la que saldrá el swing
+	 */
+	private float radius;
+	/**
+	 * para que identifique si es un laser o no
+	 */
+	private boolean isBeam;
 	
-		super(muzzle[0], muzzle[1], spr, p, p.getWeapon().getDamage(), piercing); 
+	private final Entity entity;
+
+	public Swing(Entity e, int damage, float duration, EProjectileType type, int width, int height, float radius, boolean piercing, boolean isBeam) {
+		//this(e, type, width, height, damage, duration, piercing);
+		super(Projectile.calcularMuzzle(new Vector2(), e, isBeam), type, damage, piercing);
+		this.entity = e;
+		this.lifespan = duration;
+		this.rotation = e.getRotation();
 		
-		this.duracion = duracion;
-		this.radio = radio;
+		this.isBeam = isBeam;
+		this.radius = radius;
 		
-		getSpr().setBounds(muzzle[0], muzzle[1], width, height); // Usa el ancho y alto recibidos
-	   
+		sprite.setBounds(position.x - sprite.getOriginX(), position.y - sprite.getOriginY(), width, height);
+		sprite.setRotation(rotation);
+		
 		if (isBeam){//Lasers
-			getSpr().setOrigin(width / 2f, radio);
+			sprite.setOrigin(width / 2f, radius);
 		} else{//Melee
-	   		getSpr().setOriginCenter();
+			sprite.setOriginCenter();
 		}
 		
-	   	getSpr().setRotation(muzzle[2]-90);
-	   	getSpr().setPosition(muzzle[0] - getSpr().getOriginX(), muzzle[1] - getSpr().getOriginY());
 	}
 
-    
-    @Override
-    public void update(float delta, Player p) {
-    	float muzzle[] = calcularMuzzle(p, false);
-    	
-        mover(muzzle[0], muzzle[1], muzzle[2]-90, radio);
-        if (isDestroyed()) return;
-
-        tiempoActivo += delta;
-        if (tiempoActivo > duracion) {
-            destroy();
-        }
-    }
-    //TODO
 	@Override
 	public void update(float delta) {
-		// TODO Auto-generated method stub
+		this.rotation = entity.getRotation();
+		Vector2 muzzle= Projectile.calcularMuzzle(position, entity, isBeam);
+		mover(muzzle, this.rotation, radius);
 		
+		if (destroyed) return;
+		activeTime += delta;
+		if (activeTime > lifespan)
+			destroy();
 	}
 }

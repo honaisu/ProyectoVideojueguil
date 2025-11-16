@@ -27,7 +27,7 @@ public class GameWorld {
 	
 	private final float ROTATE_ANGLE = 5.0f;
 	private final float ROTATE_ANGLE_SLOW = 1.0f;
-	private final float ACCELERATION = 0.2f;
+	private final float ACCELERATION = 100f;
 	private boolean estaEnPausa = false;
 	
 	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
@@ -53,8 +53,7 @@ public class GameWorld {
 		this.handleInput(delta);
 		player.update(delta);
 		
-		//logica que el propio GameWolrd deebria manejar, no GameScreen
-	    gameLogicHandler.update(delta, player);
+	    gameLogicHandler.update(delta);
 		gameLogicHandler.handleCollisions(player);
 		
 		//Chekeamos que este completo
@@ -72,10 +71,10 @@ public class GameWorld {
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.UP)) player.accelerate(ACCELERATION);
 		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) player.accelerate(-ACCELERATION);
-		else player.applyFriction(0.9f);
+		else player.applyFriction(52f*delta); //TODO nacho revisa si te va bien :3
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			player.shoot(delta, gameLogicHandler.getProyectilManager());
+			player.shoot(gameLogicHandler.getProyectilManager());
 			//player.getWeapon().disparar(player, this, delta);
 		}
 		

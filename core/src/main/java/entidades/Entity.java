@@ -1,9 +1,15 @@
 package entidades;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Vector2;
+
+import factories.SpriteFactory;
+import interfaces.ITexture;
 
 /**
  * Clase abstracta que define una <i>entidad</i> dentro de nuestro juego.
@@ -11,81 +17,142 @@ import com.badlogic.gdx.math.Polygon;
  * Cada entidad va a ser como un "objeto" que existe en el plano (pantalla),
  * veáse ejemplos como Jugador, Bala, Enemigo...
  */
-public abstract class Entity {
-	private float x;
-	private float y;
-	private Sprite sprite;
-	
-	private boolean destroyed = false;
-	
-	public Entity(float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
-	
-	public Entity(float x, float y, Sprite sprite) {
-		this(x, y);
-		this.sprite = sprite;
-	}
-	
-	public void mover(float centerX, float centerY, float rot, float radio) {
-		float radians = (float) Math.toRadians(rot + 90);
+public abstract class Entity implements IRenderizable {
+	protected Sprite sprite;
+	protected Vector2 velocity;
+	protected Vector2 position;
+	protected float rotation = 0f;
 
-	    float nuevoX = centerX + (float) Math.cos(radians) * radio;
-	    float nuevoY = centerY + (float) Math.sin(radians) * radio;
+	protected boolean destroyed = false;
 
-	    //getSpr().setPosition(nuevoX - sprite.getWidth() / 2, nuevoY - sprite.getHeight() / 2);
-	    getSpr().setPosition(nuevoX - getSpr().getOriginX(), nuevoY - getSpr().getOriginY());
-	    getSpr().setRotation(rot);
+	public Entity(Vector2 position, ITexture asset) {
+		this.position = position;
+		this.sprite = SpriteFactory.create(asset);
+		this.velocity = new Vector2();
 	}
-	
+
+	public Entity(Vector2 position, Vector2 velocity, ITexture asset) {
+		this.position = position;
+		this.sprite = SpriteFactory.create(asset);
+		this.velocity = velocity;
+	}
+
 	/**
-	 * Verifica la colision de un objeto de tipo BallHitbox
-	 * @param BallHitbox -> puede ser un asteroide
-	 * @return true en caso de colisionar con un BallHitbox, false en caso contrario
+	 * Método abstracto encargado de poder actualizar la lógica de la entidad.
 	 */
-	public boolean checkCollision(Entity e) {
-		return Intersector.overlapConvexPolygons(getRotatedPolygon(sprite), getRotatedPolygon(e.getSpr()));
-	}
-	
+	@Override
+	public abstract void update(float delta);
+
+	@Override
 	public void draw(SpriteBatch batch) {
-        this.sprite.draw(batch);
-    }
-	
+		sprite.draw(batch);
+	}
+
+	// METODOS
+	public void mover(Vector2 center, float rotation, float radio) {
+		Vector2 offset = new Vector2(radio, 0);
+		offset.setAngleDeg(rotation + 90);
+		Vector2 newPosition = center.cpy().add(offset);
+		
+		this.position.set(newPosition);
+
+		sprite.setPosition(newPosition.x - sprite.getWidth() / 2, newPosition.y - sprite.getHeight() / 2);
+		sprite.setRotation(rotation);
+	}
+
+	public void mover(float centerX, float centerY, float rotation, float radio) {
+		this.mover(new Vector2(centerX, centerY), rotation, radio);
+	}
+
+	/**
+	 * Verifica la colision con una entidad, consiguiendo su "figura"
+	 */
+	public boolean checkCollision(Entity entity) {
+		return Intersector.overlapConvexPolygons(getRotatedPolygon(this.sprite), getRotatedPolygon(entity.getSprite()));
+	}
+
 	/**
 	 * Hace un poligono auxiliar para que la Hitbox al rotar cumpla con su tamaño
-	 * @param Sprite del objeto
-	 * @return
 	 */
-	public Polygon getRotatedPolygon(Sprite spr) {
-	    float[] vertices = new float[]{
-	        0, 0,
-	        spr.getWidth(), 0,
-	        spr.getWidth(), spr.getHeight(),
-	        0, spr.getHeight()
-	    };
+	public Polygon getRotatedPolygon(Sprite sprite) {
+		float[] vertices = { 0, 0, sprite.getWidth(), 0, sprite.getWidth(), sprite.getHeight(), 0, sprite.getHeight() };
 
-	    Polygon p = new Polygon(vertices);
-	    p.setOrigin(spr.getOriginX(), spr.getOriginY());
-	    p.setPosition(spr.getX(), spr.getY());
-	    p.setRotation(spr.getRotation());
-	    return p;
+		Polygon p = new Polygon(vertices);
+		p.setOrigin(sprite.getOriginX(), sprite.getOriginY());
+		p.setPosition(sprite.getX(), sprite.getY());
+		p.setRotation(sprite.getRotation());
+		return p;
 	}
-	
+
+	public void destroy() {
+		destroyed = true;
+	}
+
+	public boolean isDestroyed() {
+		return destroyed;
+	}
+
+	public Vector2 getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
+
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(float speed, float angleDeg) {
+		this.velocity.set(speed, 0);
+		this.velocity.setAngleDeg(angleDeg);
+	}
+
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
+	}
+
+	public float getRotation() {
+		return rotation;
+	}
+
+	public Sprite getSprite() {
+		return sprite;
+	}
+
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
+	}
+
 	/**
-     * Actualiza la lógica de la entidad
-     */
-    public abstract void update(float delta); 
-    
-    public void destroy() { destroyed = true; }
-	public boolean isDestroyed() { return destroyed; }
+	 * Método estático encargado de poder verificar si una entidad se encuentra
+	 * dentro de la "pantalla", modificando su posición para mantenerlo dentrosi es
+	 * necesario.
+	 * 
+	 * @param entity Entidad que se verifica si está dentro de los bordes o no.
+	 */
+	public static boolean isInBounds(Entity entity) {
+		float w = entity.getSprite().getWidth(), h = entity.getSprite().getHeight();
+		float maxX = Gdx.graphics.getWidth() - w;
+		float maxY = Gdx.graphics.getHeight() - h;
 
-	public float getX() { return x; }
-	public void setX(float x) {	this.x = x;	}
-	
-	public float getY() { return y;	}
-	public void setY(float y) {	this.y = y;	}
+		Vector2 copy = entity.getPosition().cpy();
+		Vector2 position = entity.getPosition();
+		Vector2 velocity = entity.getVelocity();
 
-	public Sprite getSpr() { return sprite; }
-	public void setSpr(Sprite spr) { this.sprite = spr; }
+		position.x = MathUtils.clamp(position.x, 0, maxX);
+		if (position.x != copy.x) {
+			velocity.x = -velocity.x;
+			return false;
+		}
+
+		position.y = MathUtils.clamp(position.y, 0, maxY);
+		if (position.y != copy.y) {
+			velocity.y = -velocity.y;
+			return false;
+		}
+
+		return true;
+	}
 }

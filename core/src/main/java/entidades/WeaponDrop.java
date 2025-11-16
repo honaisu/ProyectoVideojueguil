@@ -1,7 +1,7 @@
 package entidades;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 import armas.Weapon;
 
@@ -11,16 +11,16 @@ public class WeaponDrop extends Entity {
 	private float duration = 3f;
 	
 	public WeaponDrop(float x, float y, Weapon weapon) {
-        super(x, y, new Sprite(weapon.getDropTexture())); 
+        super(new Vector2(x, y), weapon.getDropTexture()); 
         
         this.weaponToGive = weapon;
-        getSpr().scale(1f);
-        getSpr().setPosition(x, y);
+        sprite.scale(1f);
+        sprite.setPosition(x, y);
     }
 	
 	@Override
     public void draw(SpriteBatch batch) {
-        getSpr().draw(batch);
+        sprite.draw(batch);
     }
 	
 	@Override

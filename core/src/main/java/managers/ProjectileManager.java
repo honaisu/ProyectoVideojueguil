@@ -6,17 +6,35 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import entidades.Player;
 import entidades.proyectiles.Projectile;
+import entidades.IRenderizable;
 
-public class ProjectileManager {
+public class ProjectileManager implements IRenderizable {
 	private final List<Projectile> proyectiles = new ArrayList<>();
 	private final List<Projectile> toAdd = new ArrayList<>();
 	
+	/*@Override
+	public void update(float delta) {
+		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
+		Iterator<Projectile> iterator = proyectiles.iterator();
+
+	    while (iterator.hasNext()) {
+	        Projectile proyectil = iterator.next();
+	        if (proyectil == null) {
+	        	iterator.remove();
+	        	continue;
+	        }
+	        proyectil.update(delta);
+	        if (proyectil.isDestroyed()) {
+	            iterator.remove();
+	        }
+	    }
+    }*/
+	
 	public void add(Projectile proyectil) {
 		if (proyectil == null) return;
-
 		toAdd.add(proyectil);
+
 	}
 	
 	public boolean remove(Projectile proyectil) {
@@ -31,8 +49,7 @@ public class ProjectileManager {
 		if (proyectiles.isEmpty()) return null;
 		return proyectiles.get(0);
 	}
-	
-	public void update(float delta, Player player) {
+	public void update(float delta) {
 		if (!toAdd.isEmpty()) {
 			proyectiles.addAll(toAdd);
 			toAdd.clear();
@@ -46,7 +63,7 @@ public class ProjectileManager {
 	        	iterator.remove();
 	        	continue;
 	        }
-	        proyectil.update(delta, player);
+	        proyectil.update(delta);
 	        if (proyectil.isDestroyed()) {
 	            iterator.remove();
 	        }
@@ -58,7 +75,6 @@ public class ProjectileManager {
             proyectil.draw(batch);
         }
     }
-	
 	public void clear() {
 		proyectiles.clear();
 	}

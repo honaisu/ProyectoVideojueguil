@@ -79,7 +79,7 @@ public class GameScreen extends BaseScreen {
 		//ahora antes de "dibujar" le preguntamos al GameWorld//
 		//String currentRoundName = world.getCurrentRoundName();
 		//batch.begin();
-		world.getGameLogicHandler().render(batch);
+		world.getGameLogicHandler().draw(batch);
 		world.getPlayer().draw(batch);
 		//hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
 		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), levelName, roundName);

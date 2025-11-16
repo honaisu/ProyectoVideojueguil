@@ -2,62 +2,62 @@ package entidades;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 
 import armas.*;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
-import factories.SpriteFactory;
+import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
-public class Player extends Entity {
-	private final float MAX_VELOCITY = 10.0f;
+
+public class Player extends Creature {
+	private final float MAX_VELOCITY = 300.0f;
 	// Estado básico
-	private int life = 100;
-
-	// fisica de si
-	private float xVel = 0f;
-	private float yVel = 0f;
-	private float rotation = 0f;
-
+	private int score = 0;
+	private int round = 1;
 	// Visual y audio
-
 	private Sound hurtSound = AssetManager.getInstancia().getSound(EGameSound.HURT);
-	private Animation<TextureRegion> animation;
-	private float stateTime = 0f;
+	private AnimationHandler animation;
 
 	// Lógica de Daño merge
 	private boolean hurted = false;
-	private int hurtTime; // TODO
+	private int hurtTime;
 	private float iFrames = 0f;
 
-	// Arma inicial o por defecto
-	private Weapon weapon = new FlameShot();
+	boolean isMoving = false;
 
+	// Arma inicial o por defecto
+	private Weapon weapon = new Melee();
+
+	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
 		this(x, y, EPlayerSkin.ORIGINAL);
 	}
 
 	public Player(float x, float y, EPlayerSkin skin) {
-		super(x, y, SpriteFactory.create(skin));
-		animation = AnimationFactory.createPlayer(skin);
+		super(new Vector2(x, y), skin, 100);
+		// Lo pone al centro
+		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
-		// getSpr().scale(1f);
-		getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		getSpr().setOriginCenter();
+		sprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		sprite.setRotation(rotation);
+		sprite.setOriginCenter();
+
+		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), sprite);
 	}
 
 	@Override
 	public void update(float delta) {
-		boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+		// el 0.1f es un margen de error
+		isMoving = !velocity.isZero(0.1f);
 		if (isMoving)
-			stateTime += delta;
+			animation.updateStateTime(delta);
+		;
 
 		// Lógica de daño
 		if (hurted) {
@@ -67,45 +67,33 @@ public class Player extends Entity {
 		}
 		if (iFrames > 0f)
 			iFrames -= delta;
+		
+		if(weapon != null) {
+			weapon.getState().update(delta);
+		}
 
-		xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
-		yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
 
-		float positionX = getSpr().getX() + xVel;
-		float positionY = getSpr().getY() + yVel;
+		velocity.limit(MAX_VELOCITY);
 
-		// Logica de rebote
-		borderBounce(positionX, positionY);
+		Vector2 position = getPosition().cpy().add(velocity.cpy().scl(delta));
 
-		getSpr().setPosition(positionX, positionY);
-		getSpr().setRotation(rotation);
+		this.position.set(position);
+		Entity.isInBounds(this);
 
-		weapon.update(delta);
+		sprite.setPosition(position.x, position.y);
+		sprite.setRotation(rotation);
+
 	}
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		TextureRegion currentFrame;
-		boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
-
-		if (isMoving) {
-			currentFrame = animation.getKeyFrame(stateTime, true);
-		} else {
-			currentFrame = animation.getKeyFrame(0, true);
-		}
-
 		// Si está herido, se podría aplicar un efecto de parpadeo con el color del
 		// batch
-		if (hurted) {
-			// Lógica simple de parpadeo
-			if (hurtTime % 10 < 5) {
-				return;
-			}
-		}
+		if (hurted && hurtTime % 10 < 5)
+			return;
 
-		batch.draw(currentFrame, getSpr().getX(), getSpr().getY(), getSpr().getOriginX(), getSpr().getOriginY(),
-				getSpr().getWidth(), getSpr().getHeight(), getSpr().getScaleX(), getSpr().getScaleY(),
-				getSpr().getRotation());
+		animation.updateSprite(getSprite());
+		animation.handle(batch, isMoving, true);
 	}
 
 	// TODO revisar tema de la vida//
@@ -114,63 +102,45 @@ public class Player extends Entity {
 		if (hurted)
 			return;
 
-		this.life -= damage; //
+		this.hp -= damage;
 		this.hurted = true;
-		this.hurtTime = 120; // Invulnerable por 120 frames (aprox 2 segundos)
+		// Invulnerable por 120 frames (aprox 2 segundos)
+		this.hurtTime = 120;
 
-		if (hurtSound != null) {
+		if (hurtSound != null)
 			hurtSound.play();
-		}
 	}
 
 	public boolean isHurt() {
 		return hurted;
 	}
 
-	public boolean isDead() {
-		return life <= 0;
-	}
 	// TODO revisar tema de la vida//
-
 	public void rotate(float amount) {
 		this.rotation += amount;
 	}
 
 	public void accelerate(float amount) {
-		xVel -= (float) Math.sin(Math.toRadians(rotation)) * amount;
-		yVel += (float) Math.cos(Math.toRadians(rotation)) * amount;
+		Vector2 acceleration = new Vector2(0, 1);
+		acceleration.setAngleDeg(rotation + 90);
+		acceleration.scl(amount);
+
+		velocity.add(acceleration);
 	}
 
 	public void applyFriction(float friction) {
-		xVel *= friction;
-		yVel *= friction;
+		velocity.scl(friction);
 	}
 
-	public void shoot(float delta, ProjectileManager manager) {
-		weapon.atack(delta, this, manager);
+	public void shoot(ProjectileManager manager) {
+		weapon.attack(this, manager);
 
-		if (weapon.getAmmo() == 0) {
+		if (weapon.getState().getAmmo() == 0)
 			weapon = new Melee();
-		}
-	}
-
-	private void borderBounce(float positionX, float positionY) {
-		if ((positionX) < 0 || (positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
-			xVel *= -1;
-		}
-		if ((positionY) < 0 || (positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
-			yVel *= -1;
-		}
 	}
 
 	public void setWeapon(Weapon newWeapon) {
 		this.weapon = newWeapon;
-	}
-
-	public void damage(int amount) {
-		life -= amount;
-		if (life < 0)
-			life = 0;
 	}
 
 	// Getters básicos
@@ -182,11 +152,15 @@ public class Player extends Entity {
 		return weapon;
 	}
 
-	public int getLife() {
-		return life;
+	public int getRound() {
+		return round;
+	}
+
+	public int getScore() {
+		return score;
 	}
 
 	public boolean hasWeapon() {
-		return weapon.getAmmo() > 0;
+		return weapon.getState().getAmmo() > 0 && !(weapon instanceof Melee);
 	}
 }
