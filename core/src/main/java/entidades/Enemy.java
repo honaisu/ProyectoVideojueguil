@@ -99,6 +99,15 @@ public class Enemy extends Entity {
 	public boolean isDead() {
 		return this.healthPoints <= 0;
 	}
+	
+	
+	/**
+     * Rebota contra un obstáculo sólido.
+     */
+    public void bounce() {
+        vx *= -1; 
+        vy *= -1;
+    }
 
 	// --- Getters ---
 	

@@ -14,240 +14,275 @@ import factories.AnimationFactory;
 import factories.SpriteFactory;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
-
+import entidades.obstaculos.DamageHazard;
 
 public class Player extends Entity {
 	private final float MAX_VELOCITY = 10.0f;
-	// Estado básico 
+	// Estado básico
 	private int score = 0;
-    private int round = 1;
-    private int life = 100;
+	private int round = 1;
+	private int life = 100;
 
-	//fisica de si
+	// fisica de si
 	private float xVel = 0f;
 	private float yVel = 0f;
 	private float rotation = 0f;
-	
-	//Visual y audio
-	
+
+	// Visual y audio
+
 	private Sound hurtSound = AssetManager.getInstancia().getSound(EGameSound.HURT);
 	private Animation<TextureRegion> animation;
 	private float stateTime = 0f;
-		
-	//Lógica de Daño merge
+
+	// Lógica de Daño merge
 	private boolean hurted = false;
-	private int hurtTime;           //TODO
+	private int hurtTime; // TODO
 	private float iFrames = 0f;
-	  
-	//Arma inicial o por defecto
+	private float puddleCooldown = 0f; // Cooldown para el daño de charco (se reduce el culdawn de daño si no mal
+										// recuerdo)
+
+	// Arma inicial o por defecto
 	private Weapon weapon = new LaserCannon();
-	
+
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
 		this(x, y, EPlayerSkin.ORIGINAL);
 	}
-	
+
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(x, y, SpriteFactory.create(skin));
 		animation = AnimationFactory.createPlayer(skin);
 
-		//getSpr().scale(1f);
-    	getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-    	getSpr().setOriginCenter();
+		// getSpr().scale(1f);
+		getSpr().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		getSpr().setOriginCenter();
 	}
-	 
+
 	@Override
 	public void update(float delta) {
-	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
-	    if (isMoving) stateTime += delta;
+		boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+		if (isMoving)
+			stateTime += delta;
 
-	    // Lógica de daño
-	    if (hurted) {
-	      hurtTime--;
-	      if (hurtTime <= 0) hurted = false;
-	    }
-	    if (iFrames > 0f) iFrames -= delta;
+		// Lógica de daño
+		if (hurted) {
+			hurtTime--;
+			if (hurtTime <= 0)
+				hurted = false;
+		}
+		if (iFrames > 0f)
+			iFrames -= delta;
 
-	    xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
-	    yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
+		// cuando chocamos con el charco
+		if (puddleCooldown > 0)
+			puddleCooldown -= delta; // Restamos al timer del charco
 
-	    float positionX = getSpr().getX() + xVel;
-	    float positionY = getSpr().getY() + yVel;
+		xVel = MathUtils.clamp(xVel, -MAX_VELOCITY, MAX_VELOCITY);
+		yVel = MathUtils.clamp(yVel, -MAX_VELOCITY, MAX_VELOCITY);
 
-	    // Logica de rebote 
-	    borderBounce(positionX, positionY);
-	    
-	    getSpr().setPosition(positionX, positionY);
-	    getSpr().setRotation(rotation);
+		float positionX = getSpr().getX() + xVel;
+		float positionY = getSpr().getY() + yVel;
 
-	    weapon.actualizar(delta);
-	  }
+		// Logica de rebote
+		borderBounce(positionX, positionY);
 
- /*TODO
-	public void draw(SpriteBatch batch) {
-	    TextureRegion currentFrame;
-	    boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+		getSpr().setPosition(positionX, positionY);
+		getSpr().setRotation(rotation);
 
-	    currentFrame = isMoving ? animation.getKeyFrame(stateTime, true)
-	                            : animation.getKeyFrame(0f, true);
+		weapon.actualizar(delta);
+	}
 
-	    if (hurted) {
-	      if ((hurtTime % 10) < 5) return; // Parpadeo
-	    }
-
-	    batch.draw(
-	      currentFrame,
-	      getSpr().getX(), getSpr().getY(),
-	      getSpr().getOriginX(), getSpr().getOriginY(),
-	      getSpr().getWidth(), getSpr().getHeight(),
-	      getSpr().getScaleX(), getSpr().getScaleY(),
-	      getSpr().getRotation()
-	    );
-	  }
-
-
-        // Rebote en bordes
-        float positionX = getSpr().getX() + xVel;
-    	float positionY = getSpr().getY() + yVel;
-        this.borderBounce(positionX, positionY);
-
-        // Aplicar velocidad a la posición
-        getSpr().setPosition(positionX, positionY);
-        getSpr().setRotation(rotation);
-
-        // Actualizar el arma
-        weapon.actualizar(delta);
-    }
-	*/
+	/*
+	 * TODO public void draw(SpriteBatch batch) { TextureRegion currentFrame;
+	 * boolean isMoving = (Math.abs(xVel) > 0.1f || Math.abs(yVel) > 0.1f);
+	 * 
+	 * currentFrame = isMoving ? animation.getKeyFrame(stateTime, true) :
+	 * animation.getKeyFrame(0f, true);
+	 * 
+	 * if (hurted) { if ((hurtTime % 10) < 5) return; // Parpadeo }
+	 * 
+	 * batch.draw( currentFrame, getSpr().getX(), getSpr().getY(),
+	 * getSpr().getOriginX(), getSpr().getOriginY(), getSpr().getWidth(),
+	 * getSpr().getHeight(), getSpr().getScaleX(), getSpr().getScaleY(),
+	 * getSpr().getRotation() ); }
+	 * 
+	 * 
+	 * // Rebote en bordes float positionX = getSpr().getX() + xVel; float positionY
+	 * = getSpr().getY() + yVel; this.borderBounce(positionX, positionY);
+	 * 
+	 * // Aplicar velocidad a la posición getSpr().setPosition(positionX,
+	 * positionY); getSpr().setRotation(rotation);
+	 * 
+	 * // Actualizar el arma weapon.actualizar(delta); }
+	 */
 	@Override
 	public void draw(SpriteBatch batch) {
- 		TextureRegion currentFrame;
- 		boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
+		TextureRegion currentFrame;
+		boolean isMoving = (Math.abs(xVel) > 0.1 || Math.abs(yVel) > 0.1);
 
- 	    if (isMoving) {
- 	        currentFrame = animation.getKeyFrame(stateTime, true);
- 	    } else {
- 	        currentFrame = animation.getKeyFrame(0, true);
- 	    }
-         
-        // Si está herido, se podría aplicar un efecto de parpadeo con el color del batch
-        if (hurted) {
-            // Lógica simple de parpadeo
-            if (hurtTime % 10 < 5) {
-                return;
-            }
-        }
+		if (isMoving) {
+			currentFrame = animation.getKeyFrame(stateTime, true);
+		} else {
+			currentFrame = animation.getKeyFrame(0, true);
+		}
 
-	    batch.draw(currentFrame,
-	    		getSpr().getX(), getSpr().getY(),
-	    		getSpr().getOriginX(), getSpr().getOriginY(),
-	    		getSpr().getWidth(), getSpr().getHeight(),
-	    		getSpr().getScaleX(), getSpr().getScaleY(),
-	    		getSpr().getRotation());
+		// Si está herido, se podría aplicar un efecto de parpadeo con el color del
+		// batch
+		if (hurted) {
+			// Lógica simple de parpadeo
+			if (hurtTime % 10 < 5) {
+				return;
+			}
+		}
+
+		batch.draw(currentFrame, getSpr().getX(), getSpr().getY(), getSpr().getOriginX(), getSpr().getOriginY(),
+				getSpr().getWidth(), getSpr().getHeight(), getSpr().getScaleX(), getSpr().getScaleY(),
+				getSpr().getRotation());
 	}
-	
-	//TODO revisar tema de la vida//
+
+	// TODO revisar tema de la vida//
 	public void takeDamage(int damage) {
 		// Solo recibe daño si no está herido (invulnerable)
-		if (hurted) return;
-		
+		if (hurted)
+			return;
+
 		this.life -= damage; //
 		this.hurted = true;
 		this.hurtTime = 120; // Invulnerable por 120 frames (aprox 2 segundos)
-		
+
 		if (hurtSound != null) {
 			hurtSound.play();
 		}
 	}
-	
+
 	public boolean isHurt() {
 		return hurted;
 	}
-	
+
 	public boolean isDead() {
 		return life <= 0;
 	}
-	//TODO revisar tema de la vida//
+	// TODO revisar tema de la vida//
 
 	public void rotate(float amount) {
-        this.rotation += amount;
-    }
+		this.rotation += amount;
+	}
 
-    public void accelerate(float amount) {
-        xVel -= (float) Math.sin(Math.toRadians(rotation)) * amount;
-        yVel += (float) Math.cos(Math.toRadians(rotation)) * amount;
-    }
+	public void accelerate(float amount) {
+		xVel -= (float) Math.sin(Math.toRadians(rotation)) * amount;
+		yVel += (float) Math.cos(Math.toRadians(rotation)) * amount;
+	}
 
-    public void applyFriction(float friction) {
-        xVel *= friction;
-        yVel *= friction;
-    }
-    
-    public void shoot(float delta, ProjectileManager manager) {    	
-    	weapon.atacar(delta, this, manager);
-    	
-    	if (weapon.getMunicion() == 0) {
-    		weapon = new Melee();
-    	}
-    }
-    
-    private void borderBounce(float positionX, float positionY) {
-    	if ((positionX) < 0 || 
-    		(positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
-    		xVel *= -1;
-    	}
-        if ((positionY) < 0 || 
-        	(positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
-        	yVel *= -1;
-        }
-    }
-	
+	public void applyFriction(float friction) {
+		xVel *= friction;
+		yVel *= friction;
+	}
+
+	public void shoot(float delta, ProjectileManager manager) {
+		weapon.atacar(delta, this, manager);
+
+		if (weapon.getMunicion() == 0) {
+			weapon = new Melee();
+		}
+	}
+
+	private void borderBounce(float positionX, float positionY) {
+		if ((positionX) < 0 || (positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
+			xVel *= -1;
+		}
+		if ((positionY) < 0 || (positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
+			yVel *= -1;
+		}
+	}
+
 	public void setWeapon(Weapon newWeapon) {
-        this.weapon = newWeapon;
-    }
-/*
-  private void borderBounce(float positionX, float positionY) {
-    // Rebote horizontal
-    if (positionX < 0f || (positionX + getSpr().getWidth()) > Gdx.graphics.getWidth()) {
-      xVel *= -1f;
-      // Corrige posición para no salir
-      if (positionX < 0f) positionX = 0f;
-      else positionX = Gdx.graphics.getWidth() - getSpr().getWidth();
-    }
-    // Rebote vertical
-    if (positionY < 0f || (positionY + getSpr().getHeight()) > Gdx.graphics.getHeight()) {
-      yVel *= -1f;
-      if (positionY < 0f) positionY = 0f;
-      else positionY = Gdx.graphics.getHeight() - getSpr().getHeight();
-    }
-    // Aplica corrección local
-    getSpr().setPosition(positionX, positionY);
-  }
-  */
-/*
-  // Llamado por el CollisionManager al detectar choque con Enemy
-  public void onHitByEnemy(personajes.Enemy e) {
-    if (iFrames > 0f) return;   // invulnerable
-    damage(1);
-    iFrames = 0.5f;             // medio segundo de invulnerabilidad
-    hurted = true;
-    hurtTime = 30;              // frames de parpadeo, ajusta si usas delta
-    if (hurtSound != null) hurtSound.play();
-  }*/
+		this.weapon = newWeapon;
+	}
+	/*
+	 * private void borderBounce(float positionX, float positionY) { // Rebote
+	 * horizontal if (positionX < 0f || (positionX + getSpr().getWidth()) >
+	 * Gdx.graphics.getWidth()) { xVel *= -1f; // Corrige posición para no salir if
+	 * (positionX < 0f) positionX = 0f; else positionX = Gdx.graphics.getWidth() -
+	 * getSpr().getWidth(); } // Rebote vertical if (positionY < 0f || (positionY +
+	 * getSpr().getHeight()) > Gdx.graphics.getHeight()) { yVel *= -1f; if
+	 * (positionY < 0f) positionY = 0f; else positionY = Gdx.graphics.getHeight() -
+	 * getSpr().getHeight(); } // Aplica corrección local
+	 * getSpr().setPosition(positionX, positionY); }
+	 */
+	/*
+	 * // Llamado por el CollisionManager al detectar choque con Enemy public void
+	 * onHitByEnemy(personajes.Enemy e) { if (iFrames > 0f) return; // invulnerable
+	 * damage(1); iFrames = 0.5f; // medio segundo de invulnerabilidad hurted =
+	 * true; hurtTime = 30; // frames de parpadeo, ajusta si usas delta if
+	 * (hurtSound != null) hurtSound.play(); }
+	 */
 
-  public void damage(int amount) {
-    life -= amount;
-    if (life < 0) life = 0;
-  }
+	//Cuando choca con algo ve si es pua o charco y ve como aplica el daño y similar//
+	//lo llama el ColisionManager
+	public void onHazardCollision(DamageHazard hazard) {
 
-  // Getters básicos
-  public float getRotation() { return rotation; }
-  public Weapon getWeapon() { return weapon; }
-  public int getRound() { return round; }
-  public int getScore() { return score; }
-  public int getLife() { return life; }
+		if (hazard.getDamageType() == DamageHazard.DamageType.SPIKE) {
+			// PUAS
+			// Usamos 'takeDamage' porque es un golpe fuerte
+			// y queremos los i-frames y el parpadeo.
+			takeDamage(hazard.getDamage());
 
-  public boolean hasWeapon() {
-    return weapon.getMunicion() > 0;
-  }
+		} else if (hazard.getDamageType() == DamageHazard.DamageType.PUDDLE) {
+			// CHARCO
+			// Revisamos nuestro cooldown *privado* de charco (osea es menor el cooldown)
+			if (puddleCooldown <= 0) {
+
+				// Aplicamos el daño (bajo) directamente
+				this.life -= hazard.getDamage();
+				if (life < 0)
+					life = 0;
+
+				// Reiniciamos el cooldown 
+				this.puddleCooldown = 0.5f;
+
+			}
+		}
+	}
+
+	
+	//Rebota contra un obstáculo sólido. 	 
+	public void bounce() {
+		xVel *= -1;
+		yVel *= -1;
+
+		// Empuja al jugador fuera del bloque para evitar bug de quedarse como "pegado"
+		float push = 1.0f;
+		getSpr().setPosition(getSpr().getX() + xVel * push, getSpr().getY() + yVel * push);
+	}
+
+	public void damage(int amount) {
+		life -= amount;
+		if (life < 0)
+			life = 0;
+	}
+
+	// Getters básicos
+	public float getRotation() {
+		return rotation;
+	}
+
+	public Weapon getWeapon() {
+		return weapon;
+	}
+
+	public int getRound() {
+		return round;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public int getLife() {
+		return life;
+	}
+
+	public boolean hasWeapon() {
+		return weapon.getMunicion() > 0;
+	}
 }
