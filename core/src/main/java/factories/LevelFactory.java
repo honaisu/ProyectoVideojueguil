@@ -146,7 +146,7 @@ public class LevelFactory {
 				// Spawnean fuera de la pantalla (izquierda)
 				Enemy e = new Enemy(-100, (float) (Math.random() * 600 + 100), size, drop, health, damage);
 
-				e.setPolarVelocityLocal(100f, 0);
+				e.setVelocity(100f, 0);
 				em.add(e);
 			}
 		}));
@@ -162,7 +162,7 @@ public class LevelFactory {
 				float x = (float) (Math.random() * 1000 + 100);
 				Enemy e = new Enemy(x, -100, size, drop, health, damage);
 				
-				e.setPolarVelocityLocal(90f, 90);
+				e.setVelocity(90f, 90);
 				em.add(e);
 			}
 		}));
@@ -195,7 +195,7 @@ public class LevelFactory {
                 // Una leve variación de velocidad para que no sea perfecto
                 float finalSpeed = baseSpeed + (float)(Math.random() * 20) - 10;
 
-                e.setPolarVelocityLocal(finalSpeed, finalAngle);
+                e.setVelocity(finalSpeed, finalAngle);
                 em.add(e);
             }
         }));
@@ -209,11 +209,11 @@ public class LevelFactory {
 
 			// 2 "Depredadores" más fuertes con movimiento fijo
 			Enemy p1 = new Enemy(100, 700, 100f, 0.2f, 100, 20);
-			p1.setPolarVelocityLocal(150f, 300); // Rápido y hacia abajo-izquierda
+			p1.setVelocity(150f, 300); // Rápido y hacia abajo-izquierda
 			em.add(p1);
 
 			Enemy p2 = new Enemy(1100, 700, 100f, 0.2f, 100, 20);
-			p2.setPolarVelocityLocal(150f, 240); // Rápido y hacia abajo-derecha
+			p2.setVelocity(150f, 240); // Rápido y hacia abajo-derecha
 			em.add(p2);
 		}));
 
@@ -226,7 +226,7 @@ public class LevelFactory {
 			// El Jefe
 			Enemy boss = new Enemy(600, 900, 250f, 1.0f, 500, 35);
 
-			boss.setPolarVelocityLocal(40f, 270);
+			boss.setVelocity(40f, 270);
 			em.add(boss);
 		}));
 
@@ -249,7 +249,7 @@ public class LevelFactory {
 				float x = (float) (Math.random() * 1000 + 100);
 				Enemy e = new Enemy(x, 900, size, drop, health, damage);
 
-				e.setPolarVelocityLocal(130f, 270);
+				e.setVelocity(130f, 270);
 				em.add(e);
 			}
 		}));
@@ -268,7 +268,7 @@ public class LevelFactory {
 
 				Enemy e = new Enemy(x, y, size, drop, health, damage);
 
-				e.setPolarVelocityLocal(110f, angle);
+				e.setVelocity(110f, angle);
 				em.add(e);
 			}
 		}));
@@ -285,7 +285,7 @@ public class LevelFactory {
 				// Spawnean en el centro
 				Enemy e = new Enemy(600, 400, size, drop, health, damage);
 
-				e.setPolarVelocityLocal(200f, angles[i]);
+				e.setVelocity(200f, angles[i]);
 				em.add(e);
 			}
 		}));
@@ -303,14 +303,14 @@ public class LevelFactory {
 			for (int i = 0; i < 4; i++) {
 				float x = (float) (Math.random() * 1000 + 100);
 				Enemy e = new Enemy(x, 900, 90f, 0.1f, 90, 18);
-				e.setPolarVelocityLocal(130f, 270);
+				e.setVelocity(130f, 270);
 				em.add(e);
 			}
 
 			// El Jefe
 			Enemy boss = new Enemy(600, 800, 250f, 1.0f, 600, 40);
 			// Rebotará por toda la pantalla
-			boss.setPolarVelocityLocal(80f, 225);
+			boss.setVelocity(80f, 225);
 			em.add(boss);
 		}));
 
@@ -333,7 +333,7 @@ public class LevelFactory {
 				float y = (float) (Math.random() * 600 + 100);
 				Enemy e = new Enemy(1300, y, size, drop, health, damage);
 
-				e.setPolarVelocityLocal(130f, 180);
+				e.setVelocity(130f, 180);
 				em.add(e);
 			}
 		}));
@@ -349,7 +349,7 @@ public class LevelFactory {
 				float x = (float) (Math.random() * 1000 + 100);
 				Enemy e = new Enemy(x, 900, size, drop, health, damage);
 
-				e.setPolarVelocityLocal(150f, 270);
+				e.setVelocity(150f, 270);
 				em.add(e);
 			}
 		}));
@@ -363,13 +363,13 @@ public class LevelFactory {
 			// 3 desde la izquierda
 			for (int i = 0; i < 3; i++) {
 				Enemy e = new Enemy(-100, (float) (Math.random() * 600 + 100), size, drop, health, damage);
-				e.setPolarVelocityLocal(250f, 15f); // Muy rápido, ángulo superficial
+				e.setVelocity(250f, 15f); // Muy rápido, ángulo superficial
 				em.add(e);
 			}
 			// 3 desde la derecha
 			for (int i = 0; i < 3; i++) {
 				Enemy e = new Enemy(1300, (float) (Math.random() * 600 + 100), size, drop, health, damage);
-				e.setPolarVelocityLocal(250f, 165f); // Muy rápido, ángulo superficial
+				e.setVelocity(250f, 165f); // Muy rápido, ángulo superficial
 				em.add(e);
 			}
 		}));
@@ -390,27 +390,27 @@ public class LevelFactory {
 
 			// Arriba Izq -> Abajo Der
 			Enemy g1 = new Enemy(100, 700, guardSize, guardDrop, guardHealth, guardDamage);
-			g1.setPolarVelocityLocal(160f, 315);
+			g1.setVelocity(160f, 315);
 			em.add(g1);
 
 			// Arriba Der -> Abajo Izq
 			Enemy g2 = new Enemy(1100, 700, guardSize, guardDrop, guardHealth, guardDamage);
-			g2.setPolarVelocityLocal(160f, 225);
+			g2.setVelocity(160f, 225);
 			em.add(g2);
 
 			// Abajo Izq -> Arriba Der
 			Enemy g3 = new Enemy(100, 100, guardSize, guardDrop, guardHealth, guardDamage);
-			g3.setPolarVelocityLocal(160f, 45);
+			g3.setVelocity(160f, 45);
 			em.add(g3);
 
 			// Abajo Der -> Arriba Izq
 			Enemy g4 = new Enemy(1100, 100, guardSize, guardDrop, guardHealth, guardDamage);
-			g4.setPolarVelocityLocal(160f, 135);
+			g4.setVelocity(160f, 135);
 			em.add(g4);
 
 			// 2. El Jefe (lento, pero tanque)
 			Enemy boss = new Enemy(600, 900, 300f, 1.0f, 1000, 50);
-			boss.setPolarVelocityLocal(30f, 270); // Muy lento hacia abajo
+			boss.setVelocity(30f, 270); // Muy lento hacia abajo
 			em.add(boss);
 		}));
 

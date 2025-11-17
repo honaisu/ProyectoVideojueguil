@@ -3,8 +3,8 @@ package enumeradores.recursos;
 import interfaces.IAssetPath;
 
 public enum EGameMusic implements IAssetPath {
-	MAIN("doom.mp3", true),
-	TUTORIAL("tutorial.mp3", false);
+	TUTORIAL("tutorial.mp3", false),
+	MAIN("doom.mp3", true);
 
 	private final String ruta;
 	private final boolean loop;

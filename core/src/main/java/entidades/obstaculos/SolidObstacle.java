@@ -1,17 +1,18 @@
 package entidades.obstaculos;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import entidades.Entity;
 import enumeradores.recursos.EObstacleSkin;
-import factories.SpriteFactory;
+//import factories.SpriteFactory; ya no se ocupa creo
 
 public class SolidObstacle extends Entity {
 
     public SolidObstacle(float x, float y) {
         // Siempre usa la skin BLOCK // en vola poner uno fondo ma wonito (nachoid)
-    	super(x, y, SpriteFactory.create(EObstacleSkin.BLOCK));
+    	super(new Vector2(x, y), EObstacleSkin.BLOCK);
         
-        getSpr().setPosition(x, y);
+    	this.sprite.setPosition(x, y);
     }
 
     @Override

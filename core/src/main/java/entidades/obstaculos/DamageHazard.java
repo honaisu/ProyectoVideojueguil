@@ -1,9 +1,10 @@
 package entidades.obstaculos;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import entidades.Entity;
 import enumeradores.recursos.EObstacleSkin;
-import factories.SpriteFactory;
+//import factories.SpriteFactory;
 
 public class DamageHazard extends Entity {
 
@@ -17,13 +18,13 @@ public class DamageHazard extends Entity {
 
     public DamageHazard(float x, float y, EObstacleSkin skin, DamageType type, int damageAmount) {
         // Usa la skin específica que le pasa la fábrica
-        super(x, y, SpriteFactory.create(skin));
+    	super(new Vector2(x, y), skin); //pero ahora adaptado al vector 2 u_u
         
         this.type = type;
         this.damageAmount = damageAmount;
         
         // getSpr().setAlpha(0.8f); // sirve para poner trsparente los obstaculos en caso de
-        getSpr().setPosition(x, y); 
+        this.sprite.setPosition(x, y);
     }
 
     // Getters para que el Player pueda preguntar

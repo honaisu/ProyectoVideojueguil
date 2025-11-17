@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
 import enumeradores.recursos.EPlayerSkin;
 import enumeradores.recursos.EProjectileType;
-import interfaces.IAssetPath;
 import interfaces.ITexture;
 import managers.assets.AssetManager;
 

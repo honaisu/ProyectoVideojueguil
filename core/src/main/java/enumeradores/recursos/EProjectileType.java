@@ -3,20 +3,28 @@ package enumeradores.recursos;
 import interfaces.ITexture;
 
 public enum EProjectileType implements ITexture {
-	BULLET_TEMPLATE("bullet_template.png", 32, 32),
+	// ESPECIALES
 	LASER_CANNON("laser_cannon.png", 96, 32),
-	HOLLOWPOINT("hollowpoint.png", 32, 32),
 	LASER_GUN("laser_gun.png", 96, 32),
-	ROUNDNOSE("roundnose.png", 32, 32),
-	REDWIRE("redwire.png", 32, 32),
 	SWING("swing.png", 96, 64),
-	FLAME("flame.png", 32, 32),
-	;
+	// Los que usan un sprite "default"
+	// BALAS
+	BULLET_TEMPLATE("bullet_template.png"),
+	HOLLOWPOINT("hollowpoint.png"),
+	ROUNDNOSE("roundnose.png"),
+	REDWIRE("redwire.png"),
+	RAYGUN("raypulse.png"),
+	ROCKET("rocket.png",64,64), //TODO perdon nacho hice es sprite 64x64 y con el DEFAULT_SIZE lo deja como 1/4 de la textura XD
+	FLAME("flame.png");
 	
 	EProjectileType(String ruta, int width, int height) {
 		this.ruta = "textures/projectiles/" + ruta; 
 		this.width = width;
 		this.height = height;
+	}
+	// Inicia las balas con textura 32x32
+	EProjectileType(String ruta) {
+		this(ruta, DEFAULT_SIZE/2, DEFAULT_SIZE/2);
 	}
 
 	private final String ruta;

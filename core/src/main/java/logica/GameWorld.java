@@ -27,7 +27,8 @@ public class GameWorld {
 	private float currentLevelFriction = 0.9f; // tipo flag para ver que fricciones tenemos actualemnte (normal es 0.9f)
 
 	private final float ROTATE_ANGLE = 5.0f;
-	private final float ACCELERATION = 0.2f;
+	private final float ROTATE_ANGLE_SLOW = 1.0f;
+	private final float ACCELERATION = 100f;
 	private boolean estaEnPausa = false;
 
 	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
@@ -62,8 +63,8 @@ public class GameWorld {
 		this.handleInput(delta);
 		player.update(delta);
 
-		// logica que el propio GameWolrd deebria manejar, no GameScreen
-		gameLogicHandler.update(delta, player);
+		gameLogicHandler.update(delta);
+
 		gameLogicHandler.handleCollisions(player);
 
 		// Chekeamos que este completo
@@ -71,25 +72,34 @@ public class GameWorld {
 	}
 
 	private void handleInput(float delta) {
-		if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-			player.rotate(ROTATE_ANGLE);
-		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-			player.rotate(-ROTATE_ANGLE);
 
+		// Lógica de rotación de benjoid con coso de C
+		if ((Gdx.input.isKeyPressed(Input.Keys.C))) { // Mayor precision
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+				player.rotate(ROTATE_ANGLE_SLOW);
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+				player.rotate(-ROTATE_ANGLE_SLOW);
+		} else { // Movimiento normal
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+				player.rotate(ROTATE_ANGLE);
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+				player.rotate(-ROTATE_ANGLE);
+		}
+
+		// Lógica de aceleración
 		if (Gdx.input.isKeyPressed(Input.Keys.UP))
 			player.accelerate(ACCELERATION);
 		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
 			player.accelerate(-ACCELERATION);
 		else
-			// player.applyFriction(0.9f);
+			// Lógica de fricción de 'HEAD'
 			player.applyFriction(this.currentLevelFriction);
 
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-			player.shoot(delta, gameLogicHandler.getProyectilManager());
-			// player.getWeapon().disparar(player, this, delta);
+			player.shoot(gameLogicHandler.getProyectilManager());
 		}
 
-		// "manteniendo" la idea se marcar si está en pausa o no
+		// La idea se marcar si está en pausa o no
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			estaEnPausa = true;
 		}
@@ -147,7 +157,7 @@ public class GameWorld {
 		if (currentLevel == null)
 			return; // Aún no ha cargado nada
 
-		// Si estamos esperando 
+		// Si estamos esperando
 		// Y la lista de enemigos está vacía
 		if (waitingForNextRound && gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
 
@@ -181,7 +191,7 @@ public class GameWorld {
 	}
 
 	/**
-	 * Devuelve el nombre del NIVEL actual 
+	 * Devuelve el nombre del NIVEL actual
 	 */
 	public String getCurrentLevelName() {
 		if (currentLevel != null) {
@@ -191,7 +201,7 @@ public class GameWorld {
 	}
 
 	/**
-	 * Devuelve el nombre de la RONDA actual 
+	 * Devuelve el nombre de la RONDA actual
 	 */
 	public String getCurrentRoundName() {
 		if (currentLevel != null) {

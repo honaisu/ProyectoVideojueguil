@@ -4,5 +4,5 @@ import entidades.Player;
 import managers.ProjectileManager;
 
 public interface IDisparable {
-	public void atacar(float delta, Player p, ProjectileManager manager);
+	public void atack(float delta, Player p, ProjectileManager manager);
 }

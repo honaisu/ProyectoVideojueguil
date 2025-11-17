@@ -1,62 +1,49 @@
 package armas;
 
-
 import java.util.Random;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 
-import armas.proyectiles.Bullet;
-import armas.proyectiles.Projectile;
-import entidades.Player;
+import entidades.proyectiles.Bullet;
+import entidades.Entity;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
 
 public class Shotgun extends Weapon {
 	public Shotgun() {
-		super("Shotgun",
-				10,												// daño
-				2.5f, 											// cadencia
-				8, 												// municion
-				AssetManager.getInstancia().getSound(EGameSound.SHOOT));	// sonido
+		super("Shotgun", 10, // daño
+				2f, // cadencia
+				8, EDropType.SHOTGUN);
 	}
 
 	@Override
-	public void crearProyectil(Player p, ProjectileManager manager) {
-        float[] muzzle = Projectile.calcularMuzzle(p, false);
-        float width = 20f;
-        float vel = 10f;
-        
-        //simula una dispersion de balas aleatorias
-        Random ra = new Random();
-        
-        int pellets = 8;
-        int spread = 15;
+	public void crearProyectil(Entity p, ProjectileManager manager) {
+		int width = 20;
+		int vel = 7;
 
-        for (int i = 0; i < pellets; i++) {
-            // Ángulo con desviación aleatoria
-            float angle = muzzle[2] + (ra.nextFloat() * spread * 2 - spread);
+		// simula una dispersion de balas aleatorias
+		Random ra = new Random();
 
-            Bullet bala = new Bullet(
-            		muzzle[0], muzzle[1],	// posicion de la bala
-                width,                    	// escala de la bala
-                angle,						// angulo de la bala
-                vel + ra.nextInt(4),     	// velocidad levemente aleatoria
-                p,
-                false);
-            manager.add(bala);
-        }
-  
+		int pellets = 8;
+		int spread = 15;
+
+		for (int i = 0; i < pellets; i++) {
+			// Ángulo con desviación aleatoria
+			float angle = (p.getRotation() + 90) + (ra.nextFloat() * spread * 2 - spread);
+			vel += ra.nextInt(2);
+
+			Bullet bullet = new Bullet(p, EProjectileType.ROUNDNOSE, state.getDamage(), vel, width, angle, false);
+
+			manager.add(bullet);
+		}
+
 	}
-	@Override
-    public Texture getDropTexture() {
-        return AssetManager.getInstancia().getTexture(EDropType.SHOTGUN);
-    }
 
-    @Override
-    public Sound getPickupSound() {
-        return AssetManager.getInstancia().getSound(EGameSound.DROP_SHOTGUN);
-    }
+	@Override
+	public Sound getPickupSound() {
+		return AssetManager.getInstancia().getSound(EGameSound.DROP_SHOTGUN);
+	}
 }

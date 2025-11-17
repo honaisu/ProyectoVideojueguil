@@ -7,10 +7,11 @@ import com.badlogic.gdx.audio.Sound;
 import java.util.Random;
 
 import armas.*;
-import armas.proyectiles.Projectile;
+
 import entidades.Enemy;
 import entidades.Player;
 import entidades.WeaponDrop;
+import entidades.proyectiles.Projectile;
 import enumeradores.recursos.EGameSound;
 import managers.assets.AssetManager;
 
@@ -38,10 +39,11 @@ public class CollisionManager {
 
 	public int handleCollisions(Player player, List<Projectile> projectiles, List<Enemy> enemies,
 			DropManager dropManager, ObstacleManager obstacleManager) {
+		
 		int totalScore = handleProjectileVsEnemy(projectiles, enemies, dropManager);
 		handlePlayerVsEnemy(player, enemies);
-		handlePlayerVsDrops(player, dropManager);
-
+		handlePlayerVsDrops(player, dropManager); 
+		// Lógica de Obstáculos 
 		handlePlayerVsHazards(player, obstacleManager);
 		handleSolidCollisions(player, enemies, obstacleManager);
 
@@ -109,123 +111,20 @@ public class CollisionManager {
 	}
 
 	private int handleEnemyDeath(Enemy enemy, Iterator<Enemy> iterator, DropManager dropManager) {
-		if (explosionSound != null)
-			explosionSound.play(0.1f);
+        if (explosionSound != null) explosionSound.play(0.1f);
+        
+        // Lógica de Drop
+        if (Math.random() < enemy.getRareDropProbability()) {
+            Weapon weaponToDrop = createRandomWeapon(); 
+			// Se usa getPosition() de benjoid, que es cmo la logica actual
+            WeaponDrop drop = new WeaponDrop(enemy.getPosition().x, enemy.getPosition().y, weaponToDrop);
+            dropManager.add(drop); 
+        }
+        
+        iterator.remove(); // Eliminar enemigo de la lista
+        return scorePerEnemy;
+    }
 
-		// Lógica de Drop
-		if (Math.random() < enemy.getRareDropProbability()) {
-			Weapon weaponToDrop = createRandomWeapon();
-			WeaponDrop drop = new WeaponDrop(enemy.getX(), enemy.getY(), weaponToDrop);
-			dropManager.add(drop);
-		}
-
-		iterator.remove(); // Eliminar enemigo de la lista
-		return scorePerEnemy;
-	}
-
-	/**
-	 * ESTE ES EL MÉTODO DE COLISIÓN PRINCIPAL (de origin/dia) Es el que debemos
-	 * llamar desde GameLogicHandler. Maneja Proyectil vs Enemigo Y Jugador vs
-	 * Enemigo.
-	 */
-	/*
-	 * public int handleCollisions(Player player, List<Projectile> projectiles,
-	 * List<Enemy> enemies, DropManager dropManager) { int totalScore = 0;
-	 * 
-	 * // Los iteradores se utilizan para poder... iterar... Iterator<Projectile>
-	 * projectileIterator = projectiles.iterator(); while
-	 * (projectileIterator.hasNext()) { Projectile projectile =
-	 * projectileIterator.next();
-	 * 
-	 * boolean isPiercingWeapon = (player.getWeapon() instanceof Melee ||
-	 * player.getWeapon() instanceof LaserCannon);
-	 * 
-	 * Iterator<Enemy> enemyIterator = enemies.iterator();
-	 * 
-	 * while (enemyIterator.hasNext()) { Enemy enemy = enemyIterator.next();
-	 * 
-	 * if (!projectile.checkCollision(enemy)) continue;
-	 * 
-	 * if (isPiercingWeapon) {//Melee o LaserCannon // ya golpeo al enemigo con este
-	 * proyectil if (!projectile.hasHit(enemy)) {
-	 * 
-	 * // Daño enemy.takeDamage(player.getWeapon().getDamage());
-	 * projectile.registerHit(enemy);
-	 * 
-	 * if(enemy.isDead()) { if (explosionSound != null) explosionSound.play(0.1f);
-	 * totalScore += scorePerEnemy;
-	 * 
-	 * if (Math.random() < enemy.getRareDropProbability()) { Weapon weaponToDrop =
-	 * createRandomWeapon(); WeaponDrop drop = new WeaponDrop(enemy.getX(),
-	 * enemy.getY(), weaponToDrop); dropManager.add(drop); } enemyIterator.remove();
-	 * } }
-	 * 
-	 * } else { //Arma normal enemy.takeDamage(player.getWeapon().getDamage());
-	 * 
-	 * projectileIterator.remove();
-	 * 
-	 * if(enemy.isDead()) { if (explosionSound != null) explosionSound.play(0.1f);
-	 * totalScore += scorePerEnemy;
-	 * 
-	 * if (Math.random() < enemy.getRareDropProbability()) { Weapon weaponToDrop =
-	 * createRandomWeapon(); WeaponDrop drop = new WeaponDrop(enemy.getX(),
-	 * enemy.getY(), weaponToDrop); dropManager.add(drop); } enemyIterator.remove();
-	 * }
-	 * 
-	 * // Como el proyectil se destruyó, salimos del loop de enemigos break; } }
-	 * 
-	 * }
-	 * 
-	 * // --- 2) Colisiones: Jugador vs Enemigos --- Iterator<Enemy> enemyIterator =
-	 * enemies.iterator();while(enemyIterator.hasNext()) { Enemy enemy =
-	 * enemyIterator.next();
-	 * 
-	 * // Usamos el 'isHurt()' fusionado que incluye iFrames if
-	 * (player.checkCollision(enemy) && !player.isHurt()) {
-	 * 
-	 * // El jugador recibe daño del enemigo player.takeDamage((int)
-	 * enemy.getDamage());
-	 * 
-	 * // El enemigo también se destruye (opcional) if (explosionSound != null)
-	 * explosionSound.play(0.1f); enemyIterator.remove(); } }return totalScore; }
-	 * 
-	 * // para los drops public void handlePlayerVsDrops(Player player, DropManager
-	 * dropManager) {
-	 * 
-	 * Iterator<WeaponDrop> dropIterator = dropManager.getDrops().iterator();
-	 * 
-	 * while (dropIterator.hasNext()) { WeaponDrop drop = dropIterator.next();
-	 * 
-	 * // Si el jugador colisiona con el drop if (player.checkCollision(drop)) {
-	 * 
-	 * Weapon pickedUpWeapon = drop.getWeapon();
-	 * 
-	 * player.setWeapon(pickedUpWeapon);
-	 * 
-	 * pickedUpWeapon.getPickupSound().play();
-	 * 
-	 * dropIterator.remove();
-	 * 
-	 * } } }
-	 */
-
-	private Weapon createRandomWeapon() {
-		// Genera un número aleatorio basado en cuántas armas tienes
-		int weaponType = r.nextInt(4); // 0, 1, 2, 3
-
-		switch (weaponType) {
-		case 0:
-			return new HeavyMachineGun();
-		case 1:
-			return new Shotgun();
-		case 2:
-			return new Melee();
-		case 3:
-			return new LaserCannon();
-		default:
-			return new Melee();
-		}
-	}
 
 	// Colision de cuando el juagador choca con un obsttaculo de daño
 	public void handlePlayerVsHazards(Player player, ObstacleManager obstacleManager) {
@@ -262,5 +161,34 @@ public class CollisionManager {
 			}
 		}
 	}
+	
+	
+	
+	
+	
+	private Weapon createRandomWeapon() {
+        int weaponType = r.nextInt(6); //deberia mser (7) ?
+
+
+        switch (weaponType) {
+            case 0:
+            	return new HeavyMachineGun();
+            case 1:
+            	return new Shotgun();
+            case 2:
+                return new Melee();
+            case 3:
+            	return new RocketLauncher();
+            case 4:
+            	return new FlameShot();
+            case 5:
+            	return new RayGun();
+            case 6:
+            	return new LaserCannon();
+            default:
+                return new Melee();
+        }
+    }
+
 
 }

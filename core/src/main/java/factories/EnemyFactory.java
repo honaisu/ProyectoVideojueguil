@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 
 import entidades.Enemy;
 
+
+//TODO evitar que enemigos aparescan ensima de los bloques
 public class EnemyFactory {
 	private static final Random RNG = new Random();
 	  
@@ -39,11 +41,9 @@ public class EnemyFactory {
 	 * Llama al nuevo constructor de Enemy y le asigna la velocidad.
 	 */
 	public static Enemy createBasic(float x, float y, float size, float rareDrop, int healthPoints, int damage, float speed, float angleDeg) {
-	    // Llama al nuevo constructor fusionado de Enemy.java
 	    Enemy e = new Enemy(x, y, size, rareDrop, healthPoints, damage);
 	    
-	    // Aplica tu lógica de velocidad
-	    e.setPolarVelocityLocal(speed, angleDeg);
+	    e.setVelocity(speed, angleDeg);
 	    return e;
 	}
 }
