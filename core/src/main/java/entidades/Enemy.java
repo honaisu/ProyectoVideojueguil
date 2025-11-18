@@ -41,6 +41,19 @@ public class Enemy extends Creature {
 		getSprite().draw(batch);
 		getHealthBar().draw(batch);
 	}
+	
+	
+	/**
+     * Rebota contra un obstáculo sólido.
+     */
+	public void bounce() { //es literal lo mismo que el player
+        // Invierte la velocidad 
+        velocity.scl(-1); 
+
+        // "Empuja" a la entidad 1 píxel para "despegarla" (evitar bug tambien)
+        Vector2 pushVector = velocity.cpy().setLength(1.0f);
+        position.add(pushVector);
+    }
 
 	public float getDamage() {
 		return damage;

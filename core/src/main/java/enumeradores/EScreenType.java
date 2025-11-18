@@ -9,6 +9,7 @@ import pantallas.menus.*;
 import pantallas.juego.*;
 
 public enum EScreenType {
+
 	MENU(g -> new MainMenuScreen(g)),
 	JUEGO(g -> new GameScreen(g)),
 	PERSONALIZACION(g -> new CustomizationScreen(g)),
@@ -16,7 +17,8 @@ public enum EScreenType {
 	TUTORIAL(g -> new TutorialScreen(g)),
 	PAUSA(g -> new PauseScreen(g)),
 	TRANSICION(g -> new LevelTransitionScreen(g)),
-	GAME_OVER(g -> new GameOverScreen(g));
+	GAME_OVER(g -> new GameOverScreen(g)),
+	VICTORIA(g -> new WinScreen(g));
 	
 	private Function<MainGame, BaseScreen> screen;
 	
@@ -27,4 +29,5 @@ public enum EScreenType {
 	public BaseScreen createScreen(MainGame game) {
 		return this.screen.apply(game);
 	}
+
 }

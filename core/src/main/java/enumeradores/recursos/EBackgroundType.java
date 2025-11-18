@@ -4,13 +4,19 @@ import interfaces.ITexture;
 
 public enum EBackgroundType implements ITexture {
 	ONE("level_one.png", 887, 888),
-	TWO("level_two.png", 1083, 675);
+	TWO("level_two.png", 1083, 675),
+	THREE("fondoNivelTres.png", 341, 341),
+	FOUR("fondoNivelCuatro.png", 313, 268),
+	FIVE("fondoNivelCinco.png", 682, 682);
+	
+	
 	
 	EBackgroundType(String ruta, int width, int height) {
 		this.ruta = "backgrounds/" + ruta;
 		this.width = width;
 		this.height = height;
 	}
+
 	
 	private final String ruta;
 	private final int width;

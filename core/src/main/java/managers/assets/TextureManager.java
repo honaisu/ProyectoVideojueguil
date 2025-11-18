@@ -13,6 +13,7 @@ import enumeradores.recursos.EEnemyType;
 import enumeradores.recursos.EHealthBarType;
 import enumeradores.recursos.EPlayerSkin;
 import enumeradores.recursos.EProjectileType;
+import enumeradores.recursos.EObstacleSkin;
 import interfaces.ITexture;
 
 public class TextureManager implements Disposable {
@@ -28,6 +29,7 @@ public class TextureManager implements Disposable {
     	loadFromEnum(EEnemyType.values());
     	loadFromEnum(EDropType.values());
     	loadFromEnum(EHealthBarType.values());
+    	loadFromEnum(EObstacleSkin.values());
     }
     
     /**
