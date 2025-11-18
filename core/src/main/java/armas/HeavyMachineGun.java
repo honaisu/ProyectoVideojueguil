@@ -18,7 +18,7 @@ public class HeavyMachineGun extends Weapon {
 	public HeavyMachineGun() {
 		super("Heavy Machine Gun",
 				25,							// daño
-				0.2f, 						// cadencia
+				0.1f, 						// cadencia
 				300,						// balas
 				EDropType.HEAVY_MACHINE_GUN);
 	}

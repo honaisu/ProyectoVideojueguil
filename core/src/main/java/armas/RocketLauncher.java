@@ -21,7 +21,7 @@ public class RocketLauncher extends Weapon {
 	@Override
 	public void crearProyectil(Entity p, ProjectileManager manager) {
 		int width = 30;
-		float vel = 30f;
+		float vel = 0.2f;
 
 		Rocket rocket = new Rocket(p, state.getDamage(), width, vel, manager, false);
 		manager.add(rocket);

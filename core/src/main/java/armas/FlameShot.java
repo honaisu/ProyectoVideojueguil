@@ -13,7 +13,7 @@ import managers.assets.AssetManager;
 
 public class FlameShot extends Weapon {
 	public FlameShot() {
-		super("Flamethrower", 5, 0.08f, 120, AssetManager.getInstancia().getSound(EGameSound.SHOOT), EDropType.FLAME_SHOT);
+		super("Flamethrower", 10, 0.08f, 120, AssetManager.getInstancia().getSound(EGameSound.SHOOT), EDropType.FLAME_SHOT);
 	}
 
 	@Override

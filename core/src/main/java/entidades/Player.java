@@ -3,12 +3,15 @@ package entidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import armas.*;
 import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EHealthBarType;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
+import factories.SpriteFactory;
 import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
@@ -32,8 +35,9 @@ public class Player extends Creature {
 
 	// Arma inicial o por defecto
 	private Weapon weapon = new RocketLauncher();
-
 	
+	private HealthBar healthBar;
+
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
 		this(x, y, EPlayerSkin.ORIGINAL);
@@ -49,6 +53,9 @@ public class Player extends Creature {
 		sprite.setOriginCenter();
 
 		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), sprite);
+		
+		TextureRegion[] healthFrames = SpriteFactory.createHPBarFrames(EHealthBarType.NORMAL);
+        this.healthBar = new HealthBar(this, healthFrames, true);
 	}
 
 	@Override
@@ -82,6 +89,8 @@ public class Player extends Creature {
 
 		sprite.setPosition(position.x, position.y);
 		sprite.setRotation(rotation);
+		
+		healthBar.update();
 
 	}
 
@@ -162,5 +171,9 @@ public class Player extends Creature {
 
 	public boolean hasWeapon() {
 		return weapon.getState().getAmmo() > 0 && !(weapon instanceof Melee);
+	}
+	
+	public HealthBar getHealthBar() {
+		return healthBar;
 	}
 }

@@ -43,7 +43,7 @@ public class Rocket extends Projectile {
 			return;
 		}
 		
-        // --- 1. ACTUALIZAR VELOCIDAD (ACELERACIÓN) ---
+        // aceleracion
         if (currentSpeed < maxSpeed) {
             currentSpeed += acceleration * delta;
             if (currentSpeed > maxSpeed) {
@@ -51,21 +51,11 @@ public class Rocket extends Projectile {
             }
         }
         
-        // Calcular velocidad X/Y basada en la velocidad actual
-        //velocity.scl(currentSpeed);
-        float distanceThisFrame = currentSpeed * delta;
+        velocity.setLength(currentSpeed*delta);
         
-        float moveX = (float)Math.cos(radians) * distanceThisFrame;
-        float moveY = (float)Math.sin(radians) * distanceThisFrame;
+        velocity.setAngleRad(radians);
         
-        sprite.setPosition(sprite.getX() + moveX, sprite.getY() + moveY);
-        
-        //velocity.add(position.cpy().nor().scl(currentSpeed));
-        
-        //velocity.setAngleRad(radians);
-        
-        // Usamos delta para el movimiento
-        //sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
+        sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
 		
         if (!Entity.isInBounds(this))
 			destroy();

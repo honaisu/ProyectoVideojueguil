@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Disposable;
 import enumeradores.recursos.EBackgroundType;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.EHealthBarType;
 import enumeradores.recursos.EPlayerSkin;
 import enumeradores.recursos.EProjectileType;
 import interfaces.ITexture;
@@ -26,6 +27,7 @@ public class TextureManager implements Disposable {
     	loadFromEnum(EPlayerSkin.values());
     	loadFromEnum(EEnemyType.values());
     	loadFromEnum(EDropType.values());
+    	loadFromEnum(EHealthBarType.values());
     }
     
     /**

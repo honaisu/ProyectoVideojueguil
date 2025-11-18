@@ -1,13 +1,18 @@
 package entidades;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.EHealthBarType;
+import factories.SpriteFactory;
 
 public class Enemy extends Creature {
 	private float rareDrop;
 	private float damage;
+	
+	private HealthBar healthBar;
 
 	public Enemy(float x, float y, EEnemyType enemy, float size) {
 		super(new Vector2(x, y), enemy, 100);
@@ -20,6 +25,9 @@ public class Enemy extends Creature {
 
 		sprite.setPosition(x, y);
 		sprite.setOriginCenter();
+		
+		TextureRegion[] healthFrames = SpriteFactory.createHPBarFrames(EHealthBarType.NORMAL);
+        this.healthBar = new HealthBar(this, healthFrames, false);
 	}
 
 	@Override
@@ -30,6 +38,8 @@ public class Enemy extends Creature {
 	    position.set(newPos);
 	    Entity.isInBounds(this);
 	    sprite.setPosition(newPos.x, newPos.y);
+	    
+	    healthBar.update();
 	}
 
 	/**
@@ -39,6 +49,7 @@ public class Enemy extends Creature {
 	@Override
 	public void draw(SpriteBatch batch) {
 		getSprite().draw(batch);
+		healthBar.draw(batch);
 	}
 
 	public float getDamage() {
