@@ -4,6 +4,9 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
+import data.WeaponData;
+import enumeradores.EWeaponType;
+import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameMusic;
 import enumeradores.recursos.EGameSound;
 import interfaces.ITexture;
@@ -19,6 +22,7 @@ public class AssetManager {
     private TextureManager textures = new TextureManager();
     private SoundManager sounds = new SoundManager();
     private MusicManager musics = new MusicManager();
+    private DataManager data = new DataManager();
     
     private AssetManager() {}
     
@@ -38,6 +42,7 @@ public class AssetManager {
     	textures.load();
     	sounds.load();
     	musics.load();
+    	data.load();
     }
     
 	/**
@@ -50,12 +55,28 @@ public class AssetManager {
     	musics.dispose();
     }
     
+    public WeaponData getData(EWeaponType weapon) {
+    	return data.getWeaponData(weapon);
+    }
+    
+    public WeaponData getData(EDropType weapon) {
+    	return data.getWeaponData(weapon);
+    }
+    
+    public Texture getTexture(String texture) {
+    	return textures.get(texture);
+    }
+    
     public Texture getTexture(ITexture texture) {
     	return textures.get(texture);
     }
 	
 	public Sound getSound(EGameSound sound) {
 		return sounds.get(sound);
+	}
+	
+	public Sound getSound(String name) {
+		return sounds.get(name);
 	}
 
 	public Music getMusic(EGameMusic music) {

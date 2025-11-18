@@ -33,6 +33,8 @@ public class MainGame extends Game {
 	 */
 	@Override
 	public void create() {
+		// Instancia de AssetManager
+		AssetManager.getInstancia().load();
 		highScore = 0;
 		batch = new SpriteBatch();
 		font = new BitmapFont();
@@ -41,8 +43,8 @@ public class MainGame extends Game {
 		volumen = new Volumen();
 		viewport = new FitViewport(1200, 800, new OrthographicCamera());
 		// ESTE ES UN SINGLETON!! carga los assets :D
-		AssetManager.getInstancia().load();
 		
+		// Acá ya se empieza a crear el juego
         pantallaManager = new ScreenManager(this);
         pantallaManager.cambiarPantalla(EScreenType.MENU);
 	}

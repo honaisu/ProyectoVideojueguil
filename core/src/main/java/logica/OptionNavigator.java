@@ -62,7 +62,7 @@ public class OptionNavigator {
 	        float alpha = seleccionada ? 1f : 0.7f;
             font.setColor(alpha, alpha, alpha, alpha);
             
-            String label = opcion.getNombre();
+            String label = opcion.getName();
             String value = "";
             
             String textoCompleto = (seleccionada ? "> " : "  ") + label + (value.isEmpty() ? "" : ": " + value) + (seleccionada ? " <" : "");

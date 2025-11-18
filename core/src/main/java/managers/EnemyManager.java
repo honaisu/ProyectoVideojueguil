@@ -5,8 +5,8 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.Enemy;
-import entidades.IRenderizable;
 import factories.EnemyFactory;
+import interfaces.IRenderizable;
 
 public class EnemyManager implements IRenderizable {
 	// mio

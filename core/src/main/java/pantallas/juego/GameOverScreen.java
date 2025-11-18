@@ -24,7 +24,7 @@ public class GameOverScreen extends BaseScreen {
 
 	public GameOverScreen(MainGame game) {
 		super(game);
-		sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
+		//sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
 	}
 
 	@Override

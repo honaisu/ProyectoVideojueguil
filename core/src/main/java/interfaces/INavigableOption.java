@@ -9,7 +9,7 @@ import logica.MainGame;
  * (Casos como, por ejemplo, cambiar la pantalla actual).
  */
 public interface INavigableOption extends IExecutableGame {
-	public String getNombre();
+	public String getName();
 	public int ordinal();
 	@Override
 	public default void ejecutar(MainGame game) {}

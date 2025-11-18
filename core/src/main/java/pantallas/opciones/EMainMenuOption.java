@@ -26,7 +26,7 @@ public enum EMainMenuOption implements INavigableOption, IExecutableGame {
     public IScreenAction getAction() { return accion; }
     
     @Override
-    public String getNombre() {
+    public String getName() {
     	return nombre;
     }
 

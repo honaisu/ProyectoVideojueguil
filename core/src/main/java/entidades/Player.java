@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import armas.*;
+import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
+import factories.WeaponFactory;
 import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
@@ -31,8 +33,7 @@ public class Player extends Creature {
 	boolean isMoving = false;
 
 	// Arma inicial o por defecto
-	private Weapon weapon = new RocketLauncher();
-
+	private Weapon weapon;
 	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
@@ -41,6 +42,9 @@ public class Player extends Creature {
 
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100);
+		
+		this.weapon = WeaponFactory.create(EWeaponType.LASER_GUN);
+		
 		// Lo pone al centro
 		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
@@ -134,9 +138,11 @@ public class Player extends Creature {
 
 	public void shoot(ProjectileManager manager) {
 		weapon.attack(this, manager);
+		
+		if (weapon.getState().getAmmo() == null) return;
 
 		if (weapon.getState().getAmmo() == 0)
-			weapon = new Melee();
+			weapon = WeaponFactory.create(EWeaponType.MELEE);
 	}
 
 	public void setWeapon(Weapon newWeapon) {
@@ -161,6 +167,7 @@ public class Player extends Creature {
 	}
 
 	public boolean hasWeapon() {
-		return weapon.getState().getAmmo() > 0 && !(weapon instanceof Melee);
+		if (weapon.getState().getAmmo() == null) return false;
+		return weapon.getState().getAmmo() > 0;
 	}
 }

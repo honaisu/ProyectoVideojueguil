@@ -1,4 +1,4 @@
-package entidades;
+package interfaces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public interface IRenderizable {
 	/**
-	 * Método opcional que seguirá la sucesión de pasos esperada para las clases que
+	 * Método default que seguirá la sucesión de pasos esperada para las clases que
 	 * implementen esta interfaz.
 	 * 
 	 * @param delta Diferencia de tiempo

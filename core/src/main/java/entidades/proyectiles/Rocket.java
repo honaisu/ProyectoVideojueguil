@@ -2,104 +2,87 @@ package entidades.proyectiles;
 
 import com.badlogic.gdx.math.Vector2;
 
+import data.BulletData;
+import data.RocketData;
 import entidades.Enemy;
 import entidades.Entity;
-import enumeradores.recursos.EProjectileType;
 import managers.ProjectileManager;
 
 public class Rocket extends Projectile {
-	
-	private float radians;
-    private float currentSpeed;
+	private float acceleration;
     private float maxSpeed;
-    private float acceleration;
     
-    private ProjectileManager manager; // Para crear la explosión
-
+    // Para crear la explosión
+    private ProjectileManager manager; 
+    private BulletData explosionData;
+    
+	/*
 	public Rocket(Entity e, int damage, float width, float speed, ProjectileManager manager, boolean piercing) {
 		super(Projectile.calcularMuzzle(new Vector2(), e, false), EProjectileType.ROCKET, damage, piercing);
 		
         this.manager = manager;
+        // hace que mire para "adelante"
 		this.rotation = e.getRotation() + 90;
 		
         sprite.setBounds(position.x, position.y, width, width);
         sprite.setOriginCenter();
         sprite.setRotation(e.getRotation());
         
-        // --- LÓGICA DE ACELERACIÓN ---
-        this.radians = (float) Math.toRadians(rotation);
-        velocity.set(position.cpy().nor());
-        velocity.scl(speed);
-        velocity.setAngleRad(radians);
+        setVelocity(speed, this.rotation);
+	}*/
+	
+	public Rocket(RocketData data, Entity shooter, ProjectileManager manager) {
+        super(Projectile.calcularMuzzle(new Vector2(), shooter, data.piercing), data);
         
-        this.currentSpeed = speed;
-        this.maxSpeed = 1600f;
-        this.acceleration = 800f;
-	}
+        this.manager = manager;
+        this.explosionData = data.explosionData;
+        this.acceleration = data.acceleration;
+        this.maxSpeed = data.maxSpeed;
+        
+        this.rotation = shooter.getRotation() + 90;
+        
+        sprite.setPosition(position.x, position.y);
+        sprite.setOriginCenter();
+        sprite.setRotation(shooter.getRotation());
+        
+        setVelocity(data.velocity, this.rotation);
+    }
 
 	@Override
 	public void update(float delta) {
-		if (isDestroyed()) {
-			return;
-		}
+		if (isDestroyed()) return;
 		
-        // --- 1. ACTUALIZAR VELOCIDAD (ACELERACIÓN) ---
+		float currentSpeed = velocity.len();
+		
         if (currentSpeed < maxSpeed) {
             currentSpeed += acceleration * delta;
-            if (currentSpeed > maxSpeed) {
-                currentSpeed = maxSpeed;
-            }
+            // Cambia la magnitud del vector (no su dirección) :D
+            velocity.setLength(Math.min(currentSpeed, maxSpeed));
         }
         
-        // Calcular velocidad X/Y basada en la velocidad actual
-        //velocity.scl(currentSpeed);
-        float distanceThisFrame = currentSpeed * delta;
+        Vector2 movement = velocity.cpy().scl(delta);
         
-        float moveX = (float)Math.cos(radians) * distanceThisFrame;
-        float moveY = (float)Math.sin(radians) * distanceThisFrame;
+        sprite.translate(movement.x, movement.y);
+        position.add(movement);
         
-        sprite.setPosition(sprite.getX() + moveX, sprite.getY() + moveY);
-        
-        //velocity.add(position.cpy().nor().scl(currentSpeed));
-        
-        //velocity.setAngleRad(radians);
-        
-        // Usamos delta para el movimiento
-        //sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
-		
-        if (!Entity.isInBounds(this))
-			destroy();
+        if (!Entity.isInBounds(this)) {
+        	sprite.setPosition(position.x, position.y);
+        	destroy();
+        }
 	}
 	
 	
 	@Override
 	public boolean onHitEnemy(Enemy enemy) {
-		enemy.takeDamage(getDamage()); // Hace daño al enemigo que golpeó
-        spawnExplosion(); // Crea la explosión
-		destroy(); // Marca este misil para ser destruido
-		return true; // Retorna true para que el manager lo elimine
+		// Crea la explosión
+		Projectile explosion = this.spawnExplosion();
+		manager.add(explosion);
+		
+		return true; 
 	}
 	
-	private void spawnExplosion() {
-        if (manager == null) return; // Seguridad //TODO
-        
-        // --- PARÁMETROS DE LA EXPLOSIÓN ---
-        int explosionSize = 350;
-        boolean isPiercing = true;
-        float explosionLifespan = 0.8f;
-
-        float cX = sprite.getX();// + sprite.getWidth() / 2;
-        float cY = sprite.getY();// + sprite.getHeight() / 2;
-        Vector2 spawnPoint = new Vector2(cX, cY);
-        
-
-        
-        Bullet explosion = new Bullet(spawnPoint, EProjectileType.FLAME, 100, explosionSize, isPiercing,
-        		explosionLifespan);
-        //explosion.setPosition(new Vector2(explosionX + explosion.getSprite().getWidth()/2 , explosionY +explosion.getSprite().getHeight()/2));
-
-        manager.add(explosion); 
+	private Projectile spawnExplosion() { 
+    	Bullet projectile = new Bullet(this.explosionData, position.cpy());        	
+        return projectile;
     }
-
-
 }

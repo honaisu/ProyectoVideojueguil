@@ -2,6 +2,7 @@ package entidades;
 
 import com.badlogic.gdx.math.Vector2;
 
+import interfaces.IRenderizable;
 import interfaces.ITexture;
 
 /**

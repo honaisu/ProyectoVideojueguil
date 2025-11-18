@@ -31,7 +31,7 @@ public class GameWorld {
 	private boolean estaEnPausa = false;
 	
 	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
-		this.player  = new Player(5, 5, skin);
+		this.player  = new Player(0, 0, skin);
 		this.gameLogicHandler = new GameLogicHandler();
 		
 		//para niveles

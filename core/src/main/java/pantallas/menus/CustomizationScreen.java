@@ -71,7 +71,7 @@ public class CustomizationScreen extends NavigableScreen {
         	}
         	
         	// Nombre de la skin
-        	font.draw(batch, skin.getNombre(), previewX, previewY + 200);
+        	font.draw(batch, skin.getName(), previewX, previewY + 200);
         	
         	// Sprite de la skin
         	batch.draw(SpriteFactory.create(skin), previewX, previewY, PREVIEW_HW, PREVIEW_HW);

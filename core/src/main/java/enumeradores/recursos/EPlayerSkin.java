@@ -22,7 +22,7 @@ public enum EPlayerSkin implements INavigableOption, ITexture {
 	public String getRuta() { return ruta; }
 	
 	@Override
-	public String getNombre() { return nombre; }
+	public String getName() { return nombre; }
 	
 	@Override
 	public int getWidth() { return width; }

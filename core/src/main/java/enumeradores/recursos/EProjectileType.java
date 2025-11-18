@@ -11,10 +11,10 @@ public enum EProjectileType implements ITexture {
 	// BALAS
 	BULLET_TEMPLATE("bullet_template.png"),
 	HOLLOWPOINT("hollowpoint.png"),
+	ROCKET("rocket.png", 64, 64), //TODO perdon nacho hice es sprite 64x64 y con el DEFAULT_SIZE lo deja como 1/4 de la textura XD
 	ROUNDNOSE("roundnose.png"),
 	REDWIRE("redwire.png"),
 	RAYGUN("raypulse.png"),
-	ROCKET("rocket.png",64,64), //TODO perdon nacho hice es sprite 64x64 y con el DEFAULT_SIZE lo deja como 1/4 de la textura XD
 	FLAME("flame.png");
 	
 	EProjectileType(String ruta, int width, int height) {
@@ -22,7 +22,10 @@ public enum EProjectileType implements ITexture {
 		this.width = width;
 		this.height = height;
 	}
-	// Inicia las balas con textura 32x32
+	
+	/**
+	 * Inicia las balas con textura 32x32
+	 */
 	EProjectileType(String ruta) {
 		this(ruta, DEFAULT_SIZE/2, DEFAULT_SIZE/2);
 	}

@@ -7,7 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.proyectiles.Projectile;
-import entidades.IRenderizable;
+import interfaces.IRenderizable;
 
 public class ProjectileManager implements IRenderizable {
 	private final List<Projectile> proyectiles = new ArrayList<>();
@@ -70,6 +70,10 @@ public class ProjectileManager implements IRenderizable {
 	    }
     }
 	
+	public List<Projectile> getProjectiles() {
+		return proyectiles;
+	}
+	
 	public void draw(SpriteBatch batch) {
         for (Projectile proyectil : proyectiles) {
             proyectil.draw(batch);
@@ -82,8 +86,4 @@ public class ProjectileManager implements IRenderizable {
 	public boolean isEmpty() {
 		return proyectiles.isEmpty();
 	}
-	
-	public List<Projectile> getProjectiles() {
-        return proyectiles;
-    }
 }

@@ -3,8 +3,7 @@ package managers;
 import java.util.Iterator;
 import java.util.List;
 import com.badlogic.gdx.audio.Sound;
-
-import java.util.Random;
+import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
 
@@ -12,15 +11,14 @@ import entidades.Enemy;
 import entidades.Player;
 import entidades.WeaponDrop;
 import entidades.proyectiles.Projectile;
+import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
+import factories.WeaponFactory;
 import managers.assets.AssetManager;
 
 public class CollisionManager {
-
 	private final Sound explosionSound;
 	private final int scorePerEnemy;
-
-	private Random r = new Random();
 
 	public CollisionManager(Sound explosionSound, int scorePerEnemy) {
 		this.explosionSound = explosionSound;
@@ -92,7 +90,7 @@ public class CollisionManager {
             if (player.checkCollision(drop)) {
                 Weapon pickedUpWeapon = drop.getWeapon();
                 player.setWeapon(pickedUpWeapon);
-                pickedUpWeapon.getPickupSound().play();
+                //pickedUpWeapon.getPickupSound().play();
                 dropIterator.remove();
             }
         }
@@ -111,29 +109,11 @@ public class CollisionManager {
         iterator.remove(); // Eliminar enemigo de la lista
         return scorePerEnemy;
     }
-	
+
 	private Weapon createRandomWeapon() {
-        int weaponType = r.nextInt(6);
-
-
-        switch (weaponType) {
-            case 0:
-            	return new HeavyMachineGun();
-            case 1:
-            	return new Shotgun();
-            case 2:
-                return new Melee();
-            case 3:
-            	return new RocketLauncher();
-            case 4:
-            	return new FlameShot();
-            case 5:
-            	return new RayGun();
-            case 6:
-            	return new LaserCannon();
-            default:
-                return new Melee();
-        }
-    }
-
+		EWeaponType[] weapons = EWeaponType.values();
+		int randomWeapon = MathUtils.random(weapons.length - 1);
+		
+		return WeaponFactory.create(weapons[randomWeapon]);
+	}
 }

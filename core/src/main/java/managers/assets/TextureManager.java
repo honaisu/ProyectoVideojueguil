@@ -54,4 +54,9 @@ public class TextureManager implements Disposable {
 		}
 		textures.clear();
 	}
+
+	@SuppressWarnings("unlikely-arg-type")
+	public Texture get(String texture) {
+		return textures.get(texture);
+	}
 }

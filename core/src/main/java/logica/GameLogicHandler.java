@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 import entidades.proyectiles.Projectile;
-import entidades.IRenderizable;
+import interfaces.IRenderizable;
 import entidades.Player;
 import managers.EnemyManager;
 import managers.CollisionManager;
@@ -43,8 +43,6 @@ public class GameLogicHandler implements IRenderizable {
 	}
 
 	public void handleCollisions(Player player) {
-		// TODO Eliminar listas. O ver alternativas para manejar las colisiones
-		// (No se me ocurre ninguna por el momento)
 		collisionManager.handleCollisions(player, proyectilManager.getProjectiles(), enemyManager.getEnemies(),
 				dropManager);
 	}
