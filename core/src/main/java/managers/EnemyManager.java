@@ -5,16 +5,17 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.Enemy;
-import entidades.Entity; // para los bugs
 import entidades.IRenderizable;
+import enumeradores.recursos.EEnemyType;
 import factories.EnemyFactory;
-import managers.ObstacleManager; // con los bloques
 
 public class EnemyManager implements IRenderizable {
 	// mio
 	private final List<Enemy> enemies = new ArrayList<>();
 	private static final float MIN_SEPARATION = 72f;
 	private final ObstacleManager obstacleManager;
+	
+	private EEnemyType type;
 
 	// vacio para las rondas creo
 

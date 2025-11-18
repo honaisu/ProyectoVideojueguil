@@ -15,8 +15,8 @@ import managers.assets.AssetManager;
 public class Shotgun extends Weapon {
 	public Shotgun() {
 		super("Shotgun", 20, // daño
-				2f, // cadencia
-				8, EDropType.SHOTGUN);
+				1f, // cadencia
+				16, EDropType.SHOTGUN);
 	}
 
 	@Override

@@ -16,7 +16,6 @@ import enumeradores.recursos.EGameSound;
 import managers.assets.AssetManager;
 
 //para el tema de los obstaculos
-import managers.ObstacleManager;
 import entidades.obstaculos.DamageHazard;
 import entidades.obstaculos.SolidObstacle;
 
@@ -87,10 +86,14 @@ public class CollisionManager {
 
 			if (player.checkCollision(enemy) && !player.isHurt()) {
 				player.takeDamage((int) enemy.getDamage());
+				
+				enemy.takeDamage(30);
+				if(enemy.isDead()) {					
+					if (explosionSound != null)
+						explosionSound.play(0.1f);
+					enemyIterator.remove(); // Enemigo se destruye al chocar
+				}
 
-				if (explosionSound != null)
-					explosionSound.play(0.1f);
-				enemyIterator.remove(); // Enemigo se destruye al chocar
 			}
 		}
 	}
