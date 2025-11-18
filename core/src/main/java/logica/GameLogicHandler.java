@@ -27,11 +27,16 @@ public class GameLogicHandler implements IRenderizable {
 	private final ObstacleManager obstacleManager;
 
 	public GameLogicHandler() {
-		this.enemyManager = new EnemyManager();
 		this.collisionManager = new CollisionManager();
 		this.proyectilManager = new ProjectileManager();
 		this.dropManager = new DropManager();
+
+		// Creamos el ObstacleManager primero
 		this.obstacleManager = new ObstacleManager();
+
+		// Y se lo pasamos a EnemyManager para que vea dond españear enemigos sin que lo
+		// haga ensima de estos bloques
+		this.enemyManager = new EnemyManager(this.obstacleManager);
 	}
 
 	public EnemyManager getEnemyManager() {
@@ -72,8 +77,8 @@ public class GameLogicHandler implements IRenderizable {
 	// TODO ver si esto da error
 	@Override
 	public void draw(SpriteBatch batch) {
-		obstacleManager.render(batch);//quisa más adelante cambiarlo a draw?
-		enemyManager.draw(batch); 
+		obstacleManager.render(batch);// quisa más adelante cambiarlo a draw?
+		enemyManager.draw(batch);
 		proyectilManager.draw(batch);
 		dropManager.render(batch);
 	}

@@ -8,6 +8,8 @@ import entidades.obstaculos.SolidObstacle;
 import enumeradores.recursos.EBackgroundType;
 import factories.ObstacleFactory;
 
+import entidades.Entity;
+
 public class ObstacleManager {
 
     private final List<DamageHazard> hazards = new ArrayList<>();
@@ -45,4 +47,18 @@ public class ObstacleManager {
     
     public List<DamageHazard> getHazards() { return hazards; }
     public List<SolidObstacle> getSolids() { return solids; }
+    
+    /**
+     * Comprueba si una entidad está colisionando con CUALQUIER obstáculo sólido.
+     * Lo usará el EnemyManager para evitar spawns dentro de muros. (evitar bug con los bloques)
+     */
+    public boolean isCollidingWithSolid(Entity entity) {
+        for (SolidObstacle s : solids) { 
+            if (entity.checkCollision(s)) {
+                return true; 
+            }
+        }
+        return false; 
+    }
+    
 }
