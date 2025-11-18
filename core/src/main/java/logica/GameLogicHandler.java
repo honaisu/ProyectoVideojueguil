@@ -37,8 +37,8 @@ public class GameLogicHandler implements IRenderizable {
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		enemyManager.draw(batch);
 		proyectilManager.draw(batch);
+		enemyManager.draw(batch);
 		dropManager.render(batch);
 	}
 

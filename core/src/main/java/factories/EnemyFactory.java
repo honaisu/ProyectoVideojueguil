@@ -5,12 +5,14 @@ import com.badlogic.gdx.Gdx;
 
 import entidades.Enemy;
 
+
+//TODO evitar que enemigos aparescan ensima de los bloques
 public class EnemyFactory {
 	private static final Random RNG = new Random();
 	  
 	//constantes para los enemigos
 	// Tamaño fijo
-	private static final float ENEMY_SIZE = 100f;
+	private static final float ENEMY_SIZE = 0.2f;
 	private static float margin() { return ENEMY_SIZE; }
 	// Velocidad inicial
 	private static final float MIN_SPEED = 60f, MAX_SPEED = 140f;
