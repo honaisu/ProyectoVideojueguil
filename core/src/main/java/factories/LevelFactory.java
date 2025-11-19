@@ -308,7 +308,7 @@ public class LevelFactory {
 		EnemyFactory.setENEMY_HP(100);
 		EnemyFactory.setRARE_DROP(0.7f);
 		EnemyFactory.setENEMY_DAMAGE(20 + EnemyFactory.getRng().nextInt(11)); //TODO ver rng
-		EnemyFactory.setEnemyType(EEnemyType.WATER);
+		EnemyFactory.setEnemyType(EEnemyType.PENGUIN);
 		
 		List<Round> levelFiveRounds = new ArrayList<>();
 

@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 public class HealthBar {
-	
 	private Creature owner;			// La criatura a la que pertenece esta barra
     private TextureRegion[] frames;	// Arreglo con los 11 frames
     private Sprite displaySprite;	// El sprite que se va a dibujar
@@ -15,10 +14,6 @@ public class HealthBar {
     
     
     public HealthBar(Creature owner, TextureRegion[] frames, boolean isPlayer) {
-        if (frames == null || frames.length != 11) { //TODO
-            throw new IllegalArgumentException("HealthBar requiere exactamente 11 frames.");
-        }
-        
         this.owner = owner;
         this.frames = frames;
         this.isPlayer = isPlayer;
@@ -43,13 +38,16 @@ public class HealthBar {
         displaySprite.setRegion(frames[frameIndex]);
 
         // Posicion de la healthbar
-        if(isPlayer) { //Jugador en el HUD
-        	Vector2 hudPos = new Vector2(10,0);
-        	displaySprite.setBounds(hudPos.x, hudPos.y, 300, 30);
-        }else { //Debajo de los enemigos
+        if(isPlayer) { 
+        	//Jugador en el HUD
+        	Vector2 hudPos = new Vector2(10, 0);
+        	displaySprite.setPosition(hudPos.x, hudPos.y);
+        	//displaySprite.setBounds(hudPos.x, hudPos.y, 300, 30);
+        } else {
+        	//Debajo de los enemigos
         	Vector2 ownerPos = owner.getPosition();
         	float ownerWidth = owner.getSprite().getWidth();
-            float barWidth = 64f;
+            float barWidth = 32f;
             float centeredX = ownerPos.x + (ownerWidth / 2) - (barWidth / 2);
             
             // 3. Aplicamos la nueva X

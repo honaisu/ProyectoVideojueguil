@@ -24,28 +24,30 @@ public class ProjectileFactory {
 			FlameData flame = (FlameData) data;
 			projectile = new Flame(flame, shooter);
 			break;
-		case HEAVY_MACHINE_GUN:
-		case RAYGUN:
-			BulletData bullet = (BulletData) data;
-			projectile = new Bullet(bullet, shooter);
-			break;
+		//case HEAVY_MACHINE_GUN:
+		//case RAYGUN:
+			//BulletData bullet = (BulletData) data;
+			//projectile = new Bullet(bullet, shooter);
+			//break;
 		case LASER_GUN:
 		case MELEE:
 			SwingData swing = (SwingData) data;
 			projectile = new Swing(swing, shooter);
 			break;
 		case ROCKET_LAUNCHER:
+		case CLAYMORE:
 			RocketData rocket = (RocketData) data;
 			projectile = new Rocket(rocket, shooter, manager);
 			break;
+		case HEAVY_MACHINE_GUN:
+		case RAYGUN:
 		case SHOTGUN: {
 			BulletData shoot = (BulletData) data;
 			float spread = shoot.spread;
 
 			for (int i = 0; i < shoot.pellets; i++) {
 				float angle = MathUtils.random(-spread, spread);
-				float speed = MathUtils.random(0f, 2f);
-
+				float speed = MathUtils.random(0.1f, 2f);
 				Projectile newBullet = new Bullet(shoot, shooter, angle, speed);
 				manager.add(newBullet);
 			}

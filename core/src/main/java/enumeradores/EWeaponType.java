@@ -9,7 +9,8 @@ public enum EWeaponType {
 	SHOTGUN(EDropType.SHOTGUN),
 	MELEE(EDropType.MELEE),
 	HEAVY_MACHINE_GUN(EDropType.HEAVY_MACHINE_GUN),
-	RAYGUN(EDropType.RAYGUN);
+	RAYGUN(EDropType.RAYGUN),
+	CLAYMORE(EDropType.CLAYMORE);
 	
 	EDropType drop;
 	EWeaponType(EDropType drop) {

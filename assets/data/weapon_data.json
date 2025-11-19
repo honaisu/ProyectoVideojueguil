@@ -46,7 +46,7 @@
 		"damage": 2,
 		"piercing": true,
 		"duration": 0.25,
-		"width": 10,
+		"width": 20,
 		"height": 1000,
 		"isBeam": true,
 		"type": "LASER_GUN",
@@ -56,13 +56,12 @@
   "ROCKET_LAUNCHER": {
     "name": "Rocket Launcher",
 	"fireRate": 1.5,
-    "maxAmmo": 5,
+    "maxAmmo": 25,
 	"drop": "ROCKET_LAUNCHER",
     "soundFire": "SHOOT",
 	"projectileData": {
 		"class": "rocket",
-		"piercing": true,
-		"width": 25,
+		"piercing": false,
 		"velocity": 30.0,
 		"acceleration": 800.0,
 		"maxSpeed": 1600.0,
@@ -72,8 +71,8 @@
             "damage": 100,
             "piercing": true,
             "velocity": 0,
-            "scale": 350,
-			"lifespan": 1,
+            "scale": 250,
+			"lifespan": 0.8,
 			"type": "FLAME",
         }
 	}
@@ -110,7 +109,7 @@
 		"scale": 2,
 		"velocity": 15.0,
 		"spread": 15,
-		"maxDistance": 500.0,
+		"maxDistance": 150.0,
 		"maxScale": 5.0, 
 		"type": "FLAME",
 	}
@@ -125,10 +124,37 @@
 	"projectileData": {
 		"class": "bullet",
 		"damage": 20,
-		"velocity": 15,
+		"velocity": 5,
 		"width": 30,
+		"pellets": 2,
+		"spread": 0.5,
 		"piercing": true,
 		"type": "RAYGUN",
+	}
+  },
+  
+  "CLAYMORE": {
+	"name": "Claymore",
+	"fireRate": 3,
+	"maxAmmo": 5,
+	"drop": "CLAYMORE",
+	"soundFire": "SHOOT",
+	"projectileData": {
+		"class": "rocket",
+		"piercing": false,
+		"velocity": 0.0,
+		"acceleration": 0,
+		"maxSpeed": 0,
+		"type": "REDWIRE",
+		"explosionData": {
+            "class": "bullet",
+            "damage": 100,
+            "piercing": true,
+            "velocity": 0,
+            "scale": 150,
+			"lifespan": 1,
+			"type": "FLAME",
+        }
 	}
   }
 }

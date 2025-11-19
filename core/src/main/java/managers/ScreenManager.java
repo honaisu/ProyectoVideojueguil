@@ -49,9 +49,9 @@ public class ScreenManager {
     }
     
     public void cambiarPantalla(EScreenType tipoPantalla) {
-        if (tipoPantalla.equals(EScreenType.JUEGO) || tipoPantalla.equals(EScreenType.TRANSICION)) {
+        if (tipoPantalla.equals(EScreenType.GAME) || tipoPantalla.equals(EScreenType.TRANSITION)) {
             // Se desecha la pantalla antigua
-        	BaseScreen antiguaPantalla = pantallas.get(EScreenType.JUEGO);
+        	BaseScreen antiguaPantalla = pantallas.get(EScreenType.GAME);
             if (antiguaPantalla != null) antiguaPantalla.dispose();
             
             // Se reemplaza por una nueva pantalla de juego

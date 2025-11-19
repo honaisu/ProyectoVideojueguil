@@ -44,11 +44,10 @@ public class Player extends Creature {
 		this(x, y, EPlayerSkin.ORIGINAL);
 	}
 
-
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100, true);
 		
-		this.weapon = WeaponFactory.create(EWeaponType.LASER_GUN);
+		this.weapon = WeaponFactory.create(EWeaponType.MELEE);
 		// Lo pone al centro
 		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
@@ -90,7 +89,6 @@ public class Player extends Creature {
 		this.position.set(position);
         
         // Lógica de rebote en bordes
-		final float HUD_HEIGHT = 100f;
 		Entity.isInPlayableBounds(this, HUD_HEIGHT);
 		//Entity.isInBounds(this); 
 

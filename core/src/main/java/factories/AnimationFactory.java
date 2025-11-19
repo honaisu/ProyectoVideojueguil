@@ -52,8 +52,14 @@ public class AnimationFactory {
 	}
 	
 	public static Animation<TextureRegion> createSwing() {
-		Animation<TextureRegion> animacionAtaque = create(EProjectileType.SWING, 1, 8, 0.25f);
+		Animation<TextureRegion> animacionAtaque = create(EProjectileType.SWING_ANIMATION, 1, 8, 0.05f);
 	    animacionAtaque.setPlayMode(PlayMode.NORMAL); 
 		return animacionAtaque;
+	}
+	
+	public static Animation<TextureRegion> createExplosion() {
+		Animation<TextureRegion> animation = create(EProjectileType.EXPLOSION, 1, 17, 0.05f);
+		animation.setPlayMode(PlayMode.NORMAL);
+		return animation;
 	}
 }

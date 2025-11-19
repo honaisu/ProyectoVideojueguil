@@ -1,15 +1,19 @@
 package entidades.proyectiles;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import data.BulletData;
 import entidades.Entity;
+import factories.AnimationFactory;
+import logica.AnimationHandler;
 
 /**
  * Clase que representa una balla dentro del juego
  */
 public class Bullet extends Projectile {
 	private float lifespan = -1f;
+	private AnimationHandler animation;
 
 	public Bullet(BulletData data, Entity shooter) {
 		this(data, shooter, 0f, 0f);
@@ -49,8 +53,8 @@ public class Bullet extends Projectile {
         sprite.setOriginCenter();
         // Centrar el sprite en la coordenada de spawn
         sprite.setPosition(position.x - sprite.getWidth()/2, position.y - sprite.getHeight()/2);
+        this.animation = new AnimationHandler(AnimationFactory.createExplosion(), sprite);
 	}
-
 
 	private void setupSprite(BulletData data, float spriteRotation) {
 		sprite.setScale(data.scale);
@@ -66,6 +70,9 @@ public class Bullet extends Projectile {
 	public void update(float delta) {
 		if (destroyed)
 			return;
+		
+		if (animation != null)
+			animation.updateStateTime(delta);
 
 		if (lifespan > 0) {
 			lifespan -= delta;
@@ -73,14 +80,12 @@ public class Bullet extends Projectile {
 				destroy();
 				return;
 			}
-		}
+		} else if (!Entity.isInBounds(this)) {
+            destroy();
+        }
 		
 		position.add(velocity.x, velocity.y);
 		this.setSpritePosition();
-		
-        if (!Entity.isInBounds(this)) {
-            destroy();
-        }
 	}
 	
 	private void setSpritePosition() {
@@ -89,4 +94,17 @@ public class Bullet extends Projectile {
             position.y - sprite.getHeight() / 2
         );
     }
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+	}
+	
+	@Override
+	public void draw(SpriteBatch batch) {
+		if (animation != null)
+			animation.handle(batch, false);
+		else
+			super.draw(batch);
+	}
 }
