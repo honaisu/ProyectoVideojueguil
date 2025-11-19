@@ -40,7 +40,7 @@ public class GameWorld {
 
 		// creamos y agregamos los niveles //TODO creo que se van a crear y agregar como
 		// listas?
-		this.allLevels.add(LevelFactory.createLevelOne());
+		//this.allLevels.add(LevelFactory.createLevelOne());
 		this.allLevels.add(LevelFactory.createLevelTwo());
 		this.allLevels.add(LevelFactory.createLevelThree());
 		this.allLevels.add(LevelFactory.createLevelFour());

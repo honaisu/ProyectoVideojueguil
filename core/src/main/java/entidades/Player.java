@@ -14,7 +14,6 @@ import managers.ProjectileManager;
 import managers.assets.AssetManager;
 import entidades.obstaculos.DamageHazard;
 
-
 public class Player extends Creature {
 	private final float MAX_VELOCITY = 300.0f;
 	// Estado básico
@@ -33,14 +32,19 @@ public class Player extends Creature {
 
 	boolean isMoving = false;
 
+	// Daño progresivo para el charco (PUDDLE)
+	private final float PUDDLE_ESCALATION_TIME = 2.0f; // Segundos para que el daño aumente 1x (antes estaba en 3)
+	private float continuousPuddleTime = 0f; // Tiempo continuo en el charco
+	private boolean isCurrentlyInPuddle = false; // Flag para rastrear la colisión
+	private final float PUDDLE_DAMAGE_TICK = 0.5f; // Frecuencia de daño (0.5 segundos)
+
 	// Arma inicial o por defecto
-	private Weapon weapon = new  HeavyMachineGun();
-	
+	private Weapon weapon = new HeavyMachineGun();
+
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
 		this(x, y, EPlayerSkin.ORIGINAL);
 	}
-
 
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100);
@@ -57,7 +61,19 @@ public class Player extends Creature {
 
 	@Override
 	public void update(float delta) {
-        // Revisa si hay movimiento
+
+		// logica si esta encima del charco
+		if (isCurrentlyInPuddle) { 
+			continuousPuddleTime += delta;
+		} else {
+			continuousPuddleTime = 0f;
+		}
+
+		// Reseteamos el flag aquí. Esto prepara el estado para que CollisionManager lo cambie a TRUE
+		// en la fase de colisiones que ocurre después de este método.
+		isCurrentlyInPuddle = false; 
+
+		// Revisa si hay movimiento
 		isMoving = !velocity.isZero(0.1f);
 		if (isMoving)
 			animation.updateStateTime(delta);
@@ -70,28 +86,29 @@ public class Player extends Creature {
 		}
 		if (iFrames > 0f) // Este es el temporizador de invulnerabilidad real
 			iFrames -= delta;
-		
-        // Lógica del charco
-		if (puddleCooldown > 0)
-			puddleCooldown -= delta; 
 
-        // Lógica de armas
-		if(weapon != null) {
+		// Lógica del charco
+		if (puddleCooldown > 0)
+			puddleCooldown -= delta;
+
+		// Lógica de armas
+		if (weapon != null) {
 			weapon.getState().update(delta);
 		}
 
-        // Lógica de física con Vector2
+		// Lógica de física con Vector2
 		velocity.limit(MAX_VELOCITY);
 		Vector2 position = getPosition().cpy().add(velocity.cpy().scl(delta));
 		this.position.set(position);
-        
-        // Lógica de rebote en bordes
-		Entity.isInBounds(this); 
+
+		// Lógica de rebote en bordes
+		Entity.isInBounds(this);
 
 		sprite.setPosition(this.position.x, this.position.y);
 		sprite.setRotation(rotation);
+
 	}
-	
+
 	@Override
 	public void draw(SpriteBatch batch) {
 		// Si está herido, parpadea (no se dibuja en algunos frames)
@@ -101,40 +118,38 @@ public class Player extends Creature {
 		animation.updateSprite(getSprite());
 		animation.handle(batch, isMoving, true);
 	}
-	
+
 	/**
 	 * Verifica si el jugador es invulnerable (ya sea por iFrames o por parpadeo)
 	 */
 	public boolean isHurt() {
-		return hurted || iFrames > 0f; 
+		return hurted || iFrames > 0f;
 	}
-	
 
 	@Override
 	public void takeDamage(int amount) {
 		// Si ya estamos en iFrames, no recibimos más daño.
 		if (isHurt()) {
-			return; 
+			return;
 		}
 
-		super.takeDamage(amount); 
-		
+		super.takeDamage(amount);
+
 		// Activa los iFrames y el parpadeo
-		this.iFrames = 0.5f; 
-		this.hurted = true; 
-		this.hurtTime = 120;  
-		
+		this.iFrames = 0.5f;
+		this.hurted = true;
+		this.hurtTime = 120;
+
 		// Suena el efecto de sonido
 		if (hurtSound != null) {
 			hurtSound.play();
 		}
 	}
 
-	
 	public void rotate(float amount) {
 		this.rotation += amount;
 	}
-	
+
 	public void accelerate(float amount) {
 		Vector2 acceleration = new Vector2(0, 1);
 		acceleration.setAngleDeg(rotation + 90);
@@ -142,59 +157,65 @@ public class Player extends Creature {
 
 		velocity.add(acceleration);
 	}
-	
+
 	public void applyFriction(float friction) {
 		velocity.scl(friction);
 	}
-	
-	public void shoot(ProjectileManager manager) {    	
-    	weapon.attack(this, manager);
-    	
-    	if (weapon.getState().getAmmo() == 0)
-    		weapon = new Melee();
-    }
-	
-	
-	//Este método ahora funciona bien porque llama al 'takeDamage' de Player (el que acabamos de corregir)
+
+	public void shoot(ProjectileManager manager) {
+		weapon.attack(this, manager);
+
+		if (weapon.getState().getAmmo() == 0)
+			weapon = new Melee();
+	}
+
+	// Este método ahora funciona bien porque llama al 'takeDamage' de Player (el
+	// que acabamos de corregir)
 	public void onHazardCollision(DamageHazard hazard) {
 		if (hazard.getDamageType() == DamageHazard.DamageType.SPIKE) {
 			// PUAS (Golpe fuerte)
 			// Esto ahora llama al 'takeDamage' de Player, no al de Creature
-			takeDamage(hazard.getDamage()); 
+			takeDamage(hazard.getDamage());
 
 		} else if (hazard.getDamageType() == DamageHazard.DamageType.PUDDLE) {
-			// CHARCO (Daño leve, sin iFrames, pero con cooldown propio)
+			// Marcamos que el jugador está en el charco
+			isCurrentlyInPuddle = true;
+
+			//Comprueba el cooldown de daño 
 			if (puddleCooldown <= 0) {
-                
-                // Usa 'hp' directamente para saltarse los iFrames
-				this.hp -= hazard.getDamage(); 
+
+				// Calcula el multiplicador de daño: empieza en 1, sube cada
+				// PUDDLE_ESCALATION_TIME
+				// Ej: 0s-3s = 1x; 3s-6s = 2x; 6s-9s = 3x, etc.
+				int damageMultiplier = (int) (continuousPuddleTime / PUDDLE_ESCALATION_TIME) + 1;
+
+				// Calcula el daño total 
+				int finalDamage = (int) (hazard.getDamage() * damageMultiplier);
+
+				// Aplica el daño y resetea el cooldown
+				this.hp -= finalDamage;
 				if (hp < 0)
 					hp = 0;
 
-				this.puddleCooldown = 0.5f; // Cooldown específico del charco
+				this.puddleCooldown = PUDDLE_DAMAGE_TICK;
 			}
 		}
 	}
-	
-	
 
 	public void bounce() {
-        // Invierte la velocidad
-		velocity.scl(-1); 
+		// 1. Amortigua la velocidad (pierde el 30% de la energía)
+		velocity.scl(-0.7f);
 
-		// Empuja al jugador para "despegarlo" (evitar bug de quedarse atascado)
-		// Se aumenta de 5.0f a 10 para probar 
-		Vector2 pushVector = velocity.cpy().setLength(10.0f); 
-        position.add(pushVector);
+		// 2. Empuja lo suficiente para salir (5.0f es suficiente)
+		Vector2 pushVector = velocity.cpy().setLength(10.0f);
+		position.add(pushVector);
 	}
 
-	
-	
-	//seter y getters ordenados
+	// seter y getters ordenados
 	public void setWeapon(Weapon newWeapon) {
 		this.weapon = newWeapon;
 	}
-    
+
 	public float getRotation() {
 		return rotation;
 	}
@@ -210,7 +231,7 @@ public class Player extends Creature {
 	public int getScore() {
 		return score;
 	}
-    
+
 	public boolean hasWeapon() {
 		return weapon.getState().getAmmo() > 0 && !(weapon instanceof Melee);
 	}
