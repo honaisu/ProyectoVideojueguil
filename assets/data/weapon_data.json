@@ -61,7 +61,7 @@
     "soundFire": "SHOOT",
 	"projectileData": {
 		"class": "rocket",
-		"piercing": true,
+		"piercing": false,
 		"width": 25,
 		"velocity": 30.0,
 		"acceleration": 800.0,

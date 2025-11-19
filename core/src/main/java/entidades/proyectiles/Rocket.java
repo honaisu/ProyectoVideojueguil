@@ -75,10 +75,11 @@ public class Rocket extends Projectile {
 	
 	@Override
 	public boolean onHitEnemy(Enemy enemy) {
+		enemy.takeDamage(this.damage);
 		// Crea la explosión
 		Projectile explosion = this.spawnExplosion();
 		manager.add(explosion);
-		
+		this.destroy();
 		return true; 
 	}
 	
