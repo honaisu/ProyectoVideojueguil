@@ -5,7 +5,7 @@ import managers.ProjectileManager;
 
 // TODO Ver que onda para que no nos reten por no tener un strategy xd
 @FunctionalInterface
-public interface IAtacable {
+public interface IAttackable {
 	/**
 	 * Método que se encarga de "atacar" a una entidad
 	 * 

@@ -7,19 +7,16 @@ import enumeradores.recursos.EEnemyType;
 
 public class Enemy extends Creature {
 	private float rareDrop;
-	private float damage;
+	private float damage;	
 
-	public Enemy(float x, float y, EEnemyType enemy, float size) {
-		super(new Vector2(x, y), enemy, 100);
-	}
-
-	public Enemy(float x, float y, float size, float rareDrop, int hp, int damage) {
-		super(new Vector2(x, y), EEnemyType.WATER, hp);
+	public Enemy(float x, float y, EEnemyType type,float size, float rareDrop, int hp, int damage) {
+		super(new Vector2(x, y), type, hp, false);
 		this.rareDrop = rareDrop;
 		this.damage = damage;
 
-		sprite.setPosition(x, y);
+		sprite.setBounds(x,y,sprite.getWidth()*size,sprite.getHeight()*size);
 		sprite.setOriginCenter();
+		
 	}
 
 	@Override
@@ -28,8 +25,13 @@ public class Enemy extends Creature {
 	    Vector2 newPos = getPosition().cpy().add(displacement);
 	    
 	    position.set(newPos);
-	    Entity.isInBounds(this);
+	    
+	    final float HUD_HEIGHT = 100f;
+		Entity.isInPlayableBounds(this, HUD_HEIGHT);
+		
 	    sprite.setPosition(newPos.x, newPos.y);
+	    
+	    getHealthBar().update();
 	}
 
 	/**
@@ -39,6 +41,7 @@ public class Enemy extends Creature {
 	@Override
 	public void draw(SpriteBatch batch) {
 		getSprite().draw(batch);
+		getHealthBar().draw(batch);
 	}
 	
 	

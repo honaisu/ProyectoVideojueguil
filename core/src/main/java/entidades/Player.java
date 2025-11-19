@@ -3,12 +3,15 @@ package entidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import armas.*;
+import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
+import factories.WeaponFactory;
 import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
@@ -39,15 +42,19 @@ public class Player extends Creature {
 	private final float PUDDLE_DAMAGE_TICK = 0.5f; // Frecuencia de daño (0.5 segundos)
 
 	// Arma inicial o por defecto
-	private Weapon weapon = new HeavyMachineGun();
+	//private Weapon weapon = new HeavyMachineGun();
 
+	private Weapon weapon;
+	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
 		this(x, y, EPlayerSkin.ORIGINAL);
 	}
 
 	public Player(float x, float y, EPlayerSkin skin) {
-		super(new Vector2(x, y), skin, 100);
+		super(new Vector2(x, y), skin, 100, true);
+		
+		this.weapon = WeaponFactory.create(EWeaponType.MELEE);
 		// Lo pone al centro
 		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
@@ -56,7 +63,6 @@ public class Player extends Creature {
 		sprite.setOriginCenter();
 
 		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), sprite);
-
 	}
 
 	@Override
@@ -100,12 +106,18 @@ public class Player extends Creature {
 		velocity.limit(MAX_VELOCITY);
 		Vector2 position = getPosition().cpy().add(velocity.cpy().scl(delta));
 		this.position.set(position);
-
-		// Lógica de rebote en bordes
-		Entity.isInBounds(this);
+		
+		
+        //de nachoid, algo más específico y mejor
+        // Lógica de rebote en bordes
+		Entity.isInPlayableBounds(this, HUD_HEIGHT);
+		//Entity.isInBounds(this); 
 
 		sprite.setPosition(this.position.x, this.position.y);
 		sprite.setRotation(rotation);
+		
+		getHealthBar().update();
+
 
 	}
 
@@ -162,38 +174,60 @@ public class Player extends Creature {
 		velocity.scl(friction);
 	}
 
-	public void shoot(ProjectileManager manager) {
+	/*public void shoot(ProjectileManager manager) {
 		weapon.attack(this, manager);
 
 		if (weapon.getState().getAmmo() == 0)
 			weapon = new Melee();
-	}
+	}*/
 
-	// Este método ahora funciona bien porque llama al 'takeDamage' de Player (el
-	// que acabamos de corregir)
-	public void onHazardCollision(DamageHazard hazard) {
+	public void shoot(ProjectileManager manager) {
+		weapon.attack(this, manager);
+		
+		if (weapon.getState().getAmmo() == null) return;
+
+		if (weapon.getState().getAmmo() == 0)
+			weapon = WeaponFactory.create(EWeaponType.MELEE);
+	}
+	
+	/*public void onHazardCollision(DamageHazard hazard) {
 		if (hazard.getDamageType() == DamageHazard.DamageType.SPIKE) {
 			// PUAS (Golpe fuerte)
-			// Esto ahora llama al 'takeDamage' de Player, no al de Creature
+			takeDamage(hazard.getDamage());
+		} else if (hazard.getDamageType() == DamageHazard.DamageType.PUDDLE) {
+			// CHARCO (Daño leve con cooldown propio)
+			if (puddleCooldown <= 0) {
+                
+				this.hp -= hazard.getDamage(); 
+>>>>>>> origin/noche
+				if (hp < 0)
+					hp = 0;
+
+				this.puddleCooldown = PUDDLE_DAMAGE_TICK;
+			}
+		}
+	}*/
+	
+	
+	
+	public void onHazardCollision(DamageHazard hazard) {
+		if (hazard.getDamageType() == DamageHazard.DamageType.SPIKE) {
+			//Logica de pua
 			takeDamage(hazard.getDamage());
 
 		} else if (hazard.getDamageType() == DamageHazard.DamageType.PUDDLE) {
-			// Marcamos que el jugador está en el charco
-			isCurrentlyInPuddle = true;
+			//Charco con daño progresivo
+			isCurrentlyInPuddle = true; 
 
-			//Comprueba el cooldown de daño 
+			// Comprueba el cooldown de daño 
 			if (puddleCooldown <= 0) {
 
-				// Calcula el multiplicador de daño: empieza en 1, sube cada
-				// PUDDLE_ESCALATION_TIME
-				// Ej: 0s-3s = 1x; 3s-6s = 2x; 6s-9s = 3x, etc.
+				//Si pasa más tiempo en el poso, realiza más daño 
 				int damageMultiplier = (int) (continuousPuddleTime / PUDDLE_ESCALATION_TIME) + 1;
 
-				// Calcula el daño total 
 				int finalDamage = (int) (hazard.getDamage() * damageMultiplier);
 
-				// Aplica el daño y resetea el cooldown
-				this.hp -= finalDamage;
+				this.hp -= finalDamage; 
 				if (hp < 0)
 					hp = 0;
 
@@ -211,7 +245,6 @@ public class Player extends Creature {
 		position.add(pushVector);
 	}
 
-	// seter y getters ordenados
 	public void setWeapon(Weapon newWeapon) {
 		this.weapon = newWeapon;
 	}
@@ -233,7 +266,8 @@ public class Player extends Creature {
 	}
 
 	public boolean hasWeapon() {
-		return weapon.getState().getAmmo() > 0 && !(weapon instanceof Melee);
+		if (weapon.getState().getAmmo() == null) return false;
+		return weapon.getState().getAmmo() > 0;
 	}
 
 }

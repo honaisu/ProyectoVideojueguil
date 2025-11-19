@@ -1,57 +1,67 @@
 package entidades.proyectiles;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import data.BulletData;
 import entidades.Entity;
-import enumeradores.recursos.EProjectileType;
+import factories.AnimationFactory;
+import logica.AnimationHandler;
 
-//Clase que representa una balla dentro del juego
-
+/**
+ * Clase que representa una balla dentro del juego
+ */
 public class Bullet extends Projectile {
-
 	private float lifespan = -1f;
+	private AnimationHandler animation;
 
-    public Bullet(Entity e, EProjectileType type, int damage, float speed, int scale, boolean piercing) {
-        this(e, type, damage, speed, scale, e.getRotation() + 90, piercing);
-    }
-    
-    // bala con dispercion
-    public Bullet(Entity e, EProjectileType type, int damage, float speed, int scale, float rotation,
-            boolean piercing) {
-        super(Projectile.calcularMuzzle(new Vector2(), e, false), type, damage, piercing);
-        this.rotation = rotation;
+	public Bullet(BulletData data, Entity shooter) {
+		this(data, shooter, 0f, 0f);
+	}
+	
+	/**
+	 * Constructor que permite a una entidad poder disparar la bala correspondiente.
+	 */
+	public Bullet(BulletData data, Entity shooter, float angle, float speed) {
+		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.piercing), data);
+
+		this.lifespan = data.lifespan;
+		float finalRotation = shooter.getRotation() + 90 + angle;
+        float finalVelocity = data.velocity + speed;
         
-        sprite.setPosition(position.x, position.y);
+        // Configuramos la velocidad de la ENTIDAD (no solo del sprite)
+        this.velocity.set(finalVelocity, 0);
+        this.velocity.setAngleDeg(finalRotation);
+        this.rotation = finalRotation - 90; 
+
+        // Configurar visuales
+        this.setupSprite(data, this.rotation);
+	}
+
+	/**
+	 * Constructor utilizado para spawnear la bala en un sector específico (vector).
+	 */
+	public Bullet(BulletData data, Vector2 spawn) {
+		super(spawn, data);
+
+		this.lifespan = data.lifespan;
+		// Las explosiones no giran
+		this.rotation = 0;
+
+		// Configuración especial para explosiones o spawns estáticos
+        sprite.setBounds(position.x, position.y, data.scale, data.scale);
         sprite.setOriginCenter();
-        
-        sprite.setBounds(position.x - sprite.getOriginX(), position.y - sprite.getOriginY(), scale, scale);
-        sprite.setRotation(rotation - 90);
+        // Centrar el sprite en la coordenada de spawn
+        sprite.setPosition(position.x - sprite.getWidth()/2, position.y - sprite.getHeight()/2);
+        this.animation = new AnimationHandler(AnimationFactory.createExplosion(), sprite);
+	}
 
-        float radians = (float) Math.toRadians(rotation);
-        velocity.set(position.cpy().nor());
-        velocity.scl(speed);
-        
-        velocity.setAngleRad(radians);
-        
-
-    }
-
-    // para la explosion
-    public Bullet(Vector2 spawnPosition, EProjectileType type, int damage, int scale, boolean piercing,
-            float lifespan) {
-    	super(spawnPosition, type, damage, piercing);
-        this.lifespan = lifespan;
-        
-        this.rotation = 0; // Las explosiones no giran
-
-        
-        sprite.setPosition(position.x, position.y);
+	private void setupSprite(BulletData data, float spriteRotation) {
+		sprite.setScale(data.scale);
         sprite.setOriginCenter();
-
-        sprite.setBounds(position.x - (scale / 2f), position.y - (scale / 2f), scale, scale);
-
-        velocity.set(0, 0);
-    }
+        sprite.setRotation(rotation);
+		this.setSpritePosition();
+	}
 
 	/**
 	 * movimiento de la bala y colision con el borde de la ventana
@@ -60,6 +70,9 @@ public class Bullet extends Projectile {
 	public void update(float delta) {
 		if (destroyed)
 			return;
+		
+		if (animation != null)
+			animation.updateStateTime(delta);
 
 		if (lifespan > 0) {
 			lifespan -= delta;
@@ -67,13 +80,31 @@ public class Bullet extends Projectile {
 				destroy();
 				return;
 			}
-		}
-
-		// Mueve el sprite (que es ESTA entidad)
-		sprite.setPosition(sprite.getX() + velocity.x, sprite.getY() + velocity.y);
-
-		// Comprueba límites
-		if (lifespan < 0 && !Entity.isInBounds(this))
-			destroy();
+		} else if (!Entity.isInBounds(this)) {
+            destroy();
+        }
+		
+		position.add(velocity.x, velocity.y);
+		this.setSpritePosition();
+	}
+	
+	private void setSpritePosition() {
+        sprite.setPosition(
+            position.x - sprite.getWidth() / 2, 
+            position.y - sprite.getHeight() / 2
+        );
+    }
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+	}
+	
+	@Override
+	public void draw(SpriteBatch batch) {
+		if (animation != null)
+			animation.handle(batch, false);
+		else
+			super.draw(batch);
 	}
 }

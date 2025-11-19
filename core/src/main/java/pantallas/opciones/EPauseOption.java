@@ -13,7 +13,7 @@ public enum EPauseOption implements INavigableOption {
 	}
 	
 	@Override
-	public String getNombre() {
+	public String getName() {
 		return nombre;
 	}
 }

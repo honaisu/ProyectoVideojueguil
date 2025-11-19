@@ -3,7 +3,7 @@ package logica;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.proyectiles.Projectile;
-import entidades.IRenderizable;
+import interfaces.IRenderizable;
 import entidades.Player;
 import managers.EnemyManager;
 import managers.CollisionManager;
@@ -31,12 +31,31 @@ public class GameLogicHandler implements IRenderizable {
 		this.proyectilManager = new ProjectileManager();
 		this.dropManager = new DropManager();
 
-		// Creamos el ObstacleManager primero
 		this.obstacleManager = new ObstacleManager();
-
-		// Y se lo pasamos a EnemyManager para que vea dond españear enemigos sin que lo
-		// haga ensima de estos bloques
 		this.enemyManager = new EnemyManager(this.obstacleManager);
+	}
+	
+	public int handleCollisions(Player player) {
+		int scoreGanado = collisionManager.handleCollisions(player, proyectilManager.getProjectiles(),
+				enemyManager.getEnemies(),
+				dropManager, obstacleManager);
+
+		collisionManager.handlePlayerVsDrops(player, dropManager);
+		return scoreGanado;
+	}
+	
+	@Override
+	public void draw(SpriteBatch batch) {
+		obstacleManager.render(batch);
+		proyectilManager.draw(batch);
+		enemyManager.draw(batch);
+		dropManager.render(batch);
+	}
+	
+	public void addProjectile(Projectile projectile) {
+		if (projectile == null)
+			return;
+		proyectilManager.add(projectile);
 	}
 
 	public EnemyManager getEnemyManager() {
@@ -73,29 +92,4 @@ public class GameLogicHandler implements IRenderizable {
 		dropManager.update(delta);
 		obstacleManager.update(delta);
 	}
-
-	// TODO ver si esto da error
-	@Override
-	public void draw(SpriteBatch batch) {
-		obstacleManager.render(batch);// quisa más adelante cambiarlo a draw?
-		enemyManager.draw(batch);
-		proyectilManager.draw(batch);
-		dropManager.render(batch);
-	}
-
-	public int handleCollisions(Player player) {
-		int scoreGanado = collisionManager.handleCollisions(player, proyectilManager.getProjectiles(),
-				enemyManager.getEnemies(), // ta raro esto JNASJ
-				dropManager, obstacleManager);
-
-		collisionManager.handlePlayerVsDrops(player, dropManager);
-		return scoreGanado;
-	}
-
-	public void addProjectile(Projectile projectile) {
-		if (projectile == null)
-			return;
-		proyectilManager.add(projectile);
-	}
-
 }

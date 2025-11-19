@@ -16,7 +16,7 @@ public enum EConfigurationOption implements INavigableOption {
 	}
 	
 	@Override
-	public String getNombre() {
+	public String getName() {
 		return nombre;
 	}
 }

@@ -9,8 +9,6 @@ import enumeradores.recursos.EPlayerSkin;
 import factories.LevelFactory;
 
 //coso para los enemigos y el cambio de ronda
-import java.util.ArrayList; //no c que tan necesario
-import java.util.List; // no c si rompa lo e Strategy
 
 import logica.levels.Level;
 
@@ -18,7 +16,6 @@ public class GameWorld {
 	private final GameLogicHandler gameLogicHandler;
 	private final Player player;
 
-	private List<Level> allLevels; // Lista de Niveles
 	private int currentLevelIndex; // Índice para saber en qué nivel vamos
 	private Level currentLevel; // El objeto Nivel que estamos jugando AHORA
 	private boolean waitingForNextRound; // Esto se mantiene, pero ahora lo usa el Nivel
@@ -32,31 +29,65 @@ public class GameWorld {
 	private boolean estaEnPausa = false;
 
 	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
-		this.player = new Player(5, 5, skin);
+		this.player = new Player(0, 0, skin);
 		this.gameLogicHandler = new GameLogicHandler();
-
-		// para niveles
-		this.allLevels = new ArrayList<>();
-
-		// creamos y agregamos los niveles //TODO creo que se van a crear y agregar como
-		// listas?
-		//this.allLevels.add(LevelFactory.createLevelOne());
-		this.allLevels.add(LevelFactory.createLevelTwo());
-		this.allLevels.add(LevelFactory.createLevelThree());
-		this.allLevels.add(LevelFactory.createLevelFour());
-		this.allLevels.add(LevelFactory.createLevelFive());
 
 		// nuevo para el tema de inciar los niveles
 		this.currentLevelIndex = startingLevelIndex - 1;
+		// this.currentLevelIndex = 3;
 		this.waitingForNextRound = true;
 
 		// y creamos el primer nivel
 		startNextLevel();
+	}
 
-		// TODO mejora esto// crea los obstaculos apra el nivel 1
-		gameLogicHandler.getObstacleManager().spawnObstacles(currentLevel.getHazardCount(),
-				currentLevel.getSolidCount(), currentLevel.getBackground());
+	private void startNextLevel() {
 
+		currentLevelIndex++; // Avanzamos al siguiente índice (0 -> 1 -> 2...)
+		final int TOTAL_LEVELS = 5; // Constante para saber cuándo parar
+
+		// TODO ver rondas
+		// currentLevelIndex = 4;
+
+		if (currentLevelIndex < TOTAL_LEVELS) {
+
+			// 1. Cargamos el Nivel (solo el que toca) usando el Factory.
+			switch (currentLevelIndex) {
+			case 0: // Nivel 1
+				currentLevel = LevelFactory.createLevelOne();
+				break;
+			case 1: // Nivel 2
+				currentLevel = LevelFactory.createLevelTwo();
+				break;
+			case 2: // Nivel 3
+				currentLevel = LevelFactory.createLevelThree();
+				break;
+			case 3: // Nivel 4
+				currentLevel = LevelFactory.createLevelFour();
+				break;
+			case 4: // Nivel 5
+				currentLevel = LevelFactory.createLevelFive();
+				break;
+			default:
+				System.err.println("Error: Índice de nivel inválido: " + currentLevelIndex);
+				return;
+			}
+
+			// 2. Actualizamos la friccion del nivel (código original se mantiene)
+			this.currentLevelFriction = currentLevel.getPlayerFriction();
+
+			// 3. Creamos los obstaculos (código original se mantiene)
+			// TODO mejora esto// crea los obstaculos apra el nivel 1
+			gameLogicHandler.getObstacleManager().spawnObstacles(currentLevel.getHazardCount(),
+					currentLevel.getSolidCount(), currentLevel.getBackground());
+
+			// 4. Marcamos que estamos listos para la *primera ronda*
+			this.waitingForNextRound = true;
+
+		} else {
+			// Hemos excedido el número total de niveles, manejado en checkCompletion(),
+			// pero puedes poner una comprobación de seguridad aquí si es necesario.
+		}
 	}
 
 	public void update(float delta) {
@@ -122,30 +153,6 @@ public class GameWorld {
 		this.estaEnPausa = estaEnPausa;
 	}
 
-	/**
-	 * Carga el siguiente nivel de la lista.
-	 */
-	private void startNextLevel() {
-
-		currentLevelIndex++; // Avanzamos al siguiente nivel
-
-		if (currentLevelIndex < allLevels.size()) {
-			// Cargamos el objeto Nivel
-			currentLevel = allLevels.get(currentLevelIndex);
-
-			// Actualizamos la friccion del nivel
-			this.currentLevelFriction = currentLevel.getPlayerFriction();
-
-			// Creamos los obstaculos apra los siguientes niveles //TODO ver si puedo
-			// dejarlo ma wonito
-			gameLogicHandler.getObstacleManager().spawnObstacles(currentLevel.getHazardCount(),
-					currentLevel.getSolidCount(), currentLevel.getBackground());
-
-			// Marcamos que estamos listos para la *primera ronda*
-			this.waitingForNextRound = true;
-		}
-	}
-
 	// para comporbar si todos los enemigos fueron derrotados
 	/**
 	 * Ahora DELEGA la lógica al Nivel actual.
@@ -168,7 +175,9 @@ public class GameWorld {
 				// El nivel nos dijo que se quedó sin rondas
 				int nextLevelIdx = currentLevelIndex + 1;
 
-				if (nextLevelIdx >= allLevels.size()) {
+				final int TOTAL_LEVELS = 5;
+
+				if (nextLevelIdx >= TOTAL_LEVELS) {
 					// ¡Ganó el juego! No hay más niveles.
 					this.gameWon = true;
 					System.out.println("¡HAS GANADO EL JUEGO!"); // (Lo movemos aquí)

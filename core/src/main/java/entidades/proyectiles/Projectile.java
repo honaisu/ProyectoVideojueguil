@@ -2,58 +2,29 @@ package entidades.proyectiles;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/*<<<<<<< HEAD
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-
-import entidades.Enemy;
-import entidades.Entity;
-import entidades.Player;
-
-public abstract class Projectile extends Entity {
-
-	private int damage;
-	private List<Enemy> enemiesHit; // revisar
-	private boolean isPiercing;
-	
-
-	public Projectile(float x, float y, Sprite spr, Player player, int damage, boolean piercing) {
-		super(x, y, spr);
-		this.damage = damage;
-		this.enemiesHit = new ArrayList<>();
-		this.isPiercing = piercing;
-	}
-
-	public abstract void update(float delta, Player player);
-
-	public boolean onHitEnemy(Enemy enemy) {
-		if(isPiercing) {
-=======*/
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import data.ProjectileData;
 import entidades.Enemy;
 import entidades.Entity;
-import entidades.IRenderizable;
-import interfaces.ITexture;
+import interfaces.IRenderizable;
 
 public abstract class Projectile extends Entity implements IRenderizable {
-	protected final List<Enemy> enemiesHit; // TODO revisar
+	// TODO revisar
+	protected final List<Enemy> enemiesHit = new ArrayList<>(); 
 	protected boolean piercing;
 	protected int damage;
 
-	public Projectile(Vector2 position, ITexture asset, int damage, boolean piercing) {
-		super(position, asset);
-		this.enemiesHit = new ArrayList<>();
-		this.piercing = piercing;
-		this.damage = damage;
+	public Projectile(float x, float y, ProjectileData data) {
+		this(new Vector2(x, y), data);
 	}
 
-	public Projectile(float x, float y, ITexture asset, int damage, boolean piercing) {
-		this(new Vector2(x, y), asset, damage, piercing);
+	public Projectile(Vector2 position, ProjectileData data) {
+		super(position, data.type);
+		this.piercing = data.piercing;
+		this.damage = data.damage;
 	}
 
 	/**
@@ -83,7 +54,6 @@ public abstract class Projectile extends Entity implements IRenderizable {
 			enemy.takeDamage(damage);
 			return true;
 		}
-
 	}
 
 	public int getDamage() {
@@ -100,7 +70,6 @@ public abstract class Projectile extends Entity implements IRenderizable {
 	 * @param onTip    Para ver si queremos que esté "en el tip" del rectángulo
 	 */
 	public static Vector2 calcularMuzzle(Vector2 position, Rectangle r, float rotation, boolean onTip) {
-		
 		float cX = r.getX() + r.getWidth() / 2f;
 		float cY = r.getY() + r.getHeight() / 2f;
 		float length = r.getHeight() / 2f;
@@ -126,6 +95,9 @@ public abstract class Projectile extends Entity implements IRenderizable {
 	public static Vector2 calcularMuzzle(Vector2 position, Entity entity, boolean onTip) {
 		Rectangle r = entity.getSprite().getBoundingRectangle();
 		float rotation = entity.getRotation() + 90;
+		
+		
+		
 		return calcularMuzzle(position, r, rotation, onTip);
 	}
 }

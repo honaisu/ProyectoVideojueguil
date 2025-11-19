@@ -44,7 +44,7 @@ public class GameScreen extends BaseScreen {
 		if (world.isGameWon()) {
             
             // Ahora va a la pantalla de Victoria
-            getGame().getPantallaManager().cambiarPantalla(EScreenType.VICTORIA); 
+            getGame().getPantallaManager().cambiarPantalla(EScreenType.WIN); 
             return; // Detenemos el update
         }
 
@@ -53,7 +53,7 @@ public class GameScreen extends BaseScreen {
 
 	        // le decimos a mi game cual es el siguiente nivel
 	        getGame().setNextLevelToLoad(world.getNextLevelIndex());
-	        getGame().getPantallaManager().cambiarPantalla(EScreenType.TRANSICION);
+	        getGame().getPantallaManager().cambiarPantalla(EScreenType.TRANSITION);
 	        return;
 	    }
 
@@ -66,7 +66,7 @@ public class GameScreen extends BaseScreen {
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			getGame().getPantallaManager().cambiarPantalla(EScreenType.PAUSA);
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.PAUSE);
 		}
 	}
 	

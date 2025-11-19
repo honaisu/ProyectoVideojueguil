@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Disposable;
 import enumeradores.recursos.EBackgroundType;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.EHealthBarType;
 import enumeradores.recursos.EPlayerSkin;
 import enumeradores.recursos.EProjectileType;
 import enumeradores.recursos.EObstacleSkin;
@@ -27,6 +28,7 @@ public class TextureManager implements Disposable {
     	loadFromEnum(EPlayerSkin.values());
     	loadFromEnum(EEnemyType.values());
     	loadFromEnum(EDropType.values());
+    	loadFromEnum(EHealthBarType.values());
     	loadFromEnum(EObstacleSkin.values());
     }
     
@@ -55,5 +57,10 @@ public class TextureManager implements Disposable {
 			texture.dispose();
 		}
 		textures.clear();
+	}
+
+	@SuppressWarnings("unlikely-arg-type")
+	public Texture get(String texture) {
+		return textures.get(texture);
 	}
 }

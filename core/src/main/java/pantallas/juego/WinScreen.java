@@ -35,7 +35,7 @@ public class WinScreen extends NavigableScreen {
 
             if (opcionActual.ordinal() == EWinOption.VOLVER_A_JUGAR.ordinal()) {
                 // Opción: Volver a Jugar
-                getGame().getPantallaManager().cambiarPantalla(EScreenType.JUEGO);
+                getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME);
                 this.dispose(); // (Igual que en tu PauseScreen)
                 
             } else {

@@ -9,9 +9,9 @@ import interfaces.IScreenAction;
 import logica.MainGame;
 
 public enum EMainMenuOption implements INavigableOption, IExecutableGame {
-	INICIAR("Iniciar Juego", (m) -> m.cambiarPantalla(EScreenType.JUEGO)),
-	PERSONALIZAR("Personalizar Personaje", (m) -> m.cambiarPantalla(EScreenType.PERSONALIZACION)),
-	OPCIONES("Configuración", (m) -> m.cambiarPantalla(EScreenType.CONFIGURACION)),
+	INICIAR("Iniciar Juego", (m) -> m.cambiarPantalla(EScreenType.GAME)),
+	PERSONALIZAR("Personalizar Personaje", (m) -> m.cambiarPantalla(EScreenType.CUSTOMIZATION)),
+	OPCIONES("Configuración", (m) -> m.cambiarPantalla(EScreenType.CONFIGURATION)),
 	TUTORIAL("Tutorial", (m) -> m.cambiarPantalla(EScreenType.TUTORIAL)),
 	SALIR("Salir del Juego", (m) -> Gdx.app.exit());
 	
@@ -26,7 +26,7 @@ public enum EMainMenuOption implements INavigableOption, IExecutableGame {
     public IScreenAction getAction() { return accion; }
     
     @Override
-    public String getNombre() {
+    public String getName() {
     	return nombre;
     }
 

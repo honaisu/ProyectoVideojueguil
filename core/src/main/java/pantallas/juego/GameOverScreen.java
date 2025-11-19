@@ -24,7 +24,7 @@ public class GameOverScreen extends BaseScreen {
 
 	public GameOverScreen(MainGame game) {
 		super(game);
-		sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
+		//sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class GameOverScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			getGame().getPantallaManager().cambiarPantalla(EScreenType.JUEGO);
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME);
 		}
 	}
 

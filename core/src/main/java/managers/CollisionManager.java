@@ -3,8 +3,7 @@ package managers;
 import java.util.Iterator;
 import java.util.List;
 import com.badlogic.gdx.audio.Sound;
-
-import java.util.Random;
+import com.badlogic.gdx.math.MathUtils;
 
 import armas.*;
 
@@ -12,20 +11,18 @@ import entidades.Enemy;
 import entidades.Player;
 import entidades.WeaponDrop;
 import entidades.proyectiles.Projectile;
+import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
+import factories.WeaponFactory;
 import managers.assets.AssetManager;
 
 //para el tema de los obstaculos
-import managers.ObstacleManager;
 import entidades.obstaculos.DamageHazard;
 import entidades.obstaculos.SolidObstacle;
 
 public class CollisionManager {
-
 	private final Sound explosionSound;
 	private final int scorePerEnemy;
-
-	private Random r = new Random();
 
 	public CollisionManager(Sound explosionSound, int scorePerEnemy) {
 		this.explosionSound = explosionSound;
@@ -87,10 +84,14 @@ public class CollisionManager {
 
 			if (player.checkCollision(enemy) && !player.isHurt()) {
 				player.takeDamage((int) enemy.getDamage());
+				
+				enemy.takeDamage(30);
+				if(enemy.isDead()) {					
+					if (explosionSound != null)
+						explosionSound.play(0.1f);
+					enemyIterator.remove(); // Enemigo se destruye al chocar
+				}
 
-				if (explosionSound != null)
-					explosionSound.play(0.1f);
-				enemyIterator.remove(); // Enemigo se destruye al chocar
 			}
 		}
 	}
@@ -109,7 +110,7 @@ public class CollisionManager {
 			}
 		}
 	}
-
+	
 	private int handleEnemyDeath(Enemy enemy, Iterator<Enemy> iterator, DropManager dropManager) {
         if (explosionSound != null) explosionSound.play(0.1f);
         
@@ -125,6 +126,12 @@ public class CollisionManager {
         return scorePerEnemy;
     }
 
+	private Weapon createRandomWeapon() {
+		EWeaponType[] weapons = EWeaponType.values();
+		int randomWeapon = MathUtils.random(weapons.length - 1);
+		
+		return WeaponFactory.create(weapons[randomWeapon]);
+	}
 
 	// Colision de cuando el juagador choca con un obsttaculo de daño
 	public void handlePlayerVsHazards(Player player, ObstacleManager obstacleManager) {
@@ -161,34 +168,4 @@ public class CollisionManager {
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	private Weapon createRandomWeapon() {
-        int weaponType = r.nextInt(6); //deberia mser (7) ?
-
-
-        switch (weaponType) {
-            case 0:
-            	return new HeavyMachineGun();
-            case 1:
-            	return new Shotgun();
-            case 2:
-                return new Melee();
-            case 3:
-            	return new RocketLauncher();
-            case 4:
-            	return new FlameShot();
-            case 5:
-            	return new RayGun();
-            case 6:
-            	return new LaserCannon();
-            default:
-                return new Melee();
-        }
-    }
-
-
 }

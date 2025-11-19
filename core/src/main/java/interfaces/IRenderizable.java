@@ -1,4 +1,4 @@
-package entidades;
+package interfaces;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * (de su lógica) y un método draw (para dibujarlo)
  */
 public interface IRenderizable {
+	// Constante que define el tamaño de HUD
+	final float HUD_HEIGHT = 100f;
 	/**
-	 * Método opcional que seguirá la sucesión de pasos esperada para las clases que
+	 * Método default que seguirá la sucesión de pasos esperada para las clases que
 	 * implementen esta interfaz.
 	 * 
 	 * @param delta Diferencia de tiempo

@@ -1,6 +1,7 @@
 package entidades;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
@@ -8,7 +9,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
+import data.TextureData;
 import factories.SpriteFactory;
+import interfaces.IRenderizable;
 import interfaces.ITexture;
 
 /**
@@ -19,7 +22,7 @@ import interfaces.ITexture;
  */
 public abstract class Entity implements IRenderizable {
 	protected Sprite sprite;
-	protected Vector2 velocity;
+	protected Vector2 velocity = new Vector2();
 	protected Vector2 position;
 	protected float rotation = 0f;
 
@@ -28,13 +31,19 @@ public abstract class Entity implements IRenderizable {
 	public Entity(Vector2 position, ITexture asset) {
 		this.position = position;
 		this.sprite = SpriteFactory.create(asset);
-		this.velocity = new Vector2();
+		//this.sprite = SpriteFactory.create(EEnemyType.WATER);
 	}
 
 	public Entity(Vector2 position, Vector2 velocity, ITexture asset) {
 		this.position = position;
 		this.sprite = SpriteFactory.create(asset);
-		this.velocity = velocity;
+		this.velocity.set(velocity);
+	}
+
+	public Entity(Vector2 position, TextureData texture) {
+		this.position = position;
+		this.sprite = new Sprite(new Texture(texture.path), texture.width, texture.height);
+		this.sprite.setPosition(position.x, position.y);
 	}
 
 	/**
@@ -141,6 +150,7 @@ public abstract class Entity implements IRenderizable {
 		Vector2 position = entity.getPosition();
 		Vector2 velocity = entity.getVelocity();
 
+		// Clamp básicamenente se encarga de "limitar" la posición a solo esos valores límite
 		position.x = MathUtils.clamp(position.x, 0, maxX);
 		if (position.x != copy.x) {
 			velocity.x = -velocity.x;
@@ -154,5 +164,34 @@ public abstract class Entity implements IRenderizable {
 		}
 
 		return true;
+	}
+	
+	public static boolean isInPlayableBounds(Entity entity, float hudHeight) {
+	    float w = entity.getSprite().getWidth(), h = entity.getSprite().getHeight();
+	    float maxX = Gdx.graphics.getWidth() - w;
+	    // Nuevo límite Y superior, igual que antes
+	    float maxY = Gdx.graphics.getHeight() - h; 
+	    // Nuevo límite Y inferior (la altura del HUD)
+	    float minY = hudHeight; 
+
+	    Vector2 copy = entity.getPosition().cpy();
+	    Vector2 position = entity.getPosition();
+	    Vector2 velocity = entity.getVelocity();
+
+	    // Clamp horizontal (X) - Se mantiene igual (desde 0)
+	    position.x = MathUtils.clamp(position.x, 0, maxX);
+	    if (position.x != copy.x) {
+	        velocity.x = -velocity.x;
+	        return false;
+	    }
+
+	    // Clamp vertical (Y) - Nuevo: desde minY hasta maxY
+	    position.y = MathUtils.clamp(position.y, minY, maxY);
+	    if (position.y != copy.y) {
+	        velocity.y = -velocity.y;
+	        return false;
+	    }
+
+	    return true;
 	}
 }

@@ -5,9 +5,9 @@ import interfaces.ITexture;
 public enum EBackgroundType implements ITexture {
 	ONE("level_one.png", 887, 888),
 	TWO("level_two.png", 1083, 675),
-	THREE("fondoNivelTres.png", 341, 341),
-	FOUR("fondoNivelCuatro.png", 313, 268),
-	FIVE("fondoNivelCinco.png", 682, 682);
+	THREE("level_three.png", 341, 341),
+	FOUR("level_four.png", 313, 268),
+	FIVE("level_five.png", 682, 682);
 	
 	
 	

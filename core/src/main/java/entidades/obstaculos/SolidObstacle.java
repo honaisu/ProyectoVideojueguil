@@ -9,9 +9,11 @@ import enumeradores.recursos.EObstacleSkin;
 public class SolidObstacle extends Entity {
 
     public SolidObstacle(float x, float y) {
-        // Siempre usa la skin BLOCK // en vola poner uno fondo ma wonito (nachoid)
-    	super(new Vector2(x, y), EObstacleSkin.BLOCK);
-        
+        this(x, y, EObstacleSkin.BOX);
+    }
+    
+    public SolidObstacle(float x, float y, EObstacleSkin skin) {
+    	super(new Vector2(x, y), skin);
     	this.sprite.setPosition(x, y);
     }
 

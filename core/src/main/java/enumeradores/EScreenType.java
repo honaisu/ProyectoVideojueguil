@@ -9,16 +9,16 @@ import pantallas.menus.*;
 import pantallas.juego.*;
 
 public enum EScreenType {
-
-	MENU(g -> new MainMenuScreen(g)),
-	JUEGO(g -> new GameScreen(g)),
-	PERSONALIZACION(g -> new CustomizationScreen(g)),
-	CONFIGURACION(g -> new ConfigurationScreen(g)),
-	TUTORIAL(g -> new TutorialScreen(g)),
-	PAUSA(g -> new PauseScreen(g)),
-	TRANSICION(g -> new LevelTransitionScreen(g)),
+	CUSTOMIZATION(g -> new CustomizationScreen(g)),
+	CONFIGURATION(g -> new ConfigurationScreen(g)),
+	TRANSITION(g -> new LevelTransitionScreen(g)),
 	GAME_OVER(g -> new GameOverScreen(g)),
-	VICTORIA(g -> new WinScreen(g));
+	TUTORIAL(g -> new TutorialScreen(g)),
+	MENU(g -> new MainMenuScreen(g)),
+	PAUSE(g -> new PauseScreen(g)),
+	GAME(g -> new GameScreen(g)),
+	WIN(g -> new WinScreen(g)),
+	;
 	
 	private Function<MainGame, BaseScreen> screen;
 	
