@@ -34,6 +34,7 @@ public class GameWorld {
 		
 		// nuevo para el tema de inciar los niveles
 		this.currentLevelIndex = startingLevelIndex - 1;
+		//this.currentLevelIndex = 3;
 		this.waitingForNextRound = true;
 
 		// y creamos el primer nivel

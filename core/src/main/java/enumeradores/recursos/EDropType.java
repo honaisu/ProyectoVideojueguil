@@ -7,14 +7,15 @@ import interfaces.ITexture;
  */
 public enum EDropType implements ITexture {
 	// Drops
-	HEAVY_MACHINE_GUN("heavy.png", EGameSound.DROP_HMG),
-	ROCKET_LAUNCHER("rocket.png", EGameSound.DROP_RL),
-	LASER_CANNON("laser_gun.png", EGameSound.DROP_LC),
+	HEAVY_MACHINE_GUN("heavy_machine_gun.png", EGameSound.DROP_HMG),
+	ROCKET_LAUNCHER("rocket_launcher.png", EGameSound.DROP_RL),
+	LASER_CANNON("laser_cannon.png", EGameSound.DROP_LC),
 	LASER_GUN("laser_gun.png", EGameSound.DROP_LG),
-	FLAMESHOT("flame.png", EGameSound.DROP_FS),
+	FLAMESHOT("flameshot.png", EGameSound.DROP_FS),
 	RAYGUN("ray_gun.png", EGameSound.DROP_RG),
 	SHOTGUN("shotgun.png", EGameSound.DROP_SHOTGUN),
-	MELEE("melee.png", EGameSound.DROP_MELEE);
+	MELEE("melee.png", EGameSound.DROP_MELEE),
+	CLAYMORE("claymore.png", EGameSound.DROP_MELEE);
 	
 	private final EGameSound sound;
 	private final String ruta;

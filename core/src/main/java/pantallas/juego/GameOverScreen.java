@@ -38,7 +38,7 @@ public class GameOverScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			getGame().getPantallaManager().cambiarPantalla(EScreenType.JUEGO);
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME);
 		}
 	}
 

@@ -1,9 +1,13 @@
 package entidades.proyectiles;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import data.SwingData;
 import entidades.Entity;
+import enumeradores.recursos.EProjectileType;
+import factories.AnimationFactory;
+import logica.AnimationHandler;
 
 public class Swing extends Projectile {
 	// Contador
@@ -17,6 +21,7 @@ public class Swing extends Projectile {
 
 	private final Entity shooter;
 	private final Vector2 offsetVector = new Vector2();
+	private AnimationHandler animation;
 
 	public Swing(SwingData data, Entity shooter) {
 		super(shooter.getPosition().cpy(), data);
@@ -32,11 +37,17 @@ public class Swing extends Projectile {
 
 		sprite.setOriginCenter();
 		this.updatePosition();
+		
+		if (!isBeam)
+			this.animation = new AnimationHandler(AnimationFactory.createSwing(), sprite);
 	}
 
 	@Override
 	public void update(float delta) {
 		this.updatePosition();
+		
+		if (animation != null)
+			animation.updateStateTime(delta);
 
 		if (destroyed)
 			return;
@@ -68,5 +79,14 @@ public class Swing extends Projectile {
 		this.position.add(offsetVector);
 
 		sprite.setPosition(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
+	}
+	
+	@Override
+	public void draw(SpriteBatch batch) {
+		if (animation != null) {
+			animation.handle(batch, false); 
+		} else {
+			super.draw(batch);
+		}
 	}
 }

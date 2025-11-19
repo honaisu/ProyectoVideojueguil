@@ -36,7 +36,7 @@ public class LevelTransitionScreen extends BaseScreen {
         if (timer <= 0) {
             // Cuando el tiempo acaba, cargamos el JUEGO
             // (GameScreen usará 'getNextLevelToLoad()' para cargar el Nivel 2)
-            getGame().getPantallaManager().cambiarPantalla(EScreenType.JUEGO);
+            getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME);
         }
     }
 

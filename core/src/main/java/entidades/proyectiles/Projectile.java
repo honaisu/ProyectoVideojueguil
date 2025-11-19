@@ -54,7 +54,6 @@ public abstract class Projectile extends Entity implements IRenderizable {
 			enemy.takeDamage(damage);
 			return true;
 		}
-
 	}
 
 	public int getDamage() {

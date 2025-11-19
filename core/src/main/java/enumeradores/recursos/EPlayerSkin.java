@@ -6,7 +6,8 @@ import interfaces.INavigableOption;
 public enum EPlayerSkin implements INavigableOption, ITexture {
 	ORIGINAL("Skin Original", "original.png"),
 	ALT_1("Skin Alt 1", "alt_1.png"),
-	ALT_2("Skin Alt 2", "alt_2.png");
+	ALT_2("Skin Alt 2", "alt_2.png")
+	;
 	
 	EPlayerSkin(String nombre, String ruta) {
 		this.nombre = nombre;

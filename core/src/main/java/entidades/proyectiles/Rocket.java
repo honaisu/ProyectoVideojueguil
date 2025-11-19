@@ -42,8 +42,8 @@ public class Rocket extends Projectile {
         this.rotation = shooter.getRotation() + 90;
         
         sprite.setPosition(position.x, position.y);
-        sprite.setOriginCenter();
         sprite.setRotation(shooter.getRotation());
+        sprite.setOriginCenter();
         
         setVelocity(data.velocity, this.rotation);
     }
@@ -66,12 +66,11 @@ public class Rocket extends Projectile {
         sprite.translate(movement.x, movement.y);
         position.add(movement);
         
-        if (!Entity.isInBounds(this)) {
+        if (!Entity.isInPlayableBounds(this, HUD_HEIGHT)) {
         	sprite.setPosition(position.x, position.y);
         	destroy();
         }
 	}
-	
 	
 	@Override
 	public boolean onHitEnemy(Enemy enemy) {
@@ -79,12 +78,15 @@ public class Rocket extends Projectile {
 		// Crea la explosión
 		Projectile explosion = this.spawnExplosion();
 		manager.add(explosion);
+		
+		super.onHitEnemy(enemy);
 		this.destroy();
+		
 		return true; 
 	}
 	
 	private Projectile spawnExplosion() { 
-    	Bullet projectile = new Bullet(this.explosionData, position.cpy());        	
+    	Bullet projectile = new Bullet(this.explosionData, position.cpy());    	
         return projectile;
     }
 }
