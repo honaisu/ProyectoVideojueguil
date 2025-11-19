@@ -167,4 +167,33 @@ public abstract class Entity implements IRenderizable {
 
 		return true;
 	}
+	
+	public static boolean isInPlayableBounds(Entity entity, float hudHeight) {
+	    float w = entity.getSprite().getWidth(), h = entity.getSprite().getHeight();
+	    float maxX = Gdx.graphics.getWidth() - w;
+	    // Nuevo límite Y superior, igual que antes
+	    float maxY = Gdx.graphics.getHeight() - h; 
+	    // Nuevo límite Y inferior (la altura del HUD)
+	    float minY = hudHeight; 
+
+	    Vector2 copy = entity.getPosition().cpy();
+	    Vector2 position = entity.getPosition();
+	    Vector2 velocity = entity.getVelocity();
+
+	    // Clamp horizontal (X) - Se mantiene igual (desde 0)
+	    position.x = MathUtils.clamp(position.x, 0, maxX);
+	    if (position.x != copy.x) {
+	        velocity.x = -velocity.x;
+	        return false;
+	    }
+
+	    // Clamp vertical (Y) - Nuevo: desde minY hasta maxY
+	    position.y = MathUtils.clamp(position.y, minY, maxY);
+	    if (position.y != copy.y) {
+	        velocity.y = -velocity.y;
+	        return false;
+	    }
+
+	    return true;
+	}
 }

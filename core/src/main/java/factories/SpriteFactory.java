@@ -2,6 +2,7 @@ package factories;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import data.TextureData;
 import interfaces.ITexture;
@@ -25,7 +26,11 @@ public class SpriteFactory {
 	 * un sprite correspondiente a ello. :D
 	 */
 	private static Sprite create(Texture texture, int width, int height) {
-		Sprite sprite = new Sprite(texture, width, height);
+		//Sprite sprite = new Sprite(texture, width, height); esto recorta //antiguo
+		//probar esto
+		Sprite sprite = new Sprite(texture); 
+		sprite.setSize(width, height);
+		
 		return sprite;
 	}
 
@@ -46,4 +51,21 @@ public class SpriteFactory {
 	public static Sprite create(ITexture asset) {
 		return create(asset, asset.getWidth(), asset.getHeight());
 	}
+	
+	/**
+	 * Divide el sprite de las HealthBars 96x352
+	 */
+	public static TextureRegion[] createHPBarFrames(ITexture texture) {
+		Texture sheet = AssetManager.getInstancia().getTexture(texture);
+	    TextureRegion[][] tmp = TextureRegion.split(sheet, 96, 32);
+
+	    // El sprite sheet tiene 11 filas y 1 columna.
+	    TextureRegion[] frames = new TextureRegion[11];
+	    for (int i = 0; i < 11; i++) {
+	        frames[i] = tmp[i][0];
+	    }
+	    return frames;
+	}
+	
+	
 }

@@ -31,30 +31,37 @@ public class GameScreen extends BaseScreen {
 		this.world = new GameWorld(game.getNextLevelToLoad(), game.getPlayerSkin());
 		
 		EBackgroundType background = world.getBackground();
+
 		backgroundSprite = SpriteFactory.create(background);
 		backgroundSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 	}
 
 	@Override
 	protected void update(float delta) {
 		world.update(delta);
+		
+		if (world.isGameWon()) {
+            
+            // Ahora va a la pantalla de Victoria
+            getGame().getPantallaManager().cambiarPantalla(EScreenType.VICTORIA); 
+            return; // Detenemos el update
+        }
 
 	    // Chqeuamos la transicion
 	    if (world.isLevelComplete()) {
-	        // le decimoa  amin game cual es el siguiente nivel
+
+	        // le decimos a mi game cual es el siguiente nivel
 	        getGame().setNextLevelToLoad(world.getNextLevelIndex());
 	        getGame().getPantallaManager().cambiarPantalla(EScreenType.TRANSICION);
 	        return;
 	    }
-	    
-	    if (world.gameWon()) {
-	    	// TODO Implementar pantalla de ganada :D
-	    	getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
-	    }
 
 	    // Y el update si muere o pausa
 		if (world.getPlayer().isDead()) {
+			getGame().setNextLevelToLoad(0);//cambiamos al nivel 1
 			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME_OVER);
+			
 			return; 
 		}
 		

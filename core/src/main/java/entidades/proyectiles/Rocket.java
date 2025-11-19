@@ -54,6 +54,7 @@ public class Rocket extends Projectile {
 		
 		float currentSpeed = velocity.len();
 		
+        // aceleracion
         if (currentSpeed < maxSpeed) {
             currentSpeed += acceleration * delta;
             // Cambia la magnitud del vector (no su dirección) :D

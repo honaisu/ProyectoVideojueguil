@@ -5,6 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.Enemy;
+import enumeradores.recursos.EEnemyType;
 import factories.EnemyFactory;
 import interfaces.IRenderizable;
 
@@ -12,10 +13,18 @@ public class EnemyManager implements IRenderizable {
 	// mio
 	private final List<Enemy> enemies = new ArrayList<>();
 	private static final float MIN_SEPARATION = 72f;
+	private final ObstacleManager obstacleManager;
+	
+	private EEnemyType type;
 
 	// vacio para las rondas creo
-	public EnemyManager() {}
-	
+
+	public EnemyManager(ObstacleManager obstacleManager) {
+		this.obstacleManager = obstacleManager;
+	}
+
+	// public EnemyManager() {}
+
 	@Override
 	public void update(float delta) {
 		for (Enemy e : enemies)
@@ -31,6 +40,8 @@ public class EnemyManager implements IRenderizable {
 	// mio //sgeun gemini mejor e mio xd// Tu spawner con lógica 'isFar'. Es mejor.
 
 	// Anselmo que chucha es esto
+	// es pa evitar que aparescan enemigos ensima de otros y ahora de bloques
+	// tambien :D
 	public void spawnEnemies(int cant) {
 		final int triesPerEnemy = 24;
 		for (int i = 0; i < cant; i++) {
@@ -38,7 +49,15 @@ public class EnemyManager implements IRenderizable {
 			boolean placed = false;
 			for (int t = 0; t < triesPerEnemy && !placed; t++) {
 				cand = EnemyFactory.createRandomBasic();
-				if (isFar(cand.getPosition().x, cand.getPosition().y, MIN_SEPARATION)) {
+
+				// Comprueba si está lejos de otros enemigos
+				boolean farFromEnemies = isFar(cand.getPosition().x, cand.getPosition().y, MIN_SEPARATION);
+
+				// Comprueba si NO está dentro de un bloque (con esto solucionamos el bug)
+				boolean farFromObstacles = !obstacleManager.isCollidingWithSolid(cand);
+
+				// Ahora comprueba ambas condiciones
+				if (farFromEnemies && farFromObstacles) {
 					enemies.add(cand);
 					placed = true;
 				}
