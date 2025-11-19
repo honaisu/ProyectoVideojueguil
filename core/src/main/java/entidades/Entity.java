@@ -10,8 +10,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
 import data.TextureData;
-import enumeradores.recursos.EEnemyType;
-import enumeradores.recursos.EProjectileType;
 import factories.SpriteFactory;
 import interfaces.IRenderizable;
 import interfaces.ITexture;
