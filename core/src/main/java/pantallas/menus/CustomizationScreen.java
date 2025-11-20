@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.EPlayerSkin;
 import enumeradores.EScreenType;
-import enumeradores.recursos.EPlayerSkin;
 import factories.SpriteFactory;
 import interfaces.INavigableOption;
 import logica.MainGame;

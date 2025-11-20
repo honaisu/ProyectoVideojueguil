@@ -12,14 +12,12 @@ public class HealthBar {
     private Sprite displaySprite;	// El sprite que se va a dibujar
     private boolean isPlayer;		// Si es jugador o no
     
-    
     public HealthBar(Creature owner, TextureRegion[] frames, boolean isPlayer) {
         this.owner = owner;
         this.frames = frames;
         this.isPlayer = isPlayer;
         
         this.displaySprite = new Sprite(frames[0]);
-
     }
     
     public void update() {

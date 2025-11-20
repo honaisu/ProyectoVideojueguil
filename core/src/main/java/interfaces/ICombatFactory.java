@@ -1,8 +1,4 @@
-package factories;
-
-import interfaces.IAttackStrategy;
-import interfaces.IAttackable;
-import interfaces.IState;
+package interfaces;
 
 /**
  * Factory abstracta que se encarga de poder crear un "combate". Su principal

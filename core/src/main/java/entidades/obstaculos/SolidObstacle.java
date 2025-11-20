@@ -1,10 +1,8 @@
 package entidades.obstaculos;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import entidades.Entity;
-import enumeradores.recursos.EObstacleSkin;
-//import factories.SpriteFactory; ya no se ocupa creo
+import enumeradores.recursos.texturas.EObstacleSkin;
 
 public class SolidObstacle extends Entity {
 
@@ -19,9 +17,4 @@ public class SolidObstacle extends Entity {
 
     @Override
     public void update(float delta) { /* No se mueve */ }
-    
-    @Override
-	public void draw(SpriteBatch batch) {
- 		super.draw(batch);
-	}
 }

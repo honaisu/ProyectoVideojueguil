@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import enumeradores.EScreenType;
+import enumeradores.opciones.EWinOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
 import pantallas.menus.NavigableScreen;
-import pantallas.opciones.EWinOption;
 
 // Hereda de NavigableScreen, igual que PauseScreen
 public class WinScreen extends NavigableScreen {

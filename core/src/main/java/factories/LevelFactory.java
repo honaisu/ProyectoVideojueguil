@@ -3,8 +3,8 @@ package factories;
 import java.util.ArrayList;
 import java.util.List;
 
-import enumeradores.recursos.EBackgroundType;
-import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.texturas.EBackgroundType;
+import enumeradores.recursos.texturas.EEnemyType;
 // Imports de tus otras clases
 import logica.Round;
 import logica.levels.Level;

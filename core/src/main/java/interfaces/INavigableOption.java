@@ -12,5 +12,5 @@ public interface INavigableOption extends IExecutableGame {
 	public String getName();
 	public int ordinal();
 	@Override
-	public default void ejecutar(MainGame game) {}
+	public default void executeGame(MainGame game) {}
 }

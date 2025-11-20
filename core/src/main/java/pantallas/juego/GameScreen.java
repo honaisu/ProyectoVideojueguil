@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
 import enumeradores.EScreenType;
-import enumeradores.recursos.EBackgroundType;
+import enumeradores.recursos.texturas.EBackgroundType;
 import factories.SpriteFactory;
 import logica.GameWorld;
 import logica.MainGame;

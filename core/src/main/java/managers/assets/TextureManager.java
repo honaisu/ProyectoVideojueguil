@@ -7,13 +7,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Disposable;
 
-import enumeradores.recursos.EBackgroundType;
-import enumeradores.recursos.EDropType;
-import enumeradores.recursos.EEnemyType;
-import enumeradores.recursos.EHealthBarType;
-import enumeradores.recursos.EPlayerSkin;
-import enumeradores.recursos.EProjectileType;
-import enumeradores.recursos.EObstacleSkin;
+import enumeradores.EPlayerSkin;
+import enumeradores.recursos.texturas.EBackgroundType;
+import enumeradores.recursos.texturas.EDropType;
+import enumeradores.recursos.texturas.EEnemyType;
+import enumeradores.recursos.texturas.EHealthBarType;
+import enumeradores.recursos.texturas.EObstacleSkin;
+import enumeradores.recursos.texturas.EProjectileType;
 import interfaces.ITexture;
 
 public class TextureManager implements Disposable {

@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
+import enumeradores.opciones.EConfigurationOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
 import logica.Volumen;
-import pantallas.opciones.EConfigurationOption;
 
 public class ConfigurationScreen extends NavigableScreen {
 	private Volumen volumenTemporal = new Volumen();

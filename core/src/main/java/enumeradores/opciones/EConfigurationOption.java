@@ -1,4 +1,4 @@
-package pantallas.opciones;
+package enumeradores.opciones;
 
 import interfaces.INavigableOption;
 

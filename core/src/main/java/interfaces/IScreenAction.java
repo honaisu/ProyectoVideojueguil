@@ -8,5 +8,5 @@ import managers.ScreenManager;
  * Es utilizado, de ejemplo, para poder mover las pantallas del menú principal.
  */
 public interface IScreenAction {
-	public void ejecutar(ScreenManager pantallaManager);
+	public void executeScreen(ScreenManager pantallaManager);
 }

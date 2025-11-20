@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 
-import enumeradores.recursos.EPlayerSkin;
-import enumeradores.recursos.EProjectileType;
+import enumeradores.EPlayerSkin;
+import enumeradores.recursos.texturas.EProjectileType;
 import interfaces.ITexture;
 import managers.assets.AssetManager;
 

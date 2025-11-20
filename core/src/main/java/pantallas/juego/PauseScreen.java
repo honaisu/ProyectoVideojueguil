@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import enumeradores.EScreenType;
+import enumeradores.opciones.EPauseOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
 import pantallas.menus.NavigableScreen;
-import pantallas.opciones.EPauseOption;
 
 public class PauseScreen extends NavigableScreen {
 	private final Color TRANSPARENTE = new Color(0f, 0f, 0f, 0.45f);

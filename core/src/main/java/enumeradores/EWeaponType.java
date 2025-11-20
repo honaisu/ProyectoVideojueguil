@@ -1,6 +1,6 @@
 package enumeradores;
 
-import enumeradores.recursos.EDropType;
+import enumeradores.recursos.texturas.EDropType;
 
 public enum EWeaponType {
 	ROCKET_LAUNCHER(EDropType.ROCKET_LAUNCHER),

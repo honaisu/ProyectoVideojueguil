@@ -1,4 +1,4 @@
-package enumeradores.recursos;
+package enumeradores;
 
 import interfaces.ITexture;
 import interfaces.INavigableOption;

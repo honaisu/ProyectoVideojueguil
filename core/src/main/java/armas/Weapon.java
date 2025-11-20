@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import data.ProjectileData;
 import data.WeaponData;
 import entidades.Entity;
-import enumeradores.recursos.EDropType;
+import enumeradores.recursos.texturas.EDropType;
 import interfaces.IAttackStrategy;
 import interfaces.IAttackable;
 import interfaces.IState;
