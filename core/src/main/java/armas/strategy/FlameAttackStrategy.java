@@ -1,9 +1,9 @@
 package armas.strategy;
 
+import armas.proyectiles.Flame;
 import data.FlameData;
 import data.ProjectileData;
 import entidades.Entity;
-import entidades.proyectiles.Flame;
 import interfaces.IAttackStrategy;
 import managers.ProjectileManager;
 

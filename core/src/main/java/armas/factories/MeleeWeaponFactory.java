@@ -18,7 +18,7 @@ public class MeleeWeaponFactory implements ICombatFactory {
 
 	@Override
 	public IState createState() {
-		return new MeleeState(data.fireRate);
+		return new MeleeState(data.getFireRate());
 	}
 
 	@Override
@@ -28,6 +28,6 @@ public class MeleeWeaponFactory implements ICombatFactory {
 
 	@Override
     public IAttackStrategy createStrategy() {
-        return AssetManager.getInstancia().getStrategy(data.projectileData.type);
+        return AssetManager.getInstancia().getStrategy(data.getProjectileData().getType());
     }
 }

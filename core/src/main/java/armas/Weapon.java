@@ -26,15 +26,15 @@ public class Weapon implements IAttackable {
 	private final ProjectileData data;
 
 	public Weapon(WeaponData data, IState state, IAttackStrategy strategy) {
-		this.data = data.projectileData;
+		this.data = data.getProjectileData();
 		this.strategy = strategy;
 		this.state = state;
 		
 		// Para mantenerlo ordenado
-		this.name = data.name;
-		this.type = data.drop;
+		this.name = data.getName();
+		this.type = data.getDrop();
 
-		this.fireSound = AssetManager.getInstancia().getSound(data.soundFire);
+		this.fireSound = AssetManager.getInstancia().getSound(data.getSoundFire());
 	}
 
 	@Override
@@ -67,6 +67,7 @@ public class Weapon implements IAttackable {
 	/**
 	 * Consigue el estado de la arma actual :)
 	 */
+	@Override
 	public IState getState() {
 		return state;
 	}
@@ -89,11 +90,12 @@ public class Weapon implements IAttackable {
 	public ITexture getDropTexture() {
 		return type;
 	}
-
+	
 	public Sound getFireSound() {
 		return fireSound;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}

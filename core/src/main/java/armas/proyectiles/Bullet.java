@@ -1,4 +1,4 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -24,11 +24,11 @@ public class Bullet extends Projectile implements IRenderizable {
 	 * Constructor que permite a una entidad poder disparar la bala correspondiente.
 	 */
 	public Bullet(BulletData data, Entity shooter, float angle, float speed) {
-		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.piercing), data);
+		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.isPiercing()), data);
 
-		this.lifespan = data.lifespan;
+		this.lifespan = data.getLifespan();
 		float finalRotation = shooter.getRotation() + 90 + angle;
-        float finalVelocity = data.velocity + speed;
+        float finalVelocity = data.getVelocity() + speed;
         
         // Configuramos la velocidad de la ENTIDAD (no solo del sprite)
         this.getVelocity().set(finalVelocity, 0);
@@ -45,12 +45,12 @@ public class Bullet extends Projectile implements IRenderizable {
 	public Bullet(BulletData data, Vector2 spawn) {
 		super(spawn, data);
 
-		this.lifespan = data.lifespan;
+		this.lifespan = data.getLifespan();
 		// Las explosiones no giran
 		setRotation(0);
 
 		// Configuración especial para explosiones o spawns estáticos
-        getSprite().setBounds(getPosition().x, getPosition().y, data.scale, data.scale);
+        getSprite().setBounds(getPosition().x, getPosition().y, data.getScale(), data.getScale());
         getSprite().setOriginCenter();
         // Centrar el sprite en la coordenada de spawn
         getSprite().setPosition(getPosition().x - getSprite().getWidth()/2, getPosition().y - getSprite().getHeight()/2);
@@ -58,7 +58,7 @@ public class Bullet extends Projectile implements IRenderizable {
 	}
 
 	private void setupSprite(BulletData data, float spriteRotation) {
-		getSprite().setScale(data.scale);
+		getSprite().setScale(data.getScale());
         getSprite().setOriginCenter();
         getSprite().setRotation(spriteRotation);
 		this.setSpritePosition();
