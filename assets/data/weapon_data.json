@@ -63,7 +63,6 @@
 		"class": "rocket",
 		"piercing": false,
 		"width": 25,
-
 		"velocity": 30.0,
 		"acceleration": 800.0,
 		"maxSpeed": 1600.0,
