@@ -1,4 +1,4 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +21,9 @@ public abstract class Projectile extends Entity implements IRenderizable {
 	}
 
 	public Projectile(Vector2 position, ProjectileData data) {
-		super(position, data.type);
-		this.piercing = data.piercing;
-		this.damage = data.damage;
+		super(position, data.getType());
+		this.piercing = data.isPiercing();
+		this.damage = data.getDamage();
 	}
 
 	public boolean onHitEnemy(Enemy enemy) {

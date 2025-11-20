@@ -1,4 +1,4 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -33,12 +33,12 @@ public class Rocket extends Projectile implements IRenderizable  {
 	}*/
 	
 	public Rocket(RocketData data, Entity shooter, ProjectileManager manager) {
-        super(Projectile.calcularMuzzle(new Vector2(), shooter, data.piercing), data);
+        super(Projectile.calcularMuzzle(new Vector2(), shooter, data.isPiercing()), data);
         
         this.manager = manager;
-        this.explosionData = data.explosionData;
-        this.acceleration = data.acceleration;
-        this.maxSpeed = data.maxSpeed;
+        this.explosionData = data.getExplosionData();
+        this.acceleration = data.getAcceleration();
+        this.maxSpeed = data.getMaxSpeed();
         
         setRotation(shooter.getRotation() + 90);
         
@@ -46,7 +46,7 @@ public class Rocket extends Projectile implements IRenderizable  {
         getSprite().setRotation(shooter.getRotation());
         getSprite().setOriginCenter();
         
-        setVelocity(data.velocity, getRotation());
+        setVelocity(data.getVelocity(), getRotation());
     }
 
 	@Override

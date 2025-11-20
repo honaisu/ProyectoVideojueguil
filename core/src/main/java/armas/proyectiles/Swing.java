@@ -1,4 +1,4 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -27,12 +27,12 @@ public class Swing extends Projectile implements IRenderizable {
 		super(shooter.getPosition().cpy(), data);
 		this.shooter = shooter;
 
-		this.lifespan = data.duration;
-		this.isBeam = data.isBeam;
-		this.radius = data.radius;
+		this.lifespan = data.getDuration();
+		this.isBeam = data.isBeam();
+		this.radius = data.getRadius();
 
 		setRotation(shooter.getRotation() + 90);
-		getSprite().setBounds(0, 0, data.width, data.height);
+		getSprite().setBounds(0, 0, data.getWidth(), data.getHeight());
 		getSprite().setOriginCenter();
 		
 		this.updatePosition();

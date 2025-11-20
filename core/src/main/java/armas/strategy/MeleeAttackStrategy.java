@@ -1,9 +1,9 @@
 package armas.strategy;
 
+import armas.proyectiles.Swing;
 import data.ProjectileData;
 import data.SwingData;
 import entidades.Entity;
-import entidades.proyectiles.Swing;
 import interfaces.IAttackStrategy;
 import managers.ProjectileManager;
 

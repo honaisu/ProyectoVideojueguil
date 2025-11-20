@@ -18,7 +18,7 @@ public class RangedWeaponFactory implements ICombatFactory {
 
     @Override
     public IState createState() {
-        return new RangedState(data.fireRate, data.maxAmmo);
+        return new RangedState(data.getFireRate(), data.getMaxAmmo());
     }
 
 	@Override
@@ -28,6 +28,6 @@ public class RangedWeaponFactory implements ICombatFactory {
 
 	@Override
     public IAttackStrategy createStrategy() {
-        return AssetManager.getInstancia().getStrategy(data.projectileData.type);
+        return AssetManager.getInstancia().getStrategy(data.getProjectileData().getType());
     }
 }

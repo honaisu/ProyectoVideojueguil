@@ -8,8 +8,21 @@ import enumeradores.recursos.EProjectileType;
  * piercing que hace y el daño.
  */
 public abstract class ProjectileData {
-	public EProjectileType type;
-	public float velocity = 0f;
-	public boolean piercing;
-	public int damage = 10;
+	private EProjectileType type;
+	private float velocity = 0f;
+	private boolean piercing;
+	private int damage = 10;
+	
+	public int getDamage() {
+		return damage;
+	}
+	public boolean isPiercing() {
+		return piercing;
+	}
+	public float getVelocity() {
+		return velocity;
+	}
+	public EProjectileType getType() {
+		return type;
+	}
 }

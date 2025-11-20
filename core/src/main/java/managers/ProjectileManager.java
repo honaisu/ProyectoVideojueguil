@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import entidades.proyectiles.Projectile;
+import armas.proyectiles.Projectile;
 import interfaces.IRenderizable;
 
 public class ProjectileManager implements IRenderizable {

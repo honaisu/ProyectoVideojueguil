@@ -1,12 +1,9 @@
 package entidades;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import armas.Weapon;
 import interfaces.IAttackable;
-import managers.assets.AssetManager;
 
 public class WeaponDrop extends Entity {
 	private IAttackable weaponToGive;

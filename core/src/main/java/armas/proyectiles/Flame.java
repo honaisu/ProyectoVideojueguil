@@ -1,4 +1,4 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -13,27 +13,27 @@ public class Flame extends Projectile implements IRenderizable {
 	private Vector2 startPosition;
 	
 	public Flame(FlameData data, Entity shooter) {
-		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.piercing), data);
+		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.isPiercing()), data);
 		
 		this.startPosition = getPosition().cpy();
-		this.maxDistance = data.maxDistance;
-		this.maxScale = data.maxScale;
+		this.maxDistance = data.getMaxDistance();
+		this.maxScale = data.getMaxScale();
 		setRotation(shooter.getRotation() + 90);
 		
-		float spread = data.spread;
+		float spread = data.getSpread();
 		// Setea un ángulo "aleatorio"
 		float angleDeviation = MathUtils.random(-spread, spread);
 		float speedVariation = MathUtils.random(0f, 2f);
 		float finalAngle = getRotation() + angleDeviation;
-		float finalSpeed = data.velocity + speedVariation;
+		float finalSpeed = data.getVelocity() + speedVariation;
 		
 		setVelocity(new Vector2(0, finalSpeed));
-		getVelocity().scl(data.velocity);
+		getVelocity().scl(data.getVelocity());
 		getVelocity().setAngleDeg(finalAngle);
 		
 		getSprite().setRotation(finalAngle);
 		getSprite().setOriginCenter();
-		getSprite().setScale(data.scale / 100f);
+		getSprite().setScale(data.getScale() / 100f);
 	}
 
 	/**

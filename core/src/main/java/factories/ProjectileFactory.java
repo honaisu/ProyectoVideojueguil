@@ -2,9 +2,13 @@ package factories;
 
 import com.badlogic.gdx.math.MathUtils;
 
+import armas.proyectiles.Bullet;
+import armas.proyectiles.Flame;
+import armas.proyectiles.Projectile;
+import armas.proyectiles.Rocket;
+import armas.proyectiles.Swing;
 import data.*;
 import entidades.Entity;
-import entidades.proyectiles.*;
 import enumeradores.recursos.EDropType;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
@@ -17,7 +21,7 @@ public class ProjectileFactory {
 	 * u.u
 	 */
 	public static void create(EDropType type, Entity shooter, ProjectileManager manager) {
-		ProjectileData data = AssetManager.getInstancia().getData(type).projectileData;
+		ProjectileData data = AssetManager.getInstancia().getData(type).getProjectileData();
 		Projectile projectile = null;
 		switch (type) {
 		case FLAMESHOT:
@@ -43,9 +47,9 @@ public class ProjectileFactory {
 		case RAYGUN:
 		case SHOTGUN: {
 			BulletData shoot = (BulletData) data;
-			float spread = shoot.spread;
+			float spread = shoot.getSpread();
 
-			for (int i = 0; i < shoot.pellets; i++) {
+			for (int i = 0; i < shoot.getPellets(); i++) {
 				float angle = MathUtils.random(-spread, spread);
 				float speed = MathUtils.random(0.1f, 2f);
 				Projectile newBullet = new Bullet(shoot, shooter, angle, speed);
