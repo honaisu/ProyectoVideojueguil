@@ -5,8 +5,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import data.FlameData;
 import entidades.Entity;
+import interfaces.IRenderizable;
 
-public class Flame extends Projectile {
+public class Flame extends Projectile implements IRenderizable {
 	private float maxDistance;
 	private float maxScale;
 	private Vector2 startPosition;
@@ -14,25 +15,25 @@ public class Flame extends Projectile {
 	public Flame(FlameData data, Entity shooter) {
 		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.piercing), data);
 		
-		this.startPosition = position.cpy();
+		this.startPosition = getPosition().cpy();
 		this.maxDistance = data.maxDistance;
 		this.maxScale = data.maxScale;
-		this.rotation = shooter.getRotation() + 90;
+		setRotation(shooter.getRotation() + 90);
 		
 		float spread = data.spread;
 		// Setea un ángulo "aleatorio"
 		float angleDeviation = MathUtils.random(-spread, spread);
 		float speedVariation = MathUtils.random(0f, 2f);
-		float finalAngle = rotation + angleDeviation;
+		float finalAngle = getRotation() + angleDeviation;
 		float finalSpeed = data.velocity + speedVariation;
 		
-		this.velocity = new Vector2(0, finalSpeed);
-		this.velocity.scl(data.velocity);
-		this.velocity.setAngleDeg(finalAngle);
+		setVelocity(new Vector2(0, finalSpeed));
+		getVelocity().scl(data.velocity);
+		getVelocity().setAngleDeg(finalAngle);
 		
-		sprite.setRotation(finalAngle);
-        sprite.setOriginCenter();
-        sprite.setScale(data.scale / 100f);
+		getSprite().setRotation(finalAngle);
+		getSprite().setOriginCenter();
+		getSprite().setScale(data.scale / 100f);
 	}
 
 	/**
@@ -43,10 +44,10 @@ public class Flame extends Projectile {
 		if (isDestroyed())
 			return;
 		
-		position.add(velocity.cpy().scl(delta));
-		sprite.setPosition(position.x - sprite.getOriginX(), position.y - sprite.getOriginY());
+		getPosition().add(getVelocity().cpy().scl(delta));
+		getSprite().setPosition(getPosition().x - getSprite().getOriginX(), getPosition().y - getSprite().getOriginY());
 		
-		float distance = position.dst(startPosition);
+		float distance = getPosition().dst(startPosition);
 		if (distance >= maxDistance) {
 			destroy();
 			return;
@@ -54,7 +55,7 @@ public class Flame extends Projectile {
 		
 		float travelPercent = distance / maxDistance;
 		float currentScale = 1.0f + (maxScale - 1.0f) * travelPercent;
-        sprite.setScale(currentScale);
+		getSprite().setScale(currentScale);
         
         if (!Entity.isInBounds(this)) {
             destroy();

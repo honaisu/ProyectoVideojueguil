@@ -61,8 +61,11 @@ public class HUDLayout {
         spr.setPosition(Gdx.graphics.getWidth()/2-40, 48);
         spr.draw(batch);
         if (player.hasWeapon()) {
-            int mun = player.getWeapon().getState().getAmmo();
-            int max = player.getWeapon().getState().maxAmmo;
+        	Integer max = player.getWeapon().getState().getMaxResource();
+        	if (max == null) return;
+        	
+            int mun = player.getWeapon().getState().getCurrentResource();
+            
             font.draw(batch, "Municion: " + mun + " / " + max,
                     Gdx.graphics.getWidth()/2-60, 30);
         }

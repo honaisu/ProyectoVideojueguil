@@ -1,31 +1,34 @@
 package entidades;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import armas.Weapon;
+import interfaces.IAttackable;
+import managers.assets.AssetManager;
 
 public class WeaponDrop extends Entity {
-	private Weapon weaponToGive;
+	private IAttackable weaponToGive;
 	private float activeTime = 0f;
 	private float duration = 3f;
 	
 	private boolean hurted = false; 
 	private int hurtTime = 120;
 	
-	public WeaponDrop(float x, float y, Weapon weapon) {
+	public WeaponDrop(float x, float y, IAttackable weapon) {
         super(new Vector2(x, y), weapon.getDropTexture()); 
         
         this.weaponToGive = weapon;
-        sprite.scale(1f);
-        sprite.setPosition(x, y);
+        getSprite().scale(1f);
+        getSprite().setPosition(x, y);
     }
 	
 	@Override
     public void draw(SpriteBatch batch) {
 		if (hurted && hurtTime % 10 < 5)
 			return; // Parpadeo
-        sprite.draw(batch);
+        getSprite().draw(batch);
     }
 	
 	@Override
@@ -42,7 +45,7 @@ public class WeaponDrop extends Entity {
         }
     }
 	
-	public Weapon getWeapon() {
+	public IAttackable getWeapon() {
 		return weaponToGive;
 	}
 }

@@ -6,9 +6,10 @@ import data.BulletData;
 import data.RocketData;
 import entidades.Enemy;
 import entidades.Entity;
+import interfaces.IRenderizable;
 import managers.ProjectileManager;
 
-public class Rocket extends Projectile {
+public class Rocket extends Projectile implements IRenderizable  {
 	private float acceleration;
     private float maxSpeed;
     
@@ -39,35 +40,35 @@ public class Rocket extends Projectile {
         this.acceleration = data.acceleration;
         this.maxSpeed = data.maxSpeed;
         
-        this.rotation = shooter.getRotation() + 90;
+        setRotation(shooter.getRotation() + 90);
         
-        sprite.setPosition(position.x, position.y);
-        sprite.setRotation(shooter.getRotation());
-        sprite.setOriginCenter();
+        getSprite().setPosition(getPosition().x, getPosition().y);
+        getSprite().setRotation(shooter.getRotation());
+        getSprite().setOriginCenter();
         
-        setVelocity(data.velocity, this.rotation);
+        setVelocity(data.velocity, getRotation());
     }
 
 	@Override
 	public void update(float delta) {
 		if (isDestroyed()) return;
 		
-		float currentSpeed = velocity.len();
+		float currentSpeed = getVelocity().len();
 		
         // aceleracion
         if (currentSpeed < maxSpeed) {
             currentSpeed += acceleration * delta;
             // Cambia la magnitud del vector (no su dirección) :D
-            velocity.setLength(Math.min(currentSpeed, maxSpeed));
+            getVelocity().setLength(Math.min(currentSpeed, maxSpeed));
         }
         
-        Vector2 movement = velocity.cpy().scl(delta);
+        Vector2 movement = getVelocity().cpy().scl(delta);
         
-        sprite.translate(movement.x, movement.y);
-        position.add(movement);
+        getSprite().translate(movement.x, movement.y);
+        getPosition().add(movement);
         
         if (!Entity.isInPlayableBounds(this, HUD_HEIGHT)) {
-        	sprite.setPosition(position.x, position.y);
+        	getSprite().setPosition(getPosition().x, getPosition().y);
         	destroy();
         }
 	}
@@ -85,7 +86,7 @@ public class Rocket extends Projectile {
 	}
 	
 	private Projectile spawnExplosion() { 
-    	Bullet projectile = new Bullet(this.explosionData, position.cpy());    	
+    	Bullet projectile = new Bullet(this.explosionData, getPosition().cpy());    	
         return projectile;
     }
 }

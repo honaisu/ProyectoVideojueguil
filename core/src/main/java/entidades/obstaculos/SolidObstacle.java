@@ -14,7 +14,7 @@ public class SolidObstacle extends Entity {
     
     public SolidObstacle(float x, float y, EObstacleSkin skin) {
     	super(new Vector2(x, y), skin);
-    	this.sprite.setPosition(x, y);
+    	getSprite().setPosition(x, y);
     }
 
     @Override

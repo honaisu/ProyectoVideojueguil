@@ -93,11 +93,8 @@ public class GameWorld {
 	public void update(float delta) {
 		this.handleInput(delta);
 		player.update(delta);
-
 		gameLogicHandler.update(delta);
-
 		gameLogicHandler.handleCollisions(player);
-
 		// Chekeamos que este completo
 		checkCompletion(); // es apra ver si esta vacia la lista de enemigos, si lo está, avanza de ronda
 	}

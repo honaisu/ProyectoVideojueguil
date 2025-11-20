@@ -3,15 +3,14 @@ package entidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import armas.*;
 import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
 import factories.WeaponFactory;
+import interfaces.IAttackable;
 import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
@@ -28,16 +27,14 @@ public class Player extends Creature {
 	private AnimationHandler animation;
 
 	// Lógica de Daño merge
-	private boolean hurted = false;
-	private int hurtTime;
-	private float iFrames = 0f;
 	private float puddleCooldown = 0f; // Cooldown para el daño de charco (se reduce el culdawn de daño si no mal
+	private boolean hurted = false;
+	private float iFrames = 0f;
+	private int hurtTime;
 	// recuerdo)
 
-	boolean isMoving = false;
-
 	// Arma inicial o por defecto
-	private Weapon weapon;
+	private IAttackable weapon;
 	
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
@@ -47,22 +44,20 @@ public class Player extends Creature {
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100, true);
 		
-		this.weapon = WeaponFactory.create(EWeaponType.MELEE);
+		this.weapon = WeaponFactory.create(EWeaponType.FLAMESHOT);
 		// Lo pone al centro
-		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
-		sprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		sprite.setRotation(rotation);
-		sprite.setOriginCenter();
+		getSprite().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		getSprite().setRotation(this.getRotation());
+		getSprite().setOriginCenter();
 
-		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), sprite);
+		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), getSprite());
 	}
 
 	@Override
 	public void update(float delta) {
-        // Revisa si hay movimiento
-		isMoving = !velocity.isZero(0.1f);
-		if (isMoving)
+		if (isMoving())
 			animation.updateStateTime(delta);
 
 		// Lógica de invulnerabilidad
@@ -78,22 +73,18 @@ public class Player extends Creature {
 		if (puddleCooldown > 0)
 			puddleCooldown -= delta; 
 
-        // Lógica de armas
-		if(weapon != null) {
-			weapon.getState().update(delta);
-		}
+		if (weapon != null) {
+            weapon.update(delta);
+        }
 
-        // Lógica de física con Vector2
-		velocity.limit(MAX_VELOCITY);
-		Vector2 position = getPosition().cpy().add(velocity.cpy().scl(delta));
-		this.position.set(position);
+		getVelocity().limit(MAX_VELOCITY);
+		Vector2 position = getPosition().cpy().add(getVelocity().cpy().scl(delta));
+		this.setPosition(position);
         
-        // Lógica de rebote en bordes
 		Entity.isInPlayableBounds(this, HUD_HEIGHT);
-		//Entity.isInBounds(this); 
 
-		sprite.setPosition(this.position.x, this.position.y);
-		sprite.setRotation(rotation);
+		getSprite().setPosition(getPosition().x, getPosition().y);
+		getSprite().setRotation(getRotation());
 		
 		getHealthBar().update();
 
@@ -106,7 +97,7 @@ public class Player extends Creature {
 			return; // Parpadeo
 
 		animation.updateSprite(getSprite());
-		animation.handle(batch, isMoving, true);
+		animation.handle(batch, isMoving(), true);
 	}
 	
 	/**
@@ -115,7 +106,6 @@ public class Player extends Creature {
 	public boolean isHurt() {
 		return hurted || iFrames > 0f; 
 	}
-	
 
 	@Override
 	public void takeDamage(int amount) {
@@ -137,29 +127,26 @@ public class Player extends Creature {
 		}
 	}
 
-	
 	public void rotate(float amount) {
-		this.rotation += amount;
+		this.setRotation(getRotation() + amount);
 	}
 	
 	public void accelerate(float amount) {
 		Vector2 acceleration = new Vector2(0, 1);
-		acceleration.setAngleDeg(rotation + 90);
+		acceleration.setAngleDeg(getRotation() + 90);
 		acceleration.scl(amount);
 
-		velocity.add(acceleration);
+		getVelocity().add(acceleration);
 	}
 	
 	public void applyFriction(float friction) {
-		velocity.scl(friction);
+		getVelocity().scl(friction);
 	}
 	
 	public void shoot(ProjectileManager manager) {
 		weapon.attack(this, manager);
 		
-		if (weapon.getState().getAmmo() == null) return;
-
-		if (weapon.getState().getAmmo() == 0)
+		if (!hasWeapon())
 			weapon = WeaponFactory.create(EWeaponType.MELEE);
 	}
 	
@@ -170,10 +157,7 @@ public class Player extends Creature {
 		} else if (hazard.getDamageType() == DamageHazard.DamageType.PUDDLE) {
 			// CHARCO (Daño leve con cooldown propio)
 			if (puddleCooldown <= 0) {
-                
-				this.hp -= hazard.getDamage(); 
-				if (hp < 0)
-					hp = 0;
+                takeDamage(hazard.getDamage());
 
 				this.puddleCooldown = 0.5f; // Cooldown específico del charco
 			}
@@ -182,24 +166,20 @@ public class Player extends Creature {
 
 	public void bounce() {
         // Invierte la velocidad
-		velocity.scl(-1); 
+		getVelocity().scl(-1); 
 
 		// Empuja al jugador para "despegarlo" (evitar bug de quedarse atascado)
 		// Se aumenta de 5.0f a 10 para probar 
-		Vector2 pushVector = velocity.cpy().setLength(10.0f); 
-        position.add(pushVector);
+		Vector2 pushVector = getVelocity().cpy().setLength(10.0f); 
+        getPosition().add(pushVector);
 	}
 	
 	//seter y getters ordenados
-	public void setWeapon(Weapon newWeapon) {
+	public void setWeapon(IAttackable newWeapon) {
 		this.weapon = newWeapon;
 	}
-    
-	public float getRotation() {
-		return rotation;
-	}
 
-	public Weapon getWeapon() {
+	public IAttackable getWeapon() {
 		return weapon;
 	}
 
@@ -212,8 +192,8 @@ public class Player extends Creature {
 	}
     
 	public boolean hasWeapon() {
-		if (weapon.getState().getAmmo() == null) return false;
-		return weapon.getState().getAmmo() > 0;
+		if (weapon == null) return false;
+		return weapon.isValid();
 	}
 
 }

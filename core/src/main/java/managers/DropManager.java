@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import entidades.WeaponDrop;
 
 public class DropManager {
-
     private List<WeaponDrop> drops;
 
     public DropManager() {

@@ -1,7 +1,6 @@
 package entidades;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 
-import data.TextureData;
 import factories.SpriteFactory;
 import interfaces.IRenderizable;
 import interfaces.ITexture;
@@ -21,12 +19,11 @@ import interfaces.ITexture;
  * veáse ejemplos como Jugador, Bala, Enemigo...
  */
 public abstract class Entity implements IRenderizable {
-	protected Sprite sprite;
-	protected Vector2 velocity = new Vector2();
-	protected Vector2 position;
-	protected float rotation = 0f;
-
-	protected boolean destroyed = false;
+	private Sprite sprite;
+	private Vector2 velocity = new Vector2();
+	private Vector2 position;
+	private float rotation = 0f;
+	private boolean destroyed = false;
 
 	public Entity(Vector2 position, ITexture asset) {
 		this.position = position;
@@ -40,12 +37,6 @@ public abstract class Entity implements IRenderizable {
 		this.velocity.set(velocity);
 	}
 
-	public Entity(Vector2 position, TextureData texture) {
-		this.position = position;
-		this.sprite = new Sprite(new Texture(texture.path), texture.width, texture.height);
-		this.sprite.setPosition(position.x, position.y);
-	}
-
 	/**
 	 * Método abstracto encargado de poder actualizar la lógica de la entidad.
 	 */
@@ -54,7 +45,8 @@ public abstract class Entity implements IRenderizable {
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		sprite.draw(batch);
+		if (!destroyed)
+			sprite.draw(batch);
 	}
 
 	// METODOS
@@ -106,11 +98,15 @@ public abstract class Entity implements IRenderizable {
 	}
 
 	public void setPosition(Vector2 position) {
-		this.position = position;
+		this.position.set(position);
 	}
 
 	public Vector2 getVelocity() {
 		return velocity;
+	}
+
+	public boolean isMoving() {
+		return !velocity.isZero(0.1f);
 	}
 
 	public void setVelocity(float speed, float angleDeg) {
@@ -120,6 +116,10 @@ public abstract class Entity implements IRenderizable {
 
 	public void setVelocity(Vector2 velocity) {
 		this.velocity = velocity;
+	}
+
+	public void setRotation(float rotation) {
+		this.rotation = rotation;
 	}
 
 	public float getRotation() {
