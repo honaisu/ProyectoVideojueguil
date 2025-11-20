@@ -47,6 +47,7 @@ public class TextureManager implements Disposable {
     	}
     }
     
+    
     public Texture get(ITexture asset) {
     	return textures.get(asset);
     }

@@ -24,7 +24,7 @@ public class HealthBar {
     
     public void update() {
         //Porcentaje de vida
-        float healthPercent = (float) owner.getHp() / (float) owner.totalHp;
+        float healthPercent = (float) owner.getHp() / (float) owner.getTotalHp();
         if (owner.isDead()) {
             healthPercent = 0f;
         }

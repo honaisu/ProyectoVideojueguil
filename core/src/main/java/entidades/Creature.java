@@ -15,8 +15,8 @@ import interfaces.ITexture;
  */
 public abstract class Creature extends Entity implements IRenderizable {
 	// La vida de la entidad :)
-	public final int totalHp;
-	protected int hp;
+	private final int totalHp;
+	private int hp;
 	private HealthBar healthBar;
 
 	public Creature(Vector2 position, ITexture asset, int hp, boolean isPlayer) {
@@ -34,6 +34,13 @@ public abstract class Creature extends Entity implements IRenderizable {
 	 */
 	public void takeDamage(int amount) {
 		this.hp -= amount;
+		// Para que no se sobrepase nuestro límite
+		if (hp < 0)
+			hp = 0;
+	}
+	
+	public void addHp(int amount) {
+		this.hp += amount;
 	}
 
 	/**
@@ -42,6 +49,11 @@ public abstract class Creature extends Entity implements IRenderizable {
 	public boolean isDead() {
 		return this.hp <= 0;
 	}
+	
+	public int getTotalHp() {
+		return totalHp;
+	}
+	
 	public int getHp() {
 		return hp;
 	}

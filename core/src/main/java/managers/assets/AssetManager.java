@@ -9,7 +9,10 @@ import enumeradores.EWeaponType;
 import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameMusic;
 import enumeradores.recursos.EGameSound;
+import enumeradores.recursos.EProjectileType;
+import interfaces.IAttackStrategy;
 import interfaces.ITexture;
+
 
 /**
  * Clase encargada de poder tener todas las texturas, sonidos y música del juego.
@@ -23,6 +26,7 @@ public class AssetManager {
     private SoundManager sounds = new SoundManager();
     private MusicManager musics = new MusicManager();
     private DataManager data = new DataManager();
+    private StrategyRegistry strategy = new StrategyRegistry();
     
     private AssetManager() {}
     
@@ -43,6 +47,7 @@ public class AssetManager {
     	sounds.load();
     	musics.load();
     	data.load();
+    	strategy.load();
     }
     
 	/**
@@ -81,5 +86,9 @@ public class AssetManager {
 
 	public Music getMusic(EGameMusic music) {
 		return musics.get(music);
+	}
+	
+	public IAttackStrategy getStrategy(EProjectileType type) {
+		return strategy.get(type);
 	}
 }

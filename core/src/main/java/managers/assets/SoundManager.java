@@ -12,7 +12,6 @@ import enumeradores.recursos.EGameSound;
 public class SoundManager implements Disposable {
 	private Map<EGameSound, Sound> sounds = new EnumMap<>(EGameSound.class);
 	
-	
 	public void load() {
 		for (EGameSound eSound : EGameSound.values()) {
     		Sound newSound = Gdx.audio.newSound(Gdx.files.internal(eSound.getRuta()));
