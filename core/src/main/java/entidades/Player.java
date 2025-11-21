@@ -37,7 +37,7 @@ public class Player extends Creature {
 	boolean isMoving = false;
 
 	// Daño progresivo para el charco (PUDDLE)
-	private final float PUDDLE_ESCALATION_TIME = 2.0f;
+	private final float PUDDLE_ESCALATION_TIME = 3.50f;
 	private float continuousPuddleTime = 0f;
 	private boolean isCurrentlyInPuddle = false;
 	private final float PUDDLE_DAMAGE_TICK = 0.5f;

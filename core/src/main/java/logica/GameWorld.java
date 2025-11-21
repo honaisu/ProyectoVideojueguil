@@ -54,7 +54,7 @@ public class GameWorld {
 			// 1. Cargamos el Nivel (solo el que toca) usando el Factory.
 			switch (currentLevelIndex) {
 			case 0: // Nivel 1
-				currentLevel = LevelFactory.createLevelOne();
+				currentLevel = LevelFactory.createLevelTwo();
 				break;
 			case 1: // Nivel 2
 				currentLevel = LevelFactory.createLevelTwo();
