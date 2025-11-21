@@ -26,7 +26,8 @@ public enum EGameSound implements IAssetPath {
 	EXPLOSION("enemies/explosion.ogg"),
 	// Player
 	DEATH("player/death.mp3"),
-	HURT("player/hurt.mp3");
+	HURT("player/hurt.mp3"),
+	;
 	
 	private String ruta;
 	
