@@ -7,7 +7,6 @@ import managers.EnemyManager; // para gestionar los enemigos
  */
 @FunctionalInterface
 public interface IRoundStrategy {
-    
     /**
      * Ejecuta la lógica de spawning de esta ronda.
      * @param enemyManager El manager al que se añadirán los enemigos.

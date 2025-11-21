@@ -1,16 +1,13 @@
 package entidades.obstaculos;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import entidades.Entity;
-import enumeradores.recursos.EObstacleSkin;
-//import factories.SpriteFactory;
+import enumeradores.recursos.texturas.EObstacleSkin;
 
 public class DamageHazard extends Entity {
-
     public enum DamageType {
-        SPIKE,  // Pua (daño de una)
-        PUDDLE  // Charco (daño "constante" y silencioso)
+        SPIKE,
+        PUDDLE
     }
 
     private DamageType type;
@@ -33,9 +30,4 @@ public class DamageHazard extends Entity {
 
     @Override
     public void update(float delta) { /* No se mueve */ }
-    
-    @Override
-	public void draw(SpriteBatch batch) {
- 		super.draw(batch);
-	}
 }

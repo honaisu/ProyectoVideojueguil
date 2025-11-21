@@ -1,6 +1,6 @@
 package data;
 
-import enumeradores.recursos.EProjectileType;
+import enumeradores.recursos.texturas.EProjectileType;
 
 /**
  * Clase de datos que se encargan de definir un proyectil genérico dentro del

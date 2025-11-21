@@ -7,6 +7,7 @@ import armas.factories.RangedWeaponFactory;
 import data.WeaponData;
 import enumeradores.EWeaponType;
 import interfaces.IAttackable;
+import interfaces.ICombatFactory;
 import managers.assets.AssetManager;
 
 public class WeaponFactory {

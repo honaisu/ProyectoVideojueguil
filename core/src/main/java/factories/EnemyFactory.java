@@ -4,7 +4,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 
 import entidades.Enemy;
-import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.texturas.EEnemyType;
 
 
 //TODO evitar que enemigos aparescan ensima de los bloques

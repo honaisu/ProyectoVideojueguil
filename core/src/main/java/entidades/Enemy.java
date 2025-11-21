@@ -3,7 +3,7 @@ package entidades;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
-import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.texturas.EEnemyType;
 
 public class Enemy extends Creature {
 	private float rareDrop;

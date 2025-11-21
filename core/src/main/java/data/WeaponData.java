@@ -1,6 +1,6 @@
 package data;
 
-import enumeradores.recursos.EDropType;
+import enumeradores.recursos.texturas.EDropType;
 
 /**
  * Clase de datos de un arma genérica. Esta definida por su nombre, sus

@@ -5,7 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.Enemy;
-import enumeradores.recursos.EEnemyType;
+import enumeradores.recursos.texturas.EEnemyType;
 import factories.EnemyFactory;
 import interfaces.IRenderizable;
 

@@ -5,9 +5,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import enumeradores.EPlayerSkin;
 import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
-import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
 import factories.WeaponFactory;
 import interfaces.IAttackable;
@@ -26,11 +26,11 @@ public class Player extends Creature {
 	private AnimationHandler animation;
 
 	// Lógica de Daño merge
-	private float puddleCooldown = 0f; // Cooldown para el daño de charco (se reduce el culdawn de daño si no mal
+	private float puddleCooldown = 0f; 
+	// Cooldown para el daño de charco (se reduce el culdawn de daño si no mal
 	private boolean hurted = false;
 	private float iFrames = 0f;
 	private int hurtTime;
-	// recuerdo)
 
 	//mio
 	boolean isMoving = false;
@@ -274,8 +274,6 @@ public class Player extends Creature {
         // Invierte la velocidad
 		getVelocity().scl(-1); 
 
-		// Empuja al jugador para "despegarlo" (evitar bug de quedarse atascado)
-		// Se aumenta de 5.0f a 10 para probar 
 		Vector2 pushVector = getVelocity().cpy().setLength(10.0f); 
         getPosition().add(pushVector);
 	}

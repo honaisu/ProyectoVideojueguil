@@ -9,9 +9,9 @@ import com.badlogic.gdx.utils.Json;
 
 import data.*;
 import enumeradores.EWeaponType;
-import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameSound;
-import enumeradores.recursos.EProjectileType;
+import enumeradores.recursos.texturas.EDropType;
+import enumeradores.recursos.texturas.EProjectileType;
 
 /**
  * Clase encargada de gestionar el data de las armas de nuestro proyecto.

@@ -5,7 +5,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import entidades.obstaculos.DamageHazard;
 import entidades.obstaculos.SolidObstacle;
-import enumeradores.recursos.EBackgroundType;
+import enumeradores.recursos.texturas.EBackgroundType;
 import factories.ObstacleFactory;
 
 import entidades.Entity;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import data.ProjectileData;
 import data.WeaponData;
 import entidades.Entity;
-import enumeradores.recursos.EDropType;
+import enumeradores.recursos.texturas.EDropType;
 import interfaces.IAttackStrategy;
 import interfaces.IAttackable;
 import interfaces.IState;
@@ -45,7 +45,7 @@ public class Weapon implements IAttackable {
 		state.recordAttack();
 		strategy.executeAttack(data, p, manager);
 
-		playSound();
+		this.playSound();
 	}
 	
 	@Override
@@ -58,7 +58,7 @@ public class Weapon implements IAttackable {
 		return state.isValid();
 	}
 
-	public void playSound() {
+	private void playSound() {
 		fireSound.play();
 	}
 
@@ -70,10 +70,6 @@ public class Weapon implements IAttackable {
 	@Override
 	public IState getState() {
 		return state;
-	}
-	
-	public boolean isValidState() {
-		return state.isValid();
 	}
 
 	/**
@@ -89,10 +85,6 @@ public class Weapon implements IAttackable {
 	@Override
 	public ITexture getDropTexture() {
 		return type;
-	}
-	
-	public Sound getFireSound() {
-		return fireSound;
 	}
 
 	@Override
