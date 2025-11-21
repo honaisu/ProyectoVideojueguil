@@ -8,10 +8,36 @@ import enumeradores.recursos.EDropType;
  * proyectil asociado.
  */
 public class WeaponData {
-	public String name;
-	public float fireRate;
-	public Integer maxAmmo;
-	public EDropType drop;
-	public String soundFire;
-	public ProjectileData projectileData;
+	private String name;
+	private float fireRate;
+	private Integer maxAmmo;
+	private EDropType drop;
+	private String soundFire;
+	private ProjectileData projectileData;
+	
+	public WeaponData() {}
+
+	public ProjectileData getProjectileData() {
+		return projectileData;
+	}
+
+	public String getSoundFire() {
+		return soundFire;
+	}
+
+	public EDropType getDrop() {
+		return drop;
+	}
+
+	public Integer getMaxAmmo() {
+		return maxAmmo;
+	}
+
+	public float getFireRate() {
+		return fireRate;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

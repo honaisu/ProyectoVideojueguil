@@ -3,17 +3,14 @@ package managers;
 import java.util.Iterator;
 import java.util.List;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.MathUtils;
 
-import armas.*;
-
+import armas.proyectiles.Projectile;
 import entidades.Enemy;
 import entidades.Player;
 import entidades.WeaponDrop;
-import entidades.proyectiles.Projectile;
-import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
 import factories.WeaponFactory;
+import interfaces.IAttackable;
 import managers.assets.AssetManager;
 
 //para el tema de los obstaculos
@@ -103,8 +100,9 @@ public class CollisionManager {
 			WeaponDrop drop = dropIterator.next();
 
 			if (player.checkCollision(drop)) {
-				Weapon pickedUpWeapon = drop.getWeapon();
+				IAttackable pickedUpWeapon = drop.getWeapon();
 				player.setWeapon(pickedUpWeapon);
+				
 				pickedUpWeapon.getPickupSound().play();
 				dropIterator.remove();
 			}
@@ -116,7 +114,7 @@ public class CollisionManager {
         
         // Lógica de Drop
         if (Math.random() < enemy.getRareDropProbability()) {
-            Weapon weaponToDrop = createRandomWeapon(); 
+            IAttackable weaponToDrop = WeaponFactory.createRandomAttackable(); 
 			// Se usa getPosition() de benjoid, que es cmo la logica actual
             WeaponDrop drop = new WeaponDrop(enemy.getPosition().x, enemy.getPosition().y, weaponToDrop);
             dropManager.add(drop); 
@@ -125,13 +123,6 @@ public class CollisionManager {
         iterator.remove(); // Eliminar enemigo de la lista
         return scorePerEnemy;
     }
-
-	private Weapon createRandomWeapon() {
-		EWeaponType[] weapons = EWeaponType.values();
-		int randomWeapon = MathUtils.random(weapons.length - 1);
-		
-		return WeaponFactory.create(weapons[randomWeapon]);
-	}
 
 	// Colision de cuando el juagador choca con un obsttaculo de daño
 	public void handlePlayerVsHazards(Player player, ObstacleManager obstacleManager) {

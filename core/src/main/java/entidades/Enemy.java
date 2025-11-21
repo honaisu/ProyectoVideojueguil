@@ -14,22 +14,22 @@ public class Enemy extends Creature {
 		this.rareDrop = rareDrop;
 		this.damage = damage;
 
-		sprite.setBounds(x,y,sprite.getWidth()*size,sprite.getHeight()*size);
-		sprite.setOriginCenter();
+		getSprite().setBounds(x,y,getSprite().getWidth()*size,getSprite().getHeight()*size);
+		getSprite().setOriginCenter();
 		
 	}
 
 	@Override
 	public void update(float delta) {
-	    Vector2 displacement = velocity.cpy().scl(delta);
+	    Vector2 displacement = getVelocity().cpy().scl(delta);
 	    Vector2 newPos = getPosition().cpy().add(displacement);
 	    
-	    position.set(newPos);
+	    setPosition(newPos);
 	    
 	    final float HUD_HEIGHT = 100f;
 		Entity.isInPlayableBounds(this, HUD_HEIGHT);
 		
-	    sprite.setPosition(newPos.x, newPos.y);
+	    getSprite().setPosition(newPos.x, newPos.y);
 	    
 	    getHealthBar().update();
 	}
@@ -50,11 +50,11 @@ public class Enemy extends Creature {
      */
 	public void bounce() { //es literal lo mismo que el player
         // Invierte la velocidad 
-        velocity.scl(-1); 
+        getVelocity().scl(-1); 
 
         // "Empuja" a la entidad 1 píxel para "despegarla" (evitar bug tambien)
-        Vector2 pushVector = velocity.cpy().setLength(1.0f);
-        position.add(pushVector);
+        Vector2 pushVector = getVelocity().cpy().setLength(1.0f);
+        getPosition().add(pushVector);
     }
 
 	public float getDamage() {

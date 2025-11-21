@@ -27,6 +27,7 @@ public class MusicManager implements Disposable {
     	}
 		musics.clear();
 	}
+	
 
 	public Music get(EGameMusic music) {
 		return musics.get(music);

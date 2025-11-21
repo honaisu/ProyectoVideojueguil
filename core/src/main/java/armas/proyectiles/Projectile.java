@@ -1,8 +1,7 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -22,25 +21,9 @@ public abstract class Projectile extends Entity implements IRenderizable {
 	}
 
 	public Projectile(Vector2 position, ProjectileData data) {
-		super(position, data.type);
-		this.piercing = data.piercing;
-		this.damage = data.damage;
-	}
-
-	/**
-	 * Método abstracto usado por los proyectiles para poder generar su lógica
-	 * interna
-	 */
-	@Override
-	public abstract void update(float delta);
-
-	/**
-	 * Método que dibuja el proyectil mientras no sea destruido
-	 */
-	@Override
-	public void draw(SpriteBatch batch) {
-		if (!destroyed)
-			super.draw(batch);
+		super(position, data.getType());
+		this.piercing = data.isPiercing();
+		this.damage = data.getDamage();
 	}
 
 	public boolean onHitEnemy(Enemy enemy) {

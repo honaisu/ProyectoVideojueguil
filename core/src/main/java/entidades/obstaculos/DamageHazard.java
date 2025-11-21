@@ -24,7 +24,7 @@ public class DamageHazard extends Entity {
         this.damageAmount = damageAmount;
         
         // getSpr().setAlpha(0.8f); // sirve para poner trsparente los obstaculos en caso de
-        this.sprite.setPosition(x, y);
+        getSprite().setPosition(x, y);
     }
 
     // Getters para que el Player pueda preguntar

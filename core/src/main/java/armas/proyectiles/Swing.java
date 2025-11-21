@@ -1,15 +1,15 @@
-package entidades.proyectiles;
+package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 import data.SwingData;
 import entidades.Entity;
-import enumeradores.recursos.EProjectileType;
 import factories.AnimationFactory;
+import interfaces.IRenderizable;
 import logica.AnimationHandler;
 
-public class Swing extends Projectile {
+public class Swing extends Projectile implements IRenderizable {
 	// Contador
 	private float activeTime = 0f;
 	// Tiempo que dura activo el golpe
@@ -27,19 +27,18 @@ public class Swing extends Projectile {
 		super(shooter.getPosition().cpy(), data);
 		this.shooter = shooter;
 
-		this.lifespan = data.duration;
-		this.isBeam = data.isBeam;
-		this.radius = data.radius;
+		this.lifespan = data.getDuration();
+		this.isBeam = data.isBeam();
+		this.radius = data.getRadius();
 
-		this.rotation = shooter.getRotation() + 90;
-
-		sprite.setBounds(0, 0, data.width, data.height);
-
-		sprite.setOriginCenter();
+		setRotation(shooter.getRotation() + 90);
+		getSprite().setBounds(0, 0, data.getWidth(), data.getHeight());
+		getSprite().setOriginCenter();
+		
 		this.updatePosition();
 		
 		if (!isBeam)
-			this.animation = new AnimationHandler(AnimationFactory.createSwing(), sprite);
+			this.animation = new AnimationHandler(AnimationFactory.createSwing(), getSprite());
 	}
 
 	@Override
@@ -48,37 +47,37 @@ public class Swing extends Projectile {
 		
 		if (animation != null)
 			animation.updateStateTime(delta);
-
-		if (destroyed)
+		if (isDestroyed())
 			return;
+		
 		activeTime += delta;
 		if (activeTime > lifespan)
 			destroy();
 	}
 
 	private void updatePosition() {
-		this.rotation = shooter.getRotation();
+		setRotation(shooter.getRotation());
 
 		float shooterWidth = shooter.getSprite().getWidth();
 		float shooterHeight = shooter.getSprite().getHeight();
 
 		offsetVector.set(shooter.getPosition().x + shooterWidth / 2f, shooter.getPosition().y + shooterHeight / 2f);
 
-		this.mover(offsetVector, this.rotation, radius);
+		this.mover(offsetVector, getRotation(), radius);
 
 		if (isBeam)
 			this.updateOffset();
 	}
 
 	private void updateOffset() {
-		float forwardOffset = sprite.getHeight() / 2f;
+		float forwardOffset = getSprite().getHeight() / 2f;
 
 		offsetVector.set(1, 0);
-		offsetVector.setAngleDeg(rotation + 90);
+		offsetVector.setAngleDeg(getRotation() + 90);
 		offsetVector.setLength(forwardOffset);
-		this.position.add(offsetVector);
+		this.getPosition().add(offsetVector);
 
-		sprite.setPosition(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
+		getSprite().setPosition(getPosition().x - getSprite().getWidth() / 2, getPosition().y - getSprite().getHeight() / 2);
 	}
 	
 	@Override

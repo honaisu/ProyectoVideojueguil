@@ -3,15 +3,14 @@ package entidades;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import armas.*;
 import enumeradores.EWeaponType;
 import enumeradores.recursos.EGameSound;
 import enumeradores.recursos.EPlayerSkin;
 import factories.AnimationFactory;
 import factories.WeaponFactory;
+import interfaces.IAttackable;
 import logica.AnimationHandler;
 import managers.ProjectileManager;
 import managers.assets.AssetManager;
@@ -27,12 +26,13 @@ public class Player extends Creature {
 	private AnimationHandler animation;
 
 	// Lógica de Daño merge
-	private boolean hurted = false;
-	private int hurtTime;
-	private float iFrames = 0f;
 	private float puddleCooldown = 0f; // Cooldown para el daño de charco (se reduce el culdawn de daño si no mal
+	private boolean hurted = false;
+	private float iFrames = 0f;
+	private int hurtTime;
 	// recuerdo)
 
+	//mio
 	boolean isMoving = false;
 
 	// Daño progresivo para el charco (PUDDLE)
@@ -44,8 +44,9 @@ public class Player extends Creature {
 	// Arma inicial o por defecto
 	//private Weapon weapon = new HeavyMachineGun();
 
-	private Weapon weapon;
-	
+	// Arma inicial o por defecto
+	private IAttackable weapon;
+
 	public Player(float x, float y) {
 		// crea el player con skin original nomás
 		this(x, y, EPlayerSkin.ORIGINAL);
@@ -54,19 +55,20 @@ public class Player extends Creature {
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100, true);
 		
-		this.weapon = WeaponFactory.create(EWeaponType.MELEE);
+		this.weapon = WeaponFactory.create(EWeaponType.FLAMESHOT);
 		// Lo pone al centro
-		position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
-		sprite.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-		sprite.setRotation(rotation);
-		sprite.setOriginCenter();
+		getSprite().setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		getSprite().setRotation(this.getRotation());
+		getSprite().setOriginCenter();
 
-		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), sprite);
+		animation = new AnimationHandler(AnimationFactory.createPlayer(skin), getSprite());
 	}
 
 	@Override
 	public void update(float delta) {
+<<<<<<< HEAD
 
 		// logica si esta encima del charco
 		if (isCurrentlyInPuddle) { 
@@ -82,6 +84,9 @@ public class Player extends Creature {
 		// Revisa si hay movimiento
 		isMoving = !velocity.isZero(0.1f);
 		if (isMoving)
+=======
+		if (isMoving())
+>>>>>>> origin/noche
 			animation.updateStateTime(delta);
 
 		// Lógica de invulnerabilidad
@@ -93,6 +98,7 @@ public class Player extends Creature {
 		if (iFrames > 0f) // Este es el temporizador de invulnerabilidad real
 			iFrames -= delta;
 
+<<<<<<< HEAD
 		// Lógica del charco
 		if (puddleCooldown > 0)
 			puddleCooldown -= delta;
@@ -110,11 +116,20 @@ public class Player extends Creature {
 		
         //de nachoid, algo más específico y mejor
         // Lógica de rebote en bordes
-		Entity.isInPlayableBounds(this, HUD_HEIGHT);
-		//Entity.isInBounds(this); 
+=======
+		if (weapon != null) {
+            weapon.update(delta);
+        }
 
-		sprite.setPosition(this.position.x, this.position.y);
-		sprite.setRotation(rotation);
+		getVelocity().limit(MAX_VELOCITY);
+		Vector2 position = getPosition().cpy().add(getVelocity().cpy().scl(delta));
+		this.setPosition(position);
+        
+>>>>>>> origin/noche
+		Entity.isInPlayableBounds(this, HUD_HEIGHT);
+
+		getSprite().setPosition(getPosition().x, getPosition().y);
+		getSprite().setRotation(getRotation());
 		
 		getHealthBar().update();
 
@@ -128,7 +143,7 @@ public class Player extends Creature {
 			return; // Parpadeo
 
 		animation.updateSprite(getSprite());
-		animation.handle(batch, isMoving, true);
+		animation.handle(batch, isMoving(), true);
 	}
 
 	/**
@@ -159,19 +174,19 @@ public class Player extends Creature {
 	}
 
 	public void rotate(float amount) {
-		this.rotation += amount;
+		this.setRotation(getRotation() + amount);
 	}
 
 	public void accelerate(float amount) {
 		Vector2 acceleration = new Vector2(0, 1);
-		acceleration.setAngleDeg(rotation + 90);
+		acceleration.setAngleDeg(getRotation() + 90);
 		acceleration.scl(amount);
 
-		velocity.add(acceleration);
+		getVelocity().add(acceleration);
 	}
 
 	public void applyFriction(float friction) {
-		velocity.scl(friction);
+		getVelocity().scl(friction);
 	}
 
 	/*public void shoot(ProjectileManager manager) {
@@ -184,9 +199,7 @@ public class Player extends Creature {
 	public void shoot(ProjectileManager manager) {
 		weapon.attack(this, manager);
 		
-		if (weapon.getState().getAmmo() == null) return;
-
-		if (weapon.getState().getAmmo() == 0)
+		if (!hasWeapon())
 			weapon = WeaponFactory.create(EWeaponType.MELEE);
 	}
 	
@@ -197,11 +210,15 @@ public class Player extends Creature {
 		} else if (hazard.getDamageType() == DamageHazard.DamageType.PUDDLE) {
 			// CHARCO (Daño leve con cooldown propio)
 			if (puddleCooldown <= 0) {
+<<<<<<< HEAD
                 
 				this.hp -= hazard.getDamage(); 
 >>>>>>> origin/noche
 				if (hp < 0)
 					hp = 0;
+=======
+                takeDamage(hazard.getDamage());
+>>>>>>> origin/noche
 
 				this.puddleCooldown = PUDDLE_DAMAGE_TICK;
 			}
@@ -237,6 +254,7 @@ public class Player extends Creature {
 	}
 
 	public void bounce() {
+<<<<<<< HEAD
 		// 1. Amortigua la velocidad (pierde el 30% de la energía)
 		velocity.scl(-0.7f);
 
@@ -252,8 +270,23 @@ public class Player extends Creature {
 	public float getRotation() {
 		return rotation;
 	}
+=======
+        // Invierte la velocidad
+		getVelocity().scl(-1); 
 
-	public Weapon getWeapon() {
+		// Empuja al jugador para "despegarlo" (evitar bug de quedarse atascado)
+		// Se aumenta de 5.0f a 10 para probar 
+		Vector2 pushVector = getVelocity().cpy().setLength(10.0f); 
+        getPosition().add(pushVector);
+	}
+	
+	//seter y getters ordenados
+	public void setWeapon(IAttackable newWeapon) {
+		this.weapon = newWeapon;
+	}
+>>>>>>> origin/noche
+
+	public IAttackable getWeapon() {
 		return weapon;
 	}
 
@@ -266,8 +299,8 @@ public class Player extends Creature {
 	}
 
 	public boolean hasWeapon() {
-		if (weapon.getState().getAmmo() == null) return false;
-		return weapon.getState().getAmmo() > 0;
+		if (weapon == null) return false;
+		return weapon.isValid();
 	}
 
 }
