@@ -62,7 +62,6 @@
 	"projectileData": {
 		"class": "rocket",
 		"piercing": false,
-		"width": 25,
 		"velocity": 30.0,
 		"acceleration": 800.0,
 		"maxSpeed": 1600.0,
@@ -146,13 +145,13 @@
 		"velocity": 0.0,
 		"acceleration": 0,
 		"maxSpeed": 0,
-		"type": "REDWIRE",
+		"type": "ROCKET",
 		"explosionData": {
             "class": "bullet",
             "damage": 100,
             "piercing": true,
             "velocity": 0,
-            "scale": 150,
+            "scale": 500,
 			"lifespan": 1,
 			"type": "FLAME",
         }

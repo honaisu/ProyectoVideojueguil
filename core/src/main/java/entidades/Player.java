@@ -44,7 +44,7 @@ public class Player extends Creature {
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100, true);
 		
-		this.weapon = WeaponFactory.create(EWeaponType.FLAMESHOT);
+		this.weapon = WeaponFactory.create(EWeaponType.CLAYMORE);
 		// Lo pone al centro
 		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
