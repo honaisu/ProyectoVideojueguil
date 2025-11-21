@@ -12,18 +12,6 @@ public interface IRenderizable {
 	final float HUD_HEIGHT = 100f;
 
 	/**
-	 * Método default opcional que seguirá la sucesión de pasos esperada para las
-	 * clases que implementen esta interfaz.
-	 * 
-	 * @param delta Diferencia de tiempo
-	 * @param batch El "espacio" donde dibujar
-	 */
-	default void render(float delta, SpriteBatch batch) {
-		this.update(delta);
-		this.draw(batch);
-	}
-
-	/**
 	 * Método encargado de manejar la lógica interna del objeto.
 	 * 
 	 * @param delta La diferencia de tiempo (sirve para las físicas y que sean

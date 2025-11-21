@@ -1,5 +1,6 @@
-package enumeradores.recursos;
+package enumeradores.recursos.texturas;
 
+import enumeradores.recursos.EGameSound;
 import interfaces.ITexture;
 
 /**

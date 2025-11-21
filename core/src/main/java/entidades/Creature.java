@@ -3,8 +3,8 @@ package entidades;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import enumeradores.recursos.texturas.EHealthBarType;
 import interfaces.IRenderizable;
-import enumeradores.recursos.EHealthBarType;
 import factories.SpriteFactory;
 import interfaces.ITexture;
 
@@ -15,9 +15,9 @@ import interfaces.ITexture;
  */
 public abstract class Creature extends Entity implements IRenderizable {
 	// La vida de la entidad :)
+	private HealthBar healthBar;
 	private final int totalHp;
 	private int hp;
-	private HealthBar healthBar;
 
 	public Creature(Vector2 position, ITexture asset, int hp, boolean isPlayer) {
 		super(position, asset);

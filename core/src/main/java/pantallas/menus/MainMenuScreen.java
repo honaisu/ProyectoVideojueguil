@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.opciones.EMainMenuOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
-import pantallas.opciones.EMainMenuOption;
 
 public class MainMenuScreen extends NavigableScreen {
 	public MainMenuScreen(MainGame game) {
@@ -22,7 +22,7 @@ public class MainMenuScreen extends NavigableScreen {
 		INavigableOption opcionActual = navegador.getCurrentSelection();
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-			opcionActual.ejecutar(getGame());
+			opcionActual.executeGame(getGame());
 	    }
 	}
 

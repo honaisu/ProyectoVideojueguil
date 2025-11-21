@@ -1,4 +1,4 @@
-package enumeradores.recursos;
+package enumeradores.recursos.texturas;
 
 import interfaces.ITexture;
 

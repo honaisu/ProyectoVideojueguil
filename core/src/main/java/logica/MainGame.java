@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import enumeradores.EPlayerSkin;
 import enumeradores.EScreenType;
-import enumeradores.recursos.EPlayerSkin;
 import managers.ScreenManager;
 import managers.assets.AssetManager;
 

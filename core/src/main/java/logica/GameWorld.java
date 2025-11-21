@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import entidades.Player;
-import enumeradores.recursos.EBackgroundType;
-import enumeradores.recursos.EPlayerSkin;
+import enumeradores.EPlayerSkin;
+import enumeradores.recursos.texturas.EBackgroundType;
 import factories.LevelFactory;
 
 //coso para los enemigos y el cambio de ronda

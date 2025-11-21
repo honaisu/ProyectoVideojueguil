@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 import data.WeaponData;
 import enumeradores.EWeaponType;
-import enumeradores.recursos.EDropType;
 import enumeradores.recursos.EGameMusic;
 import enumeradores.recursos.EGameSound;
-import enumeradores.recursos.EProjectileType;
+import enumeradores.recursos.texturas.EDropType;
+import enumeradores.recursos.texturas.EProjectileType;
 import interfaces.IAttackStrategy;
 import interfaces.ITexture;
 

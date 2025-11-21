@@ -3,9 +3,9 @@ package armas.factories;
 import armas.Weapon;
 import armas.state.RangedState;
 import data.WeaponData;
-import factories.ICombatFactory;
 import interfaces.IAttackStrategy;
 import interfaces.IAttackable;
+import interfaces.ICombatFactory;
 import interfaces.IState;
 import managers.assets.AssetManager;
 

@@ -2,7 +2,7 @@ package logica.levels;
 
 import java.util.List;
 
-import enumeradores.recursos.EBackgroundType;
+import enumeradores.recursos.texturas.EBackgroundType;
 import logica.GameLogicHandler;
 import logica.Round;
 

@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import entidades.obstaculos.DamageHazard;
 import entidades.obstaculos.SolidObstacle;
 import entidades.obstaculos.DamageHazard.DamageType;
-import enumeradores.recursos.EBackgroundType;
-import enumeradores.recursos.EObstacleSkin;
+import enumeradores.recursos.texturas.EBackgroundType;
+import enumeradores.recursos.texturas.EObstacleSkin;
 
 public class ObstacleFactory {
 

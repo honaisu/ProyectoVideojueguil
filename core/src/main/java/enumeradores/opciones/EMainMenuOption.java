@@ -1,4 +1,4 @@
-package pantallas.opciones;
+package enumeradores.opciones;
 
 import com.badlogic.gdx.Gdx;
 
@@ -31,7 +31,7 @@ public enum EMainMenuOption implements INavigableOption, IExecutableGame {
     }
 
 	@Override
-	public void ejecutar(MainGame game) {
-		this.accion.ejecutar(game.getPantallaManager());
+	public void executeGame(MainGame game) {
+		this.accion.executeScreen(game.getPantallaManager());
 	}
 }

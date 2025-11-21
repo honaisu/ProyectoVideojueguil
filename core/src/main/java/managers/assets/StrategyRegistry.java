@@ -7,7 +7,7 @@ import armas.strategy.BulletAttackStrategy;
 import armas.strategy.FlameAttackStrategy;
 import armas.strategy.MeleeAttackStrategy;
 import armas.strategy.RocketAttackStrategy;
-import enumeradores.recursos.EProjectileType;
+import enumeradores.recursos.texturas.EProjectileType;
 import interfaces.IAttackStrategy;
 
 /**
