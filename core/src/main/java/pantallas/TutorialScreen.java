@@ -6,153 +6,291 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Align;               
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.EWeaponType;
+import factories.WeaponFactory;
+import enumeradores.recursos.texturas.EEnemyType;
+
+import entidades.Enemy;
+import entidades.Player;
+import entidades.WeaponDrop;
 import enumeradores.EScreenType;
 import enumeradores.recursos.EGameMusic;
+import enumeradores.EPlayerSkin;
+import logica.GameLogicHandler;
 import logica.MainGame;
 import managers.assets.AssetManager;
 
 public class TutorialScreen extends BaseScreen {
-    private enum Step { MOVER, MOVER_CONFIRMADO, DISPARAR, DISPARAR_CONFIRMADO, FIN } //esto quisas ponerlo en otro lado
+	
+	
+	//TODO ver si hago un enum para esto
+	private enum Step {
+		WELCOME, MOVE, SHOOT, SHOOT_DELAY, SPAWN_STATIC, KILL_STATIC, SPAWN_WEAPON, PICKUP_WEAPON, DROP_WARNING,
+		SPAWN_HORDE, SURVIVE_HORDE, END
+	}
 
-    private Step pasoActual = Step.MOVER;
+	private Step pasoActual = Step.WELCOME;
+	private float timer = 0f;
 
-    // Control general de inputs para evitar rebotes
-    private float keyCooldown = 0f;
-    private final float repeatDelay = 0.08f;
+	private final float ROTATE_ANGLE = 5.0f;
+	private final float ROTATE_ANGLE_SLOW = 1.0f;
+	private final float ACCELERATION = 100f;
+	private final float TUTORIAL_FRICTION = 0.9f;
 
-    // Delays entre subpasos
-    private final float delayMoverConfirmado = 3f;     // tiempo mostrando el mensaje tras moverse
-    private final float delayDisparoConfirmado = 3f;   // tiempo mostrando el mensaje tras disparar
+	private boolean stepInitialized = false;
 
-    // Temporizadores
-    private float timer = 0f;
-    
-    //Musica 
-    private Music musicaTutorial;
-    
-    final float worldW;
-    final float worldH;
+	private Player player;
+	private GameLogicHandler gameLogicHandler;
 
-    // Utilidad para centrar el título
-    private final GlyphLayout layout = new GlyphLayout();
+	private final float worldW;
+	private final float worldH;
+	private final GlyphLayout layout = new GlyphLayout();
+	private Music musicaTutorial;
 
-    public TutorialScreen(MainGame game) {
-        super(game);
-        worldW = game.getViewport().getWorldWidth();
-        worldH = game.getViewport().getWorldHeight();
-        musicaTutorial = AssetManager.getInstancia().getMusic(EGameMusic.TUTORIAL);
-    }
-    
-    @Override
-    protected void update(float delta) {
-        musicaTutorial.setLooping(true);
-        musicaTutorial.play();
-        keyCooldown -= delta;
+	public TutorialScreen(MainGame game) {
+		super(game);
+		this.worldW = game.getViewport().getWorldWidth();
+		this.worldH = game.getViewport().getWorldHeight();
+		this.musicaTutorial = AssetManager.getInstancia().getMusic(EGameMusic.TUTORIAL);
 
-        switch (pasoActual) {
-            case MOVER:
-                if (Gdx.input.isKeyPressed(Input.Keys.LEFT)
-                        || Gdx.input.isKeyPressed(Input.Keys.RIGHT)
-                        || Gdx.input.isKeyPressed(Input.Keys.UP)
-                        || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                    pasoActual = Step.MOVER_CONFIRMADO;
-                    timer = 0f;
-                    keyCooldown = repeatDelay;
-                }
-                break;
+		this.player = new Player(worldW / 2, worldH / 2, EPlayerSkin.ORIGINAL);
+		this.gameLogicHandler = new GameLogicHandler();
+	}
 
-            case MOVER_CONFIRMADO:
-                // El jugador puede seguir moviéndose; solo corre el temporizador
-                timer += delta;
-                if (timer >= delayMoverConfirmado) {
-                    pasoActual = Step.DISPARAR;
-                    keyCooldown = repeatDelay;
-                }
-                break;
+	private void resetTutorial() {
+		pasoActual = Step.WELCOME;
+		timer = 0f;
+		stepInitialized = false;
 
-            case DISPARAR:
-                if (keyCooldown <= 0f && Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-                    pasoActual = Step.DISPARAR_CONFIRMADO;
-                    timer = 0f;
-                    keyCooldown = repeatDelay;
-                }
-                break;
+		this.player = new Player(worldW / 2, worldH / 2, EPlayerSkin.ORIGINAL);
+		this.gameLogicHandler = new GameLogicHandler();
 
-            case DISPARAR_CONFIRMADO:
-                // Puede seguir presionando Z; mostramos el mensaje por un rato y luego finalizamos
-                timer += delta;
-                if (timer >= delayDisparoConfirmado) {
-                    pasoActual = Step.FIN;
-                    keyCooldown = repeatDelay;
-                }
-                break;
+		this.player.getPosition().set(worldW / 2, worldH / 2);
+	}
 
-            case FIN:
-                if (keyCooldown <= 0f &&
-                        (Gdx.input.isKeyJustPressed(Input.Keys.ENTER) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-                    getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
-                    musicaTutorial.stop();
-                }
-                break;
-        }
-    }
-    
+	@Override
+	public void show() {
+		resetTutorial();
+		musicaTutorial.setLooping(true);
+		musicaTutorial.play();
+	}
+
+	@Override
+	protected void update(float delta) {
+		handleTutorialInput(delta);
+
+		player.update(delta);
+		gameLogicHandler.update(delta);
+		gameLogicHandler.handleCollisions(player);
+
+		checkTutorialProgression(delta);
+
+		if (player.isDead()) {
+			player.takeDamage(-100);
+		}
+	}
+
+	private void handleTutorialInput(float delta) {
+		if (pasoActual != Step.END) {
+			if ((Gdx.input.isKeyPressed(Input.Keys.C))) {
+				if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+					player.rotate(ROTATE_ANGLE_SLOW);
+				if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+					player.rotate(-ROTATE_ANGLE_SLOW);
+			} else {
+				if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+					player.rotate(ROTATE_ANGLE);
+				if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+					player.rotate(-ROTATE_ANGLE);
+			}
+
+			if (Gdx.input.isKeyPressed(Input.Keys.UP))
+				player.accelerate(ACCELERATION);
+			else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+				player.accelerate(-ACCELERATION);
+			else
+				player.applyFriction(this.TUTORIAL_FRICTION);
+
+			if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+				player.shoot(gameLogicHandler.getProyectilManager());
+			}
+		}
+
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+			if (pasoActual == Step.END) {
+				musicaTutorial.stop();
+				getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
+			}
+		}
+	}
+
+	private void checkTutorialProgression(float delta) {
+		timer += delta;
+
+		switch (pasoActual) {
+		case WELCOME:
+			if (timer > 2f || Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY))
+				changeStep(Step.MOVE);
+			break;
+		case MOVE:
+			if (player.getVelocity().len() > 10f && timer > 2f)
+				changeStep(Step.SHOOT);
+			break;
+		case SHOOT:
+			if (Gdx.input.isKeyJustPressed(Input.Keys.Z))
+				changeStep(Step.SHOOT_DELAY);
+			break;
+		case SHOOT_DELAY:
+			if (timer >= 4.0f)
+				changeStep(Step.SPAWN_STATIC);
+			break;
+		case SPAWN_STATIC:
+			if (!stepInitialized) {
+				spawnPracticeEnemy(worldW / 2 - 300, worldH / 2 + 100);
+				spawnPracticeEnemy(worldW / 2 + 300, worldH / 2);
+				spawnPracticeEnemy(worldW / 2 - 300, worldH / 2 - 100);
+				stepInitialized = true;
+			}
+			changeStep(Step.KILL_STATIC);
+			break;
+		case KILL_STATIC:
+			if (gameLogicHandler.getEnemyManager().isEmpty())
+				changeStep(Step.SPAWN_WEAPON);
+			break;
+
+		case SPAWN_WEAPON:
+			if (!stepInitialized) {
+				player.setWeapon(WeaponFactory.create(EWeaponType.MELEE));
+
+				WeaponDrop drop = new WeaponDrop(worldW / 2, worldH / 2 - 150,
+						WeaponFactory.create(EWeaponType.SHOTGUN));
+				gameLogicHandler.getDropManager().add(drop);
+				stepInitialized = true;
+			}
+			changeStep(Step.PICKUP_WEAPON);
+			break;
+
+		case PICKUP_WEAPON:
+			if (player.getWeapon() != null && player.getWeapon().getName().toUpperCase().contains("SHOTGUN")) {
+
+				changeStep(Step.SPAWN_HORDE);
+			} else if (gameLogicHandler.getDropManager().getDrops().isEmpty()) {
+				changeStep(Step.DROP_WARNING);
+			}
+			break;
+
+
+		case DROP_WARNING:
+			if (timer >= 3.0f)
+				changeStep(Step.SPAWN_WEAPON);
+			break;
+		case SPAWN_HORDE:
+			if (!stepInitialized) {
+				gameLogicHandler.getEnemyManager().spawnEnemies(4);
+				stepInitialized = true;
+			}
+			changeStep(Step.SURVIVE_HORDE);
+			break;
+		case SURVIVE_HORDE:
+			if (gameLogicHandler.getEnemyManager().isEmpty())
+				changeStep(Step.END);
+			break;
+		case END:
+			break;
+		}
+	}
+
+	private void changeStep(Step nextStep) {
+		pasoActual = nextStep;
+		timer = 0f;
+		stepInitialized = false;
+	}
+
+	private void spawnPracticeEnemy(float x, float y) {
+		Enemy dummy = new Enemy(x, y, EEnemyType.GENERIC, 1.0f, 0f, 50, 0);
+		dummy.getVelocity().set(0, 0);
+		gameLogicHandler.getEnemyManager().add(dummy);
+	}
+
 	@Override
 	protected void draw(SpriteBatch batch, BitmapFont font) {
 		ScreenUtils.clear(0.1f, 0.12f, 0.16f, 1f);
+		batch.begin();
+		gameLogicHandler.draw(batch);
+		player.draw(batch);
+		drawInstructions(batch, font);
+		batch.end();
+	}
 
-        // Caja centrada para el cuerpo (multilínea)
-        final float cajaAncho = Math.min(720f, worldW * 0.8f);
-        final float cajaX = (worldW - cajaAncho) * 0.5f; // caja centrada horizontalmente
-        final float tituloY = worldH * 0.82f;
-        final float cuerpoY = worldH * 0.6f;
-        final float lineaDY = 64f;
+	private void drawInstructions(SpriteBatch batch, BitmapFont font) {
+		float cx = worldW / 2;
+		float cy = worldH * 0.9f;
+		font.getData().setScale(1.5f);
+		String texto = "";
+		String subtexto = "";
+		String warning = "";
 
-        batch.begin();
+		switch (pasoActual) {
+		case WELCOME:
+			texto = "ENTRENAMIENTO INICIADO";
+			subtexto = "El escenario permanecerá fijo. Presiona cualquier tecla para continuar.";
+			break;
+		case MOVE:
+			texto = "PASO 1: MOVIMIENTO";
+			subtexto = "Usa las FLECHAS (y C para precisión) para moverte.";
+			break;
+		case SHOOT:
+			texto = "PASO 2: DISPARO BÁSICO";
+			subtexto = "Presiona Z para disparar. Si la munición se agota, el Cuchillo se activa.";
+			break;
+		case SHOOT_DELAY:
+			texto = "PASO 2: DISPARO BÁSICO";
+			subtexto = "Cuchillo activo si la munición se agota. PREPARANDO OBJETIVOS...";
+			break;
+		case SPAWN_STATIC:
+		case KILL_STATIC:
+			texto = "PASO 3: OBJETIVOS ESTÁTICOS";
+			subtexto = "Destruye a los 3 maniquíes de prueba. ¡Dispara a discreción!";
+			break;
+		case SPAWN_WEAPON:
+		case PICKUP_WEAPON:
+			texto = "PASO 4: CAMBIO DE ARMAS";
+			subtexto = "Acércate y camina sobre la caja (Escopeta) para equiparla.";
+			break;
+		case DROP_WARNING:
+			texto = "¡ADVERTENCIA!";
+			subtexto = "El arma desapareció. En el juego real tienes tiempo limitado para recogerlas.";
+			warning = "Respawn en: " + String.format("%.1f", 5.0f - timer) + "s. ¡Inténtalo de nuevo!";
+			break;
+		case SPAWN_HORDE:
+		case SURVIVE_HORDE:
+			texto = "PASO 5: PRUEBA FINAL";
+			subtexto = "¡Horda pequeña! Elimina a los 4 enemigos móviles para finalizar el entrenamiento.";
+			break;
+		case END:
+			texto = "¡ENTRENAMIENTO COMPLETADO!";
+			subtexto = "Estás listo para el menú principal. Presiona ENTER o ESC.";
+			break;
+		}
 
-        // — TÍTULO CENTRADO —
-        // 1) Medimos el texto con GlyphLayout (obtiene ancho exacto).
-        // 2) Dibujamos en X = centro_mundo − (ancho_texto / 2).
-        font.getData().setScale(2.2f);
-        String titulo = "TUTORIAL";
-        layout.setText(font, titulo);
-        float tituloX = (worldW - layout.width) * 0.5f;
-        font.draw(batch, layout, tituloX, tituloY);
+		layout.setText(font, texto);
+		font.draw(batch, texto, cx - layout.width / 2, cy);
 
-        // — CUERPO CENTRADO —
-        // Usamos draw con Align.center dentro de una “caja” (cajaX, cajaAncho), ideal para varias líneas.
-        font.getData().setScale(1.6f);
+		font.getData().setScale(1.0f);
+		layout.setText(font, subtexto);
+		font.draw(batch, subtexto, cx - layout.width / 2, cy - 40);
 
-        switch (pasoActual) {
-            case MOVER:
-                font.draw(batch, "Muévete con las flechitas", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                font.draw(batch, "Presiona cualquier flecha para continuar", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
-                break;
+		if (!warning.isEmpty()) {
+			font.getData().setScale(1.0f);
+			layout.setText(font, warning);
+			font.draw(batch, warning, cx - layout.width / 2, cy - 80);
+		}
+	}
 
-            case MOVER_CONFIRMADO:
-                font.draw(batch, "¡ESO, Sigue moviéndote y acostumbrandote.", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                font.draw(batch, "Aprenderemos a disparar en un momento", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
-                break;
-
-            case DISPARAR:
-                font.draw(batch, "Dispara con Z", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                font.draw(batch, "Presiona Z para continuar", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
-                break;
-
-            case DISPARAR_CONFIRMADO:
-                font.draw(batch, "¡ESOOOO! Sigue disparando y masacrando.", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                font.draw(batch, "Por el momento la munición es infinita.", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
-                break;
-
-            case FIN:
-                font.draw(batch, "¡Listo!, hasta aquí llego lo facil", cajaX, cuerpoY, cajaAncho, Align.center, false);
-                font.draw(batch, "ENTER o ESC para volver al Menú", cajaX, cuerpoY - lineaDY, cajaAncho, Align.center, false);
-                break;
-        }
-
-        batch.end();
+	@Override
+	public void dispose() {
+		musicaTutorial.stop();
 	}
 }

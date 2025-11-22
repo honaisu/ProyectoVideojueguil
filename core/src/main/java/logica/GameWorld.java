@@ -29,65 +29,65 @@ public class GameWorld {
 	private boolean estaEnPausa = false;
 
 	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
-		this.player  = new Player(0, 0, skin);
+		this.player = new Player(0, 0, skin);
 		this.gameLogicHandler = new GameLogicHandler();
-		
+
 		// nuevo para el tema de inciar los niveles
 		this.currentLevelIndex = startingLevelIndex - 1;
-		//this.currentLevelIndex = 3;
+		// this.currentLevelIndex = 3;
 		this.waitingForNextRound = true;
 
 		// y creamos el primer nivel
 		startNextLevel();
 	}
-	
+
 	private void startNextLevel() {
 
-	    currentLevelIndex++; // Avanzamos al siguiente índice (0 -> 1 -> 2...)
-	    final int TOTAL_LEVELS = 5; // Constante para saber cuándo parar
-	    
-	    //TODO ver rondas
-	    //currentLevelIndex = 4;
+		currentLevelIndex++; // Avanzamos al siguiente índice (0 -> 1 -> 2...)
+		final int TOTAL_LEVELS = 5; // Constante para saber cuándo parar
 
-	    if (currentLevelIndex < TOTAL_LEVELS) {
-	        
-	        // 1. Cargamos el Nivel (solo el que toca) usando el Factory.
-	        switch(currentLevelIndex) {
-	            case 0: // Nivel 1
-	                currentLevel = LevelFactory.createLevelOne();
-	                break;
-	            case 1: // Nivel 2
-	                currentLevel = LevelFactory.createLevelTwo();
-	                break;
-	            case 2: // Nivel 3
-	                currentLevel = LevelFactory.createLevelThree();
-	                break;
-	            case 3: // Nivel 4
-	                currentLevel = LevelFactory.createLevelFour();
-	                break;
-	            case 4: // Nivel 5
-	                currentLevel = LevelFactory.createLevelFive();
-	                break;
-	            default:
-	                System.err.println("Error: Índice de nivel inválido: " + currentLevelIndex);
-	                return; 
-	        }
+		// TODO ver rondas
+		// currentLevelIndex = 4;
 
-	        // 2. Actualizamos la friccion del nivel (código original se mantiene)
-	        this.currentLevelFriction = currentLevel.getPlayerFriction();
+		if (currentLevelIndex < TOTAL_LEVELS) {
 
-	        // 3. Creamos los obstaculos (código original se mantiene)
-	        // TODO mejora esto// crea los obstaculos apra el nivel 1
-	        gameLogicHandler.getObstacleManager().spawnObstacles(currentLevel.getHazardCount(),
-	                currentLevel.getSolidCount(), currentLevel.getBackground());
+			// 1. Cargamos el Nivel (solo el que toca) usando el Factory.
+			switch (currentLevelIndex) {
+			case 0: // Nivel 1
+				currentLevel = LevelFactory.createLevelTwo();
+				break;
+			case 1: // Nivel 2
+				currentLevel = LevelFactory.createLevelTwo();
+				break;
+			case 2: // Nivel 3
+				currentLevel = LevelFactory.createLevelThree();
+				break;
+			case 3: // Nivel 4
+				currentLevel = LevelFactory.createLevelFour();
+				break;
+			case 4: // Nivel 5
+				currentLevel = LevelFactory.createLevelFive();
+				break;
+			default:
+				System.err.println("Error: Índice de nivel inválido: " + currentLevelIndex);
+				return;
+			}
 
-	        // 4. Marcamos que estamos listos para la *primera ronda*
-	        this.waitingForNextRound = true;
-	        
-	    } else {
-	        // Hemos excedido el número total de niveles, manejado en checkCompletion(), 
-	        // pero puedes poner una comprobación de seguridad aquí si es necesario.
-	    }
+			// 2. Actualizamos la friccion del nivel (código original se mantiene)
+			this.currentLevelFriction = currentLevel.getPlayerFriction();
+
+			// 3. Creamos los obstaculos (código original se mantiene)
+			// TODO mejora esto// crea los obstaculos apra el nivel 1
+			gameLogicHandler.getObstacleManager().spawnObstacles(currentLevel.getHazardCount(),
+					currentLevel.getSolidCount(), currentLevel.getBackground());
+
+			// 4. Marcamos que estamos listos para la *primera ronda*
+			this.waitingForNextRound = true;
+
+		} else {
+			// Hemos excedido el número total de niveles, manejado en checkCompletion(),
+			// pero puedes poner una comprobación de seguridad aquí si es necesario.
+		}
 	}
 
 	public void update(float delta) {
@@ -171,7 +171,7 @@ public class GameWorld {
 			if (levelFinished) {
 				// El nivel nos dijo que se quedó sin rondas
 				int nextLevelIdx = currentLevelIndex + 1;
-				
+
 				final int TOTAL_LEVELS = 5;
 
 				if (nextLevelIdx >= TOTAL_LEVELS) {

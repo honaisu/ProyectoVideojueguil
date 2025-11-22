@@ -217,7 +217,7 @@ public class LevelFactory {
 		}));
 
 		// Finalemnte creamos el nivel 3
-		return new Level("Nivel 3: Fosa Abisal", EBackgroundType.THREE, levelThreeRounds, 0.85f, 5, 8);
+		return new Level("Nivel 3: Fosa Abisal", EBackgroundType.THREE, levelThreeRounds, 0.85f, 5, 3);
 	}
 	
 	// Creamos el nivel 4 con tematica de lava
