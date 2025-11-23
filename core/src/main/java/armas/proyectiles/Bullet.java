@@ -1,74 +1,107 @@
 package armas.proyectiles;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
-import com.badlogic.gdx.math.Rectangle;
-import hitboxes.BallHitbox;
-import hitboxes.Hitbox;
+import data.BulletData;
+import entidades.Entity;
+import factories.AnimationFactory;
+import interfaces.IRenderizable;
+import logica.AnimationHandler;
 
-//Clase que representa una balla dentro del juego
+/**
+ * Clase que representa una bala dentro del juego
+ */
+public class Bullet extends Projectile implements IRenderizable {
+	private float lifespan = -1f;
+	private AnimationHandler animation;
 
-public class Bullet extends Projectile {
-	// velocidad de la bala eje x
-	private float xSpeed;
-	// velocidad de la bala eje y
-	private float ySpeed;
-	// ver si la bala esta destruida
-	private boolean destroyed = false;
+	/**
+	 * Constructor que permite a una entidad poder disparar la bala correspondiente.
+	 */
+	public Bullet(BulletData data, Entity shooter, float angle, float speed) {
+		super(Projectile.calcularMuzzle(Vector2.Zero, shooter, data.isPiercing()), data);
 
-	public Bullet(float x, float y, float width, float rotation, float speed) {
-		super(new BallHitbox(x, y, width, rotation));
-		float radians = (float) Math.toRadians(rotation);
+		this.lifespan = data.getLifespan();
+		float finalRotation = shooter.getRotation() + 90 + angle;
+        float finalVelocity = data.getVelocity() + speed;
+        
+        // Configuramos la velocidad de la ENTIDAD (no solo del sprite)
+        this.getVelocity().set(finalVelocity, 0);
+        this.getVelocity().setAngleDeg(finalRotation);
+        setRotation(finalRotation - 90); 
 
-        // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
-        this.xSpeed = (float) Math.cos(radians) * speed;
-        this.ySpeed = (float) Math.sin(radians) * speed;
+        // Configurar visuales
+        this.setupSprite(data, getRotation());
 	}
-	/*
-    public Bullet(float x, float y, float rotacion, float speed, Texture tx) {
-    	super(new BallHitbox(x, y, tx.getWidth() / 2, rotacion));
 
-    	// Ajusta el origen y la rotación del sprite dentro del hitbox
-        this.getHitbox().getSpr().setOriginCenter();
-        this.getHitbox().getSpr().setRotation(rotacion);
+	/**
+	 * Constructor utilizado para spawnear la explosion de un proyectil Rocket.
+	 */
+	public Bullet(BulletData data, Vector2 spawn) {
+		super(spawn, data);
 
-        // Convertir rotación a radianes para calcular la dirección del movimiento
-        float radians = (float) Math.toRadians(rotacion + 90);
+		this.lifespan = data.getLifespan();
+		// Las explosiones no giran
+		setRotation(0);
 
-        // Calcular velocidad en X e Y según el ángulo y la velocidad dadas
-        this.xSpeed = (float) Math.cos(radians) * speed;
-        this.ySpeed = (float) Math.sin(radians) * speed;
-    }*/
+		// Configuración especial para explosiones o spawns estáticos
+        getSprite().setBounds(getPosition().x, getPosition().y, data.getScale(), data.getScale());
+        getSprite().setOriginCenter();
+        // Centrar el sprite en la coordenada de spawn
+        getSprite().setPosition(getPosition().x - getSprite().getWidth()/2, getPosition().y - getSprite().getHeight()/2);
+        this.animation = new AnimationHandler(AnimationFactory.createExplosion(), getSprite());
+	}
 
-    //movimiento de la bala y colision con el borde de la ventana
-    @Override
-    public void update(float delta, Rectangle r, float rotation) {
-        // Mueve el sprite del hitbox
-        Sprite spr = getHitbox().getSpr();
-        spr.setPosition(spr.getX() + xSpeed, spr.getY() + ySpeed);
+	private void setupSprite(BulletData data, float spriteRotation) {
+		getSprite().setScale(data.getScale());
+        getSprite().setOriginCenter();
+        getSprite().setRotation(spriteRotation);
+		this.setSpritePosition();
+	}
 
-        // Comprueba si la bala ha salido de los límites de la pantalla
-        if (spr.getX() < 0 || spr.getX() + spr.getWidth() > Gdx.graphics.getWidth() ||
-            spr.getY() < 0 || spr.getY() + spr.getHeight() > Gdx.graphics.getHeight()) {
+	/**
+	 * movimiento de la bala y colision con el borde de la ventana
+	 */
+	@Override
+	public void update(float delta) {
+		if (isDestroyed())
+			return;
+		
+		if (animation != null)
+			animation.updateStateTime(delta);
+
+		if (lifespan > 0) {
+			lifespan -= delta;
+			if (lifespan <= 0) {
+				destroy();
+				return;
+			}
+		} else if (!Entity.isInBounds(this)) {
             destroy();
         }
+		
+		getPosition().add(getVelocity().x, getVelocity().y);
+		this.setSpritePosition();
+	}
+	
+	private void setSpritePosition() {
+        getSprite().setPosition(
+            getPosition().x - getSprite().getWidth() / 2, 
+            getPosition().y - getSprite().getHeight() / 2
+        );
     }
-
-    @Override
-    public void draw(SpriteBatch batch) {
-    	getHitbox().draw(batch);
-    }
-
-    //colision con un asteroide
-    public boolean checkCollision(Hitbox b2) {
-    	if (getHitbox().checkCollision(b2)) {
-            destroy();
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isDestroyed() { return destroyed; }
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+	}
+	
+	@Override
+	public void draw(SpriteBatch batch) {
+		if (animation != null)
+			animation.handle(batch, false);
+		else
+			super.draw(batch);
+	}
 }

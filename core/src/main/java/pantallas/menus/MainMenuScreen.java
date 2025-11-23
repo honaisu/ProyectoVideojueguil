@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.opciones.EMainMenuOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
-import pantallas.opciones.EMainMenuOption;
 
 public class MainMenuScreen extends NavigableScreen {
 	public MainMenuScreen(MainGame game) {
@@ -18,11 +18,11 @@ public class MainMenuScreen extends NavigableScreen {
 
 	@Override
 	protected void update(float delta) {
-		navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-		INavigableOption opcionActual = navegador.getCurrentSelection();
+		getNavegador().move(delta, Input.Keys.UP, Input.Keys.DOWN);
+		INavigableOption opcionActual = getNavegador().getCurrentSelection();
 		
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-			opcionActual.ejecutar(getGame());
+			opcionActual.executeGame(getGame());
 	    }
 	}
 
@@ -37,7 +37,7 @@ public class MainMenuScreen extends NavigableScreen {
 	    font.draw(batch, "NOT HOTLINE MIAMI", 400f, 700f);
 	    // Menú
 	    font.getData().setScale(2.5f);
-	    navegador.drawOptions(batch, font);
+	    getNavegador().drawOptions(batch, font);
 	    // Hint de controles
 	    font.getData().setScale(1.0f);
 	    font.setColor(0.9f, 0.9f, 0.9f, 0.9f);

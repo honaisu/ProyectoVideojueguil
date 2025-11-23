@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
+import enumeradores.opciones.EConfigurationOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
 import logica.Volumen;
-import pantallas.opciones.EConfigurationOption;
 
 public class ConfigurationScreen extends NavigableScreen {
 	private Volumen volumenTemporal = new Volumen();
@@ -24,8 +24,8 @@ public class ConfigurationScreen extends NavigableScreen {
     protected void update(float delta) {
         // Navegación vertical
     	// TODO arreglar método ajustarValorSonido (evitar castings)
-    	navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-        INavigableOption opcionActual = navegador.getCurrentSelection();
+    	getNavegador().move(delta, Input.Keys.UP, Input.Keys.DOWN);
+        INavigableOption opcionActual = getNavegador().getCurrentSelection();
         
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) 
     		volumenTemporal.adjustSoundValue((EConfigurationOption) opcionActual, -Volumen.STEP);
@@ -69,7 +69,7 @@ public class ConfigurationScreen extends NavigableScreen {
         font.draw(batch,labelValor(volumenTemporal.getRawMusicVolume()), 460, 240);
         font.draw(batch,labelValor(volumenTemporal.getRawSfxVolume()), 460, 180);
         
-        navegador.drawOptions(batch, font);
+        getNavegador().drawOptions(batch, font);
         
         font.setColor(Color.WHITE);
         font.draw(batch, "LEFT/RIGHT para ajustar | ENTER para confirmar | ESC para volver", 220, 500);

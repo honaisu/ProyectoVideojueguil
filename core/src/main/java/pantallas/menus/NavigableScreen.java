@@ -6,9 +6,8 @@ import logica.OptionNavigator;
 import pantallas.BaseScreen;
 
 public abstract class NavigableScreen extends BaseScreen {
-	// TODO Cambiar a private
 	// Listado de Opciones que muestra el menú
-	protected final OptionNavigator navegador;
+	private final OptionNavigator navegador;
 	
 	public NavigableScreen(MainGame game, INavigableOption[] opciones) {
 		super(game);

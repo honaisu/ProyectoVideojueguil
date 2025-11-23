@@ -7,24 +7,28 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import enumeradores.EPlayerSkin;
 import enumeradores.EScreenType;
-import enumeradores.ESkinJugador;
+import factories.SpriteFactory;
 import interfaces.INavigableOption;
 import logica.MainGame;
 
 public class CustomizationScreen extends NavigableScreen {
+	private EPlayerSkin temporalSkin;
+	
     public CustomizationScreen(MainGame game) {
-        super(game, ESkinJugador.values());
+        super(game, EPlayerSkin.values());
+        temporalSkin = game.getPlayerSkin();
     }
 
 	@Override
 	protected void update(float delta) {
 		// Entrada
-		navegador.move(delta, Input.Keys.LEFT, Input.Keys.RIGHT);
+		getNavegador().move(delta, Input.Keys.LEFT, Input.Keys.RIGHT);
 
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-        	// TODO Volver a poner el poder elegir skin
+        	getGame().setPlayerSkin(temporalSkin);
         	getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
             return;
         }
@@ -49,26 +53,28 @@ public class CustomizationScreen extends NavigableScreen {
         font.getData().setScale(1.5f);
         int x = 360, y = 300;
         final float PREVIEW_HW = 128f;
+        float previewX = x - PREVIEW_HW/2f;
+        float previewY = y - PREVIEW_HW/2f;
         
-		INavigableOption opcionActual = navegador.getCurrentSelection();
+		INavigableOption opcionActual = getNavegador().getCurrentSelection();
         
         int i = 1;
         String mensajeSeleccionado;
-        for (ESkinJugador skin : ESkinJugador.values()) {
+        for (EPlayerSkin skin : EPlayerSkin.values()) {
         	boolean seleccionado = opcionActual.equals(skin);
 
         	// Mensaje al estar apretando en uno
         	mensajeSeleccionado = "[" + i + "]";
-        	if (seleccionado) mensajeSeleccionado += " SELECCIONADO";
+        	if (seleccionado) {
+        		mensajeSeleccionado += " SELECCIONADO";
+        		temporalSkin = skin;
+        	}
         	
         	// Nombre de la skin
-        	font.draw(batch, skin.getNombre(),
-        			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f + 200);
+        	font.draw(batch, skin.getName(), previewX, previewY + 200);
         	
         	// Sprite de la skin
-        	batch.draw(skin.crearSprite(),
-        			x - PREVIEW_HW/2f, y - PREVIEW_HW/2f, 
-        			PREVIEW_HW, PREVIEW_HW);
+        	batch.draw(SpriteFactory.create(skin), previewX, previewY, PREVIEW_HW, PREVIEW_HW);
         	
         	// Sólo imprime el mensaje original :D
             font.draw(batch, mensajeSeleccionado, x - 100, y - 70);

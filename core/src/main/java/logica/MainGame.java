@@ -7,9 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import enumeradores.EPlayerSkin;
 import enumeradores.EScreenType;
-import managers.AssetManager;
 import managers.ScreenManager;
+import managers.assets.AssetManager;
 
 public class MainGame extends Game {	
 	private SpriteBatch batch;
@@ -19,7 +20,11 @@ public class MainGame extends Game {
 	
     // Volúmenes globales (0.0f a 1.0f)
 	private Volumen volumen;
+	private EPlayerSkin playerSkin = EPlayerSkin.ORIGINAL;
     private ScreenManager pantallaManager;
+    
+    //para el cambio de nivel
+    private int nextLevelToLoad = 0; // Empezamos en 0 (Nivel 1)
     
 	/**
 	 * Método encargado de crear el juego
@@ -27,6 +32,8 @@ public class MainGame extends Game {
 	 */
 	@Override
 	public void create() {
+		// Instancia de AssetManager
+		AssetManager.getInstancia().load();
 		highScore = 0;
 		batch = new SpriteBatch();
 		font = new BitmapFont();
@@ -35,8 +42,8 @@ public class MainGame extends Game {
 		volumen = new Volumen();
 		viewport = new FitViewport(1200, 800, new OrthographicCamera());
 		// ESTE ES UN SINGLETON!! carga los assets :D
-		AssetManager.getInstancia().load();
 		
+		// Acá ya se empieza a crear el juego
         pantallaManager = new ScreenManager(this);
         pantallaManager.cambiarPantalla(EScreenType.MENU);
 	}
@@ -46,14 +53,16 @@ public class MainGame extends Game {
 		batch.dispose();
 		font.dispose();
 		pantallaManager.dispose();
-		// Cuando lo probé daba error de lo que recuerdo xd
-		//assets.dispose();
+		AssetManager.getInstancia().dispose();
 	}
-
-    @Override 
-    public void render() { 
-    	super.render();
-    }
+	
+	public EPlayerSkin getPlayerSkin() {
+		return playerSkin;
+	}
+	
+	public void setPlayerSkin(EPlayerSkin skin) {
+		playerSkin = skin;
+	}
     
     public SpriteBatch getBatch() { return batch; }
     public BitmapFont getFont() { return font; }
@@ -72,4 +81,21 @@ public class MainGame extends Game {
 	public ScreenManager getPantallaManager() {
 		return pantallaManager;
 	}
+	
+	
+	//Para el cambio de niveles 
+	/**
+     * Guarda el índice del *próximo* nivel que debe ser cargado.
+     */
+    public void setNextLevelToLoad(int levelIndex) {
+        this.nextLevelToLoad = levelIndex;
+    }
+
+    /**
+     * Devuelve el índice del nivel que toca cargar.
+     */
+    public int getNextLevelToLoad() {
+        return nextLevelToLoad;
+    }
+	
 }

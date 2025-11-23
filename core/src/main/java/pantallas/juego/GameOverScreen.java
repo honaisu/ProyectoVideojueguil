@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import enumeradores.EScreenType;
+import enumeradores.recursos.EGameSound;
 import logica.MainGame;
-import managers.AssetManager;
+import managers.assets.AssetManager;
 import pantallas.BaseScreen;
 
 /**ra la pantalla de game over:)
@@ -18,12 +20,12 @@ import pantallas.BaseScreen;
  */
 public class GameOverScreen extends BaseScreen {
 	// Efecto de muerte al entrar en Game Over
-	private Sound sonidoMuerte = AssetManager.getInstancia().getMuerteSound();
+	private Sound sonidoMuerte = AssetManager.getInstancia().getSound(EGameSound.DEATH);
 	private boolean played = false;
 
 	public GameOverScreen(MainGame game) {
 		super(game);
-		sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
+		//sonidoMuerte.setVolume(0, game.getVolumen().getSfxVolume());
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class GameOverScreen extends BaseScreen {
 	@Override
 	protected void update(float delta) {
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-			getGame().getPantallaManager().cambiarPantalla(EScreenType.JUEGO);
+			getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME);
 		}
 	}
 
@@ -46,8 +48,9 @@ public class GameOverScreen extends BaseScreen {
 		ScreenUtils.clear(Color.NAVY);
 
 	    batch.begin();
-	    font.draw(batch, "Perdiste WUAAAJAJAJAJN !!!", 120, 400, 400, 1, true);
-	    font.draw(batch, "Pincha en cualquier lado o presiona una tecla para reiniciar ...", 100, 300);
+	    font.draw(batch, "GAME OVER", 0, 500, Gdx.graphics.getWidth(), Align.center, true);
+	    font.draw(batch, "Presione cualquier tecla", 0, 70, Gdx.graphics.getWidth() - 20, Align.right, true);
+	    font.draw(batch, "para continuar", 0, 40, Gdx.graphics.getWidth() - 20, Align.right, true);
 	    batch.end();
 	}
 	

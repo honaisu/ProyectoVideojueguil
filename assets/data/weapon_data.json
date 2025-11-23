@@ -1,0 +1,158 @@
+{
+  "HEAVY_MACHINE_GUN": {
+	"class": "weapon",
+    "name": "Heavy Machine Gun",
+	"fireRate": 0.1,
+	"maxAmmo": 45,
+	"drop": "HEAVY_MACHINE_GUN",
+    "soundFire": "SHOOT",
+    "projectileData": {
+		"class": "bullet",
+		"damage": 25,
+		"piercing": false,
+		"width": 30,
+		"velocity": 5,
+		"type": "HOLLOWPOINT",
+	}
+  },
+
+  "MELEE": {
+    "name": "Melee",
+	"fireRate": 1.0,
+	"maxAmmo": null,
+	"drop": "MELEE",
+    "soundFire": "SHOOT",
+	"projectileData": {
+		"class": "swing",
+		"damage": 50,
+		"radius": 50,
+		"piercing": true,
+		"isBeam": false,
+		"duration": 0.25,
+		"width": 120,
+		"height": 60,
+		"type": "SWING",
+	}
+  },
+
+  "LASER_GUN": {
+    "name": "Laser Gun",
+	"fireRate": 1.0,
+	"maxAmmo": 5,
+	"drop": "LASER_GUN",
+    "soundFire": "SHOOT_LASER",
+	"projectileData": {
+		"class": "swing",
+		"damage": 2,
+		"piercing": true,
+		"duration": 0.25,
+		"width": 20,
+		"height": 1000,
+		"isBeam": true,
+		"type": "LASER_GUN",
+	}
+  },
+
+  "ROCKET_LAUNCHER": {
+    "name": "Rocket Launcher",
+	"fireRate": 1.5,
+    "maxAmmo": 5,
+	"drop": "ROCKET_LAUNCHER",
+    "soundFire": "SHOOT",
+	"projectileData": {
+		"class": "rocket",
+		"piercing": false,
+		"velocity": 30.0,
+		"acceleration": 800.0,
+		"maxSpeed": 1600.0,
+		"type": "ROCKET",
+		"explosionData": {
+            "class": "bullet",
+            "damage": 125,
+            "piercing": true,
+            "velocity": 0,
+            "scale": 300,
+			"lifespan": 0.8,
+			"type": "FLAME",
+        }
+	}
+  },
+
+  "SHOTGUN": {
+    "name": "Shotgun",
+	"fireRate": 1.5,
+	"maxAmmo": 10,
+	"drop": "SHOTGUN",
+    "soundFire": "SHOOT",
+	"projectileData": {
+		"class": "bullet",
+		"damage": 20,
+		"velocity": 7,
+		"width": 20,
+		"piercing": false,
+		"type": "ROUNDNOSE",
+		"pellets": 8,
+		"spread": 30,
+	}
+  },
+
+  "FLAMESHOT": {
+    "name": "Flameshot",
+	"fireRate": 0.05,
+	"maxAmmo": 80,
+	"drop": "FLAMESHOT",
+    "soundFire": "SHOOT",
+	"projectileData": {
+		"class": "flame",
+		"damage": 10,
+		"piercing": true,
+		"scale": 2,
+		"velocity": 15.0,
+		"spread": 15,
+		"maxDistance": 150.0,
+		"maxScale": 5.0, 
+		"type": "FLAME",
+	}
+  },
+  
+  "RAYGUN": {
+	"name": "Ray Gun",
+	"fireRate": 0.2,
+	"maxAmmo": 30,
+	"drop": "RAYGUN",
+	"soundFire": "SHOOT",
+	"projectileData": {
+		"class": "bullet",
+		"damage": 20,
+		"velocity": 15,
+		"width": 30,
+		"piercing": true,
+		"type": "RAYGUN",
+	}
+  },
+  
+  "CLAYMORE": {
+	"name": "Claymore",
+	"fireRate": 1.5,
+	"maxAmmo": 5,
+	"drop": "CLAYMORE",
+	"soundFire": "SHOOT",
+	"projectileData": {
+		"class": "rocket",
+		"piercing": false,
+		"velocity": 0.0,
+		"acceleration": 0,
+		"maxSpeed": 0,
+		"type": "ROCKET",
+		"explosionData": {
+            "class": "bullet",
+            "damage": 100,
+            "piercing": true,
+            "velocity": 0,
+            "scale": 350,
+			"lifespan": 1,
+			"type": "FLAME",
+        }
+	}
+  }
+}

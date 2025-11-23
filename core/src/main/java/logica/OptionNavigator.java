@@ -29,7 +29,6 @@ public class OptionNavigator {
 		this.delay = delay;
 	}
 	
-	// TODO arreglar lógica...? Aunque creo que ya se ve bonito
 	/**
 	 * Método encargado de moverse entre las opciones
 	 * @param delta Parámetro delta.
@@ -62,7 +61,7 @@ public class OptionNavigator {
 	        float alpha = seleccionada ? 1f : 0.7f;
             font.setColor(alpha, alpha, alpha, alpha);
             
-            String label = opcion.getNombre();
+            String label = opcion.getName();
             String value = "";
             
             String textoCompleto = (seleccionada ? "> " : "  ") + label + (value.isEmpty() ? "" : ": " + value) + (seleccionada ? " <" : "");

@@ -5,64 +5,71 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 
 import armas.proyectiles.Projectile;
+import interfaces.IRenderizable;
 
-public class ProjectileManager {
+public class ProjectileManager implements IRenderizable {
 	private final List<Projectile> proyectiles = new ArrayList<>();
-	
-	public void add(Projectile proyectil) {
-		if (proyectil == null) return;
+	private final List<Projectile> toAdd = new ArrayList<>();
 
-		proyectiles.add(proyectil);
+	public void add(Projectile proyectil) {
+		if (proyectil == null)
+			return;
+		toAdd.add(proyectil);
+
 	}
-	
-	public boolean remove(Projectile proyectil) {
+
+	public boolean remove(Projectile proyectil) { //TODO
 		return proyectiles.remove(proyectil);
 	}
-	
-	public Projectile removeActual() {
+
+	public Projectile removeActual() { //TODO
 		return proyectiles.remove(0);
 	}
-	
-	public Projectile getActual() {
-		if (proyectiles.isEmpty()) return null;
+
+	public Projectile getActual() { //TODO
+		if (proyectiles.isEmpty())
+			return null;
 		return proyectiles.get(0);
 	}
-	
-	public void update(float delta, Rectangle r, float rotation) {
+
+	public void update(float delta) {
+		if (!toAdd.isEmpty()) {
+			proyectiles.addAll(toAdd);
+			toAdd.clear();
+		}
 		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
 		Iterator<Projectile> iterator = proyectiles.iterator();
 
-	    while (iterator.hasNext()) {
-	        Projectile proyectil = iterator.next();
-	        if (proyectil == null) {
-	        	iterator.remove();
-	        	continue;
-	        }
-	        proyectil.update(delta, r, rotation);
-	        if (proyectil.isDestroyed()) {
-	            iterator.remove();
-	        }
-	    }
-    }
-	
+		while (iterator.hasNext()) {
+			Projectile proyectil = iterator.next();
+			if (proyectil == null) {
+				iterator.remove();
+				continue;
+			}
+			proyectil.update(delta);
+			if (proyectil.isDestroyed()) {
+				iterator.remove();
+			}
+		}
+	}
+
+	public List<Projectile> getProjectiles() {
+		return proyectiles;
+	}
+
 	public void draw(SpriteBatch batch) {
-        for (Projectile proyectil : proyectiles) {
-            proyectil.draw(batch);
-        }
-    }
-	
-	public void clear() {
+		for (Projectile proyectil : proyectiles) {
+			proyectil.draw(batch);
+		}
+	}
+
+	public void clear() { //TODO
 		proyectiles.clear();
 	}
-	
-	public boolean isEmpty() {
+
+	public boolean isEmpty() { //TODO
 		return proyectiles.isEmpty();
 	}
-	
-	public List<Projectile> getProjectiles() {
-        return proyectiles;
-    }
 }

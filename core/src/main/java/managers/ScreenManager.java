@@ -5,13 +5,9 @@ import java.util.Map;
 
 import enumeradores.EScreenType;
 import logica.MainGame;
-import pantallas.*;
-import pantallas.juego.GameOverScreen;
-import pantallas.juego.GameScreen;
-import pantallas.juego.PauseScreen;
-import pantallas.menus.ConfigurationScreen;
-import pantallas.menus.CustomizationScreen;
-import pantallas.menus.MainMenuScreen;
+import pantallas.BaseScreen;
+
+
 
 public class ScreenManager {
 	private final MainGame game;
@@ -25,6 +21,7 @@ public class ScreenManager {
     
     private void iniciarPantallas() {
         // Crea una instancia de cada pantalla y la guarda en el mapa
+/*<<<<<<< HEAD
     	// TODO Implementar lógica cambiada de esto para no hacerlo como está ahora :)
     	pantallas.put(EScreenType.MENU,			new MainMenuScreen(game));
         pantallas.put(EScreenType.GAME_OVER, 		new GameOverScreen(game));
@@ -32,31 +29,45 @@ public class ScreenManager {
         pantallas.put(EScreenType.CONFIGURACION, 	new ConfigurationScreen(game));
         pantallas.put(EScreenType.PAUSA, new PauseScreen(game));
         pantallas.put(EScreenType.TUTORIAL, new TutorialScreen(game));
+        pantallas.put(EScreenType.VICTORIA, new WinScreen(game));//pantalla para la victoria
+=======*/
+    	for (EScreenType screen : EScreenType.values()) {
+    		pantallas.put(screen, screen.createScreen(game));
+    	}
+
     }
     
     public void cambiarPantalla(EScreenType tipoPantalla) {
-        if (tipoPantalla.equals(EScreenType.JUEGO)) {
+        if (tipoPantalla.equals(EScreenType.GAME) || tipoPantalla.equals(EScreenType.TRANSITION)) {
             // Se desecha la pantalla antigua
-        	BaseScreen antiguaPantalla = pantallas.get(EScreenType.JUEGO);
+        	BaseScreen antiguaPantalla = pantallas.get(EScreenType.GAME);
             if (antiguaPantalla != null) antiguaPantalla.dispose();
             
             // Se reemplaza por una nueva pantalla de juego
-            GameScreen nuevaPantallaJuego = new GameScreen(game);
-            pantallas.put(EScreenType.JUEGO, nuevaPantallaJuego);
-            game.setScreen(nuevaPantallaJuego);
+            BaseScreen nuevaPantalla = tipoPantalla.createScreen(game);
+            pantallas.put(tipoPantalla, nuevaPantalla);
+            game.setScreen(nuevaPantalla);
             return;
         }
-
+        
         BaseScreen screen = pantallas.get(tipoPantalla);
-        if (screen != null) {
-            game.setScreen(screen);
-        } 
+        if (screen == null) return;
+        game.setScreen(screen);
     }
+    
     
     public void dispose() {
         for (BaseScreen screen : pantallas.values()) {
             if (screen == null) continue;
             screen.dispose();
+        }
+    }
+    
+    public void continuarJuego() {
+        BaseScreen juegoPausado = pantallas.get(EScreenType.GAME);
+
+        if (juegoPausado != null) {
+            game.setScreen(juegoPausado);
         }
     }
 }

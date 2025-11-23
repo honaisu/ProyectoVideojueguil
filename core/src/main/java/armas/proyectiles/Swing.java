@@ -1,42 +1,91 @@
 package armas.proyectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
-import hitboxes.ArcHitbox;
+import data.SwingData;
+import entidades.Entity;
+import factories.AnimationFactory;
+import interfaces.IRenderizable;
+import logica.AnimationHandler;
 
-public class Swing extends Projectile {
-	// tiempo que dura activo el golpe
-    private float duracion = 0.25f;     
-    // Contador
-    private float tiempoActivo = 0f;  	
-    // para que desaparezca el swing	
-    
-    private float radio;
+public class Swing extends Projectile implements IRenderizable {
+	// Contador
+	private float activeTime = 0f;
+	// Tiempo que dura activo el golpe
+	private float lifespan;
+	// distancia de la que saldrá el swing
+	private float radius;
+	// para que identifique si es un laser o no
+	private boolean isBeam;
 
-    public Swing(float x, float y, float rotation, float radio) {
-    	// la colision es de tipo arqueada
-    	super(new ArcHitbox(x, y, rotation));
-    	// distancia del ataque
-    	this.radio = radio;
-    }
-    
-    @Override
-    public void update(float delta, Rectangle r, float rotation) {
-    	float centerX = r.getX() + r.getWidth() / 2;
-        float centerY = r.getY() + r.getHeight() / 2;
-    	
-    	//actualiza el movimiento de la colision con el movimiento de la nave
-    	getHitbox().mover(centerX, centerY, rotation, radio);
-        
-        //un breve periodo de tiempo hasta que se destruye automaticamente
-        tiempoActivo += delta;
-        if (tiempoActivo > duracion) {
-            destroy();
-        }
-    }
+	private final Entity shooter;
+	private final Vector2 offsetVector = new Vector2();
+	private AnimationHandler animation;
+
+	public Swing(SwingData data, Entity shooter) {
+		super(shooter.getPosition().cpy(), data);
+		this.shooter = shooter;
+
+		this.lifespan = data.getDuration();
+		this.isBeam = data.isBeam();
+		this.radius = data.getRadius();
+
+		setRotation(shooter.getRotation() + 90);
+		getSprite().setBounds(0, 0, data.getWidth(), data.getHeight());
+		getSprite().setOriginCenter();
+		
+		this.updatePosition();
+		
+		if (!isBeam)
+			this.animation = new AnimationHandler(AnimationFactory.createSwing(), getSprite());
+	}
+
+	@Override
+	public void update(float delta) {
+		this.updatePosition();
+		
+		if (animation != null)
+			animation.updateStateTime(delta);
+		if (isDestroyed())
+			return;
+		
+		activeTime += delta;
+		if (activeTime > lifespan)
+			destroy();
+	}
+
+	private void updatePosition() {
+		setRotation(shooter.getRotation());
+
+		float shooterWidth = shooter.getSprite().getWidth();
+		float shooterHeight = shooter.getSprite().getHeight();
+
+		offsetVector.set(shooter.getPosition().x + shooterWidth / 2f, shooter.getPosition().y + shooterHeight / 2f);
+
+		this.mover(offsetVector, getRotation(), radius);
+
+		if (isBeam)
+			this.updateOffset();
+	}
+
+	private void updateOffset() {
+		float forwardOffset = getSprite().getHeight() / 2f;
+
+		offsetVector.set(1, 0);
+		offsetVector.setAngleDeg(getRotation() + 90);
+		offsetVector.setLength(forwardOffset);
+		this.getPosition().add(offsetVector);
+
+		getSprite().setPosition(getPosition().x - getSprite().getWidth() / 2, getPosition().y - getSprite().getHeight() / 2);
+	}
+	
 	@Override
 	public void draw(SpriteBatch batch) {
-		getHitbox().draw(batch);
+		if (animation != null) {
+			animation.handle(batch, false); 
+		} else {
+			super.draw(batch);
+		}
 	}
 }

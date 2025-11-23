@@ -1,6 +1,6 @@
 package logica;
 
-import pantallas.opciones.EConfigurationOption;
+import enumeradores.opciones.EConfigurationOption;
 
 /**
  * Clase que sólo se encarga de manejar los valores del sonido.

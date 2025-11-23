@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import enumeradores.EScreenType;
+import enumeradores.opciones.EPauseOption;
 import interfaces.INavigableOption;
 import logica.MainGame;
 import pantallas.menus.NavigableScreen;
-import pantallas.opciones.EPauseOption;
 
 public class PauseScreen extends NavigableScreen {
 	private final Color TRANSPARENTE = new Color(0f, 0f, 0f, 0.45f);
@@ -33,13 +33,14 @@ public class PauseScreen extends NavigableScreen {
 	@Override
 	protected void update(float delta) {
 		// Navegación
-		navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-		INavigableOption opcionActual = navegador.getCurrentSelection();
+		getNavegador().move(delta, Input.Keys.UP, Input.Keys.DOWN);
+		INavigableOption opcionActual = getNavegador().getCurrentSelection();
 		
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
         	if (opcionActual.ordinal() == EPauseOption.CONTINUAR.ordinal()) {	
-        		this.resume();
+        		getGame().getPantallaManager().continuarJuego();;
         	} else {
+        		getGame().setNextLevelToLoad(0); // si sale al menu, se reinicia el nivel y las rondas
         		getGame().getPantallaManager().cambiarPantalla(EScreenType.MENU);
                 this.dispose();
                 return;
@@ -64,9 +65,11 @@ public class PauseScreen extends NavigableScreen {
         // Texto
         font.getData().setScale(2.0f);
         font.draw(batch, "PAUSA", px + 190, py + 200);
-        navegador.drawOptions(batch, font);
+        getNavegador().drawOptions(batch, font);
+
 
         batch.end();
+
 	}
 
 }
