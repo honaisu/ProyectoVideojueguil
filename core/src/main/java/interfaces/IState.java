@@ -15,8 +15,6 @@ public interface IState {
 	boolean isValid();
 
 	Integer getCurrentResource();
-	
-	void setCurrentResource(Integer amount);
 
 	Integer getMaxResource();
 }

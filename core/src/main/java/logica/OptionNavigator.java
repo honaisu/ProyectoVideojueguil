@@ -29,7 +29,6 @@ public class OptionNavigator {
 		this.delay = delay;
 	}
 	
-	// TODO arreglar lógica...? Aunque creo que ya se ve bonito
 	/**
 	 * Método encargado de moverse entre las opciones
 	 * @param delta Parámetro delta.

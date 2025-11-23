@@ -5,7 +5,7 @@ import managers.EnemyManager;
 
 public class Round {
     private final String name;
-    private final IRoundStrategy spawnStrategy;
+    private IRoundStrategy spawnStrategy;
     
     public Round(String name, IRoundStrategy spawnStrategy) {
         this.name = name;
@@ -17,7 +17,6 @@ public class Round {
     }
     
     public void executeSpawn(EnemyManager enemyManager) {
-        //System.out.println("Iniciando: " + name); 
         spawnStrategy.spawnEnemies(enemyManager);
     }
 }

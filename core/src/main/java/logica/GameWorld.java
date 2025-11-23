@@ -16,45 +16,51 @@ public class GameWorld {
 	private final GameLogicHandler gameLogicHandler;
 	private final Player player;
 
-	private int currentLevelIndex; // Índice para saber en qué nivel vamos
-	private Level currentLevel; // El objeto Nivel que estamos jugando AHORA
-	private boolean waitingForNextRound; // Esto se mantiene, pero ahora lo usa el Nivel
+	private int currentLevelIndex; // Índice nivel actual
+	private Level currentLevel; // Level actual
+	private boolean waitingForNextRound;
 	private boolean gameWon = false; // flag para ver si ya ganamos
-	private boolean levelComplete = false; // flag para ver si se completo el nivel (para avizar a GameScreen)
-	private float currentLevelFriction = 0.9f; // tipo flag para ver que fricciones tenemos actualemnte (normal es 0.9f)
+	private boolean levelComplete = false; // flag para ver si se completo el nivel
+	private float currentLevelFriction = 0.9f; // para la friccion del nivelactual (normal es 0.9f)
 
+	
+	// Parametro movimiento del jugador
 	private final float ROTATE_ANGLE = 5.0f;
 	private final float ROTATE_ANGLE_SLOW = 1.0f;
 	private final float ACCELERATION = 100f;
-	private boolean estaEnPausa = false;
+	private final float ACCELERATION_SLOW = 10f;
+	
+	// Para transicion de rondas
+	private boolean roundComplete = false; // flag para ver si se completo la ronda
+	private boolean isTransitioningRound = false; // flag para controlar el delay interna
+	private float roundDelayTimer = 0f;
+	private final float ROUND_DELAY_DURATION = 2.0f;
 
 	public GameWorld(int startingLevelIndex, EPlayerSkin skin) {
 		this.player = new Player(0, 0, skin);
 		this.gameLogicHandler = new GameLogicHandler();
 
-		// nuevo para el tema de inciar los niveles
 		this.currentLevelIndex = startingLevelIndex - 1;
-		// this.currentLevelIndex = 3;
 		this.waitingForNextRound = true;
 
-		// y creamos el primer nivel
+		// crear Primer nivel
 		startNextLevel();
 	}
 
 	private void startNextLevel() {
 
-		currentLevelIndex++; // Avanzamos al siguiente índice (0 -> 1 -> 2...)
+		currentLevelIndex++; // avanzar indice nivel
 		final int TOTAL_LEVELS = 5; // Constante para saber cuándo parar
 
-		// TODO ver rondas
-		// currentLevelIndex = 4;
+		// TODO ver rondas en especifico
+		//currentLevelIndex = 4;
 
 		if (currentLevelIndex < TOTAL_LEVELS) {
 
-			// 1. Cargamos el Nivel (solo el que toca) usando el Factory.
+			// Cargar nivel
 			switch (currentLevelIndex) {
 			case 0: // Nivel 1
-				currentLevel = LevelFactory.createLevelTwo();
+				currentLevel = LevelFactory.createLevelOne();
 				break;
 			case 1: // Nivel 2
 				currentLevel = LevelFactory.createLevelTwo();
@@ -73,20 +79,16 @@ public class GameWorld {
 				return;
 			}
 
-			// 2. Actualizamos la friccion del nivel (código original se mantiene)
+			// Friccion del jugador del nivel
 			this.currentLevelFriction = currentLevel.getPlayerFriction();
 
-			// 3. Creamos los obstaculos (código original se mantiene)
+			// Crear obstaculos
 			// TODO mejora esto// crea los obstaculos apra el nivel 1
 			gameLogicHandler.getObstacleManager().spawnObstacles(currentLevel.getHazardCount(),
 					currentLevel.getSolidCount(), currentLevel.getBackground());
 
-			// 4. Marcamos que estamos listos para la *primera ronda*
 			this.waitingForNextRound = true;
 
-		} else {
-			// Hemos excedido el número total de niveles, manejado en checkCompletion(),
-			// pero puedes poner una comprobación de seguridad aquí si es necesario.
 		}
 	}
 
@@ -96,12 +98,13 @@ public class GameWorld {
 		gameLogicHandler.update(delta);
 		gameLogicHandler.handleCollisions(player);
 		// Chekeamos que este completo
-		checkCompletion(); // es apra ver si esta vacia la lista de enemigos, si lo está, avanza de ronda
+		checkCompletion(); // es para ver si esta vacia la lista de enemigos, si lo está, avanza de ronda
+		updateRoundTransition(delta);
 	}
 
 	private void handleInput(float delta) {
-
-		// Lógica de rotación de benjoid con coso de C
+		
+		// Rotacion del jugador
 		if ((Gdx.input.isKeyPressed(Input.Keys.C))) { // Mayor precision
 			if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
 				player.rotate(ROTATE_ANGLE_SLOW);
@@ -114,23 +117,26 @@ public class GameWorld {
 				player.rotate(-ROTATE_ANGLE);
 		}
 
-		// Lógica de aceleración
-		if (Gdx.input.isKeyPressed(Input.Keys.UP))
-			player.accelerate(ACCELERATION);
+		// Aceleración del jugador
+		
+		float currentAcceleration = ACCELERATION;
+		
+		// mas lento
+		if((Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))) {
+			currentAcceleration = ACCELERATION_SLOW;
+		}
+		if (Gdx.input.isKeyPressed(Input.Keys.UP)) //normal
+			player.accelerate(currentAcceleration);
 		else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-			player.accelerate(-ACCELERATION);
+			player.accelerate(-currentAcceleration);
 		else
-			// Lógica de fricción de 'HEAD'
+			// aplica la friccion del jugador
 			player.applyFriction(this.currentLevelFriction);
 
 		if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
 			player.shoot(gameLogicHandler.getProyectilManager());
 		}
 
-		// La idea se marcar si está en pausa o no
-		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			estaEnPausa = true;
-		}
 	}
 
 	public Player getPlayer() {
@@ -141,59 +147,65 @@ public class GameWorld {
 		return gameLogicHandler;
 	}
 
-	// para manejar si está en pausa o no
-	public boolean isEstaEnPausa() {
-		return estaEnPausa;
-	}
-
-	public void setEstaEnPausa(boolean estaEnPausa) {
-		this.estaEnPausa = estaEnPausa;
-	}
 
 	// para comporbar si todos los enemigos fueron derrotados
 	/**
 	 * Ahora DELEGA la lógica al Nivel actual.
 	 */
 	private void checkCompletion() {
+		
+		if (gameWon || levelComplete) return;
+	    if (currentLevel == null) return;
 
-		if (gameWon || levelComplete)
-			return;
-		if (currentLevel == null)
-			return; // Aún no ha cargado nada
+	    // Si estamos listos para la siguiente ronda, no estamos ya en transición 
+	    // y no quedan enemigos...
+	    if (waitingForNextRound && !isTransitioningRound && 
+	        gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
+	        
+	        // 1. Activamos la transición
+	        isTransitioningRound = true;
+	        
+	        // 2. Activamos la flag para que tu otra clase dibuje el texto en pantalla
+	        roundComplete = true; 
+	        
+	        // 3. Reseteamos el timer
+	        roundDelayTimer = 0f;
+	    }else if (!waitingForNextRound && gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
+	    	this.waitingForNextRound = true; 
+	    }
+	}
+	
+	private void updateRoundTransition(float delta) {
+	    if (isTransitioningRound) {
+	        roundDelayTimer += delta;
 
-		// Si estamos esperando
-		// Y la lista de enemigos está vacía
-		if (waitingForNextRound && gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
+	        
+	        if (roundDelayTimer >= ROUND_DELAY_DURATION) {
+	            advanceRoundLogic();
+	            
+	            // Reseteamos las flags
+	            isTransitioningRound = false;
+	            roundComplete = false;
+	            roundDelayTimer = 0f;
+	        }
+	    }
+	}
+	
+	private void advanceRoundLogic() {
+	    boolean levelFinished = currentLevel.advanceToNextRound(gameLogicHandler);
 
-			// Le pedimos al NIVEL (currentLevel) que avance a su siguiente ronda
-			boolean levelFinished = currentLevel.advanceToNextRound(gameLogicHandler);
+	    if (levelFinished) {
+	        int nextLevelIdx = currentLevelIndex + 1;
+	        final int TOTAL_LEVELS = 5;
 
-			if (levelFinished) {
-				// El nivel nos dijo que se quedó sin rondas
-				int nextLevelIdx = currentLevelIndex + 1;
-
-				final int TOTAL_LEVELS = 5;
-
-				if (nextLevelIdx >= TOTAL_LEVELS) {
-					// ¡Ganó el juego! No hay más niveles.
-					this.gameWon = true;
-					System.out.println("¡HAS GANADO EL JUEGO!"); // (Lo movemos aquí)
-
-				} else {
-					// No ha ganado, solo pasa de nivel
-					this.levelComplete = true;
-				}
-			} else {
-				// El nivel aún tiene rondas.
-				this.waitingForNextRound = false;
-			}
-		}
-
-		// Si NO estamos esperando (estamos en media ronda)
-		// y la lista se vacía, nos preparamos para la siguiente.
-		else if (!waitingForNextRound && gameLogicHandler.getEnemyManager().getEnemies().isEmpty()) {
-			this.waitingForNextRound = true; // Listo para la siguiente ronda
-		}
+	        if (nextLevelIdx >= TOTAL_LEVELS) {
+	            this.gameWon = true;
+	        } else {
+	            this.levelComplete = true;
+	        }
+	    } else {
+	        this.waitingForNextRound = false; 
+	    }
 	}
 
 	/**
@@ -205,6 +217,7 @@ public class GameWorld {
 		}
 		return "Cargando...";
 	}
+	
 
 	/**
 	 * Devuelve el nombre de la RONDA actual
@@ -213,7 +226,11 @@ public class GameWorld {
 		if (currentLevel != null) {
 			return currentLevel.getCurrentRoundName();
 		}
-		return ""; // Vacío mientras carga
+		return "";
+	}
+
+	public String getNextRoundName() {
+		return currentLevel.getNextRoundName();
 	}
 
 	public EBackgroundType getBackground() {
@@ -228,7 +245,7 @@ public class GameWorld {
 	}
 
 	/**
-	 * Le dice a GameScreen cuál es el *siguiente* nivel.
+	 * siguiente nivel.
 	 */
 	public int getNextLevelIndex() {
 		// currentLevelIndex es el que *acabamos* de terminar
@@ -241,6 +258,10 @@ public class GameWorld {
 	 */
 	public boolean isGameWon() {
 		return gameWon;
+	}
+
+	public boolean isRoundComplete() {
+		return roundComplete;
 	}
 
 }

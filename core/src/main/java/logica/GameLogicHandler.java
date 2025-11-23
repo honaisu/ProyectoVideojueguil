@@ -86,7 +86,6 @@ public class GameLogicHandler implements IRenderizable {
 
 	@Override
 	public void update(float delta) {
-		// ta rarete
 		proyectilManager.update(delta);
 		enemyManager.update(delta);
 		dropManager.update(delta);

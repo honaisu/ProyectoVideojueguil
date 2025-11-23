@@ -42,7 +42,7 @@ public class HealthBar {
         	//displaySprite.setPosition(hudPos.x, hudPos.y);
         	displaySprite.setBounds(hudPos.x, hudPos.y, 300, 30);
         } else {
-        	//Debajo de los enemigos
+        	//Enemigos debajo suyo
         	Vector2 ownerPos = owner.getPosition();
         	float ownerWidth = owner.getSprite().getWidth();
             float barWidth = 64f;

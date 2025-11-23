@@ -13,14 +13,14 @@ public class EnemyFactory {
 
 	// Valores Fijos
 	private static float ENEMY_SIZE = 1f;
-	private static float RARE_DROP = RNG.nextFloat() * 0.95f;
-	private static int ENEMY_HP = 100;
-	private static int ENEMY_DAMAGE = 10 + RNG.nextInt(11);
+	private static float RARE_DROP = 0.80f;
+	private static int ENEMY_HP = 80;
+	private static int ENEMY_DAMAGE = 5;
 	
 	private static EEnemyType type = EEnemyType.GENERIC;
 	
 	// Velocidad inicial
-	private static final float MIN_SPEED = 60f, MAX_SPEED = 140f;
+	private static float MIN_SPEED = 60f, MAX_SPEED = 140f;
 	
 	public static Enemy createRandomBasic() {
 		int w = Gdx.graphics.getWidth();
@@ -33,7 +33,6 @@ public class EnemyFactory {
 		float angle = RNG.nextFloat() * 360f;
 		
 		// Llamamos al nuevo "createBasic" ahora fusionado :D//
-		//return createBasic(x, y, rareDrop, healthPoints, damage, speed, angle);
 		return createBasicAlpha(x, y, type, ENEMY_SIZE, RARE_DROP, ENEMY_HP, ENEMY_DAMAGE, speed, angle);
 	}
 	
@@ -88,9 +87,12 @@ public class EnemyFactory {
 	public static void setENEMY_DAMAGE(int enemyDamage) {
 		ENEMY_DAMAGE = enemyDamage;
 	}
-	
-	public static Random getRng() {
-		return RNG;
+
+	public static void setMIN_SPEED(float mIN_SPEED) {
+		MIN_SPEED = mIN_SPEED;
 	}
-	
+
+	public static void setMAX_SPEED(float mAX_SPEED) {
+		MAX_SPEED = mAX_SPEED;
+	}
 }

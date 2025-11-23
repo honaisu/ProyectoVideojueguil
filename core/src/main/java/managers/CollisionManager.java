@@ -13,7 +13,6 @@ import factories.WeaponFactory;
 import interfaces.IAttackable;
 import managers.assets.AssetManager;
 
-//para el tema de los obstaculos
 import entidades.obstaculos.DamageHazard;
 import entidades.obstaculos.SolidObstacle;
 
@@ -21,29 +20,26 @@ public class CollisionManager {
 	private final Sound explosionSound;
 	private final int scorePerEnemy;
 
-	public CollisionManager(Sound explosionSound, int scorePerEnemy) {
-		this.explosionSound = explosionSound;
-		this.scorePerEnemy = scorePerEnemy;
-	}
-
 	public CollisionManager() {
 		this.explosionSound = AssetManager.getInstancia().getSound(EGameSound.EXPLOSION);
 		this.scorePerEnemy = 10;
 	}
-
+	
+	// Maneja todo tipo de colisiones
 	public int handleCollisions(Player player, List<Projectile> projectiles, List<Enemy> enemies,
 			DropManager dropManager, ObstacleManager obstacleManager) {
 		
 		int totalScore = handleProjectileVsEnemy(projectiles, enemies, dropManager);
 		handlePlayerVsEnemy(player, enemies);
 		handlePlayerVsDrops(player, dropManager); 
-		// Lógica de Obstáculos 
+		
 		handlePlayerVsHazards(player, obstacleManager);
 		handleSolidCollisions(player, enemies, obstacleManager);
 
 		return totalScore;
 	}
-
+	
+	// Colision proyectiles con enemigos
 	public int handleProjectileVsEnemy(List<Projectile> projectiles, List<Enemy> enemies, DropManager dropManager) {
 		int totalScore = 0;
 		Iterator<Projectile> projectileIterator = projectiles.iterator();
@@ -72,7 +68,8 @@ public class CollisionManager {
 		}
 		return totalScore;
 	}
-
+	
+	// Colision jugador con enemigos
 	public void handlePlayerVsEnemy(Player player, List<Enemy> enemies) {
 		Iterator<Enemy> enemyIterator = enemies.iterator();
 
@@ -83,7 +80,7 @@ public class CollisionManager {
 				player.takeDamage((int) enemy.getDamage());
 				
 				enemy.takeDamage(30);
-				if(enemy.isDead()) {					
+				if(enemy.isDead()) {
 					if (explosionSound != null)
 						explosionSound.play(0.1f);
 					enemyIterator.remove(); // Enemigo se destruye al chocar
@@ -92,7 +89,8 @@ public class CollisionManager {
 			}
 		}
 	}
-
+	
+	// Colision Jugador con Drops 
 	public void handlePlayerVsDrops(Player player, DropManager dropManager) {
 		Iterator<WeaponDrop> dropIterator = dropManager.getDrops().iterator();
 
@@ -109,13 +107,14 @@ public class CollisionManager {
 		}
 	}
 	
+	// Cuando un enemigo muere crea un drop
 	private int handleEnemyDeath(Enemy enemy, Iterator<Enemy> iterator, DropManager dropManager) {
         if (explosionSound != null) explosionSound.play(0.1f);
         
         // Lógica de Drop
         if (Math.random() < enemy.getRareDropProbability()) {
-            IAttackable weaponToDrop = WeaponFactory.createRandomAttackable(); 
-			// Se usa getPosition() de benjoid, que es cmo la logica actual
+            IAttackable weaponToDrop = WeaponFactory.createRandomAttackable();
+            
             WeaponDrop drop = new WeaponDrop(enemy.getPosition().x, enemy.getPosition().y, weaponToDrop);
             dropManager.add(drop); 
         }
@@ -124,7 +123,7 @@ public class CollisionManager {
         return scorePerEnemy;
     }
 
-	// Colision de cuando el juagador choca con un obsttaculo de daño
+	// Colision de cuando el juagador choca con un obstaculo de daño
 	public void handlePlayerVsHazards(Player player, ObstacleManager obstacleManager) {
 		List<DamageHazard> hazards = obstacleManager.getHazards();
 
@@ -137,7 +136,7 @@ public class CollisionManager {
 		}
 	}
 
-	// Colision de entidad con el bloque
+	// Colision de entidad con el bloque sólido
 	public void handleSolidCollisions(Player player, List<Enemy> enemies, ObstacleManager obstacleManager) {
 		List<SolidObstacle> solids = obstacleManager.getSolids();
 

@@ -24,7 +24,7 @@ public class CustomizationScreen extends NavigableScreen {
 	@Override
 	protected void update(float delta) {
 		// Entrada
-		navegador.move(delta, Input.Keys.LEFT, Input.Keys.RIGHT);
+		getNavegador().move(delta, Input.Keys.LEFT, Input.Keys.RIGHT);
 
         // Confirmar: guardar path y volver al menú
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -56,7 +56,7 @@ public class CustomizationScreen extends NavigableScreen {
         float previewX = x - PREVIEW_HW/2f;
         float previewY = y - PREVIEW_HW/2f;
         
-		INavigableOption opcionActual = navegador.getCurrentSelection();
+		INavigableOption opcionActual = getNavegador().getCurrentSelection();
         
         int i = 1;
         String mensajeSeleccionado;

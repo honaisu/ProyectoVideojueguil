@@ -12,43 +12,28 @@ import interfaces.IRenderizable;
 public class ProjectileManager implements IRenderizable {
 	private final List<Projectile> proyectiles = new ArrayList<>();
 	private final List<Projectile> toAdd = new ArrayList<>();
-	
-	/*@Override
-	public void update(float delta) {
-		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
-		Iterator<Projectile> iterator = proyectiles.iterator();
 
-	    while (iterator.hasNext()) {
-	        Projectile proyectil = iterator.next();
-	        if (proyectil == null) {
-	        	iterator.remove();
-	        	continue;
-	        }
-	        proyectil.update(delta);
-	        if (proyectil.isDestroyed()) {
-	            iterator.remove();
-	        }
-	    }
-    }*/
-	
 	public void add(Projectile proyectil) {
-		if (proyectil == null) return;
+		if (proyectil == null)
+			return;
 		toAdd.add(proyectil);
 
 	}
-	
-	public boolean remove(Projectile proyectil) {
+
+	public boolean remove(Projectile proyectil) { //TODO
 		return proyectiles.remove(proyectil);
 	}
-	
-	public Projectile removeActual() {
+
+	public Projectile removeActual() { //TODO
 		return proyectiles.remove(0);
 	}
-	
-	public Projectile getActual() {
-		if (proyectiles.isEmpty()) return null;
+
+	public Projectile getActual() { //TODO
+		if (proyectiles.isEmpty())
+			return null;
 		return proyectiles.get(0);
 	}
+
 	public void update(float delta) {
 		if (!toAdd.isEmpty()) {
 			proyectiles.addAll(toAdd);
@@ -57,33 +42,34 @@ public class ProjectileManager implements IRenderizable {
 		// Lo utiliza por seguridad. No sabía que existia una clase así de buena :o
 		Iterator<Projectile> iterator = proyectiles.iterator();
 
-	    while (iterator.hasNext()) {
-	        Projectile proyectil = iterator.next();
-	        if (proyectil == null) {
-	        	iterator.remove();
-	        	continue;
-	        }
-	        proyectil.update(delta);
-	        if (proyectil.isDestroyed()) {
-	            iterator.remove();
-	        }
-	    }
-    }
-	
+		while (iterator.hasNext()) {
+			Projectile proyectil = iterator.next();
+			if (proyectil == null) {
+				iterator.remove();
+				continue;
+			}
+			proyectil.update(delta);
+			if (proyectil.isDestroyed()) {
+				iterator.remove();
+			}
+		}
+	}
+
 	public List<Projectile> getProjectiles() {
 		return proyectiles;
 	}
-	
+
 	public void draw(SpriteBatch batch) {
-        for (Projectile proyectil : proyectiles) {
-            proyectil.draw(batch);
-        }
-    }
-	public void clear() {
+		for (Projectile proyectil : proyectiles) {
+			proyectil.draw(batch);
+		}
+	}
+
+	public void clear() { //TODO
 		proyectiles.clear();
 	}
-	
-	public boolean isEmpty() {
+
+	public boolean isEmpty() { //TODO
 		return proyectiles.isEmpty();
 	}
 }

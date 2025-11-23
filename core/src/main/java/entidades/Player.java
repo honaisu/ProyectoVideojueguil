@@ -48,7 +48,7 @@ public class Player extends Creature {
 	public Player(float x, float y, EPlayerSkin skin) {
 		super(new Vector2(x, y), skin, 100, true);
 		
-		this.weapon = WeaponFactory.create(EWeaponType.ROCKET_LAUNCHER);
+		this.weapon = WeaponFactory.create(EWeaponType.MELEE);
 		// Lo pone al centro
 		// Posicionamiento inicial
 		getPosition().set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);

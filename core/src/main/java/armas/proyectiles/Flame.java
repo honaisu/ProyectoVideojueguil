@@ -37,7 +37,7 @@ public class Flame extends Projectile implements IRenderizable {
 	}
 
 	/**
-	 * movimiento de la bala y colision con el borde de la ventana
+	 * movimiento de la bala, distancia y colision con el borde de la ventana
 	 */
 	@Override
 	public void update(float delta) {
@@ -47,6 +47,7 @@ public class Flame extends Projectile implements IRenderizable {
 		getPosition().add(getVelocity().cpy().scl(delta));
 		getSprite().setPosition(getPosition().x - getSprite().getOriginX(), getPosition().y - getSprite().getOriginY());
 		
+		// distancia
 		float distance = getPosition().dst(startPosition);
 		if (distance >= maxDistance) {
 			destroy();

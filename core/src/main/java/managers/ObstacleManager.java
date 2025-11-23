@@ -35,7 +35,7 @@ public class ObstacleManager {
     public void update(float delta) { }
 
     public void render(SpriteBatch batch) {
-        // Dibuja primero los charcos/puas  //TODO ver bien esto
+        // Dibuja primero los charcos/puas
         for (DamageHazard h : hazards) {
             h.draw(batch);
         }

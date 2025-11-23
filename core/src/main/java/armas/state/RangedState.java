@@ -45,11 +45,6 @@ public class RangedState implements IState {
 	}
 
 	@Override
-	public void setCurrentResource(Integer amount) {
-		this.ammo += amount;
-	}
-
-	@Override
 	public Integer getMaxResource() {
 		return maxAmmo;
 	}

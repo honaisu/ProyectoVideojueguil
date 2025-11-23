@@ -23,8 +23,8 @@ public class WinScreen extends NavigableScreen {
     @Override
     protected void update(float delta) {
         // 1. Moverse por las opciones (Arriba/Abajo)
-        navegador.move(delta, Input.Keys.UP, Input.Keys.DOWN);
-        INavigableOption opcionActual = navegador.getCurrentSelection();
+    	getNavegador().move(delta, Input.Keys.UP, Input.Keys.DOWN);
+        INavigableOption opcionActual = getNavegador().getCurrentSelection();
 
         // 2. Ejecutar la opción (Enter)
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -63,7 +63,7 @@ public class WinScreen extends NavigableScreen {
         font.draw(batch, "¡HAS GANADO!", px, py);
         
         // Dibuja las opciones ("Volver a Jugar", "Menu Principal")
-        navegador.drawOptions(batch, font);
+        getNavegador().drawOptions(batch, font);
 
         batch.end();
     }

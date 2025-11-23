@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public interface IRenderizable {
 	// Constante que define el tamaño de HUD
-	final float HUD_HEIGHT = 100f;
-
+	
+	float HUD_HEIGHT = 100f;
 	/**
 	 * Método encargado de manejar la lógica interna del objeto.
 	 * 

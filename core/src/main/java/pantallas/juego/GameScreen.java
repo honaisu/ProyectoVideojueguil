@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-//para el fondo
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 
@@ -23,8 +23,7 @@ public class GameScreen extends BaseScreen {
 	private final GameWorld world;
 	private final HUDLayout hud = new HUDLayout();
 	
-	//cosas utiles para el tema del fondo 
-	private Sprite backgroundSprite; // El sprite que usaremos para el fondo
+	private Sprite backgroundSprite;
 	
 	public GameScreen(MainGame game) {
 		super(game);
@@ -41,6 +40,7 @@ public class GameScreen extends BaseScreen {
 	protected void update(float delta) {
 		world.update(delta);
 		
+
 		if (world.isGameWon()) {
             
             // Ahora va a la pantalla de Victoria
@@ -48,10 +48,10 @@ public class GameScreen extends BaseScreen {
             return; // Detenemos el update
         }
 
-	    // Chqeuamos la transicion
+	    // Chqueamos la transicion
 	    if (world.isLevelComplete()) {
 
-	        // le decimos a mi game cual es el siguiente nivel
+	        // cambiamos de nivel
 	        getGame().setNextLevelToLoad(world.getNextLevelIndex());
 	        getGame().getPantallaManager().cambiarPantalla(EScreenType.TRANSITION);
 	        return;
@@ -81,16 +81,16 @@ public class GameScreen extends BaseScreen {
 		batch.begin();
 		
 		//dibujarmos el fondo ahora si
-		backgroundSprite.draw(batch);
+		backgroundSprite.draw(batch);	
 		
-		//ahora antes de "dibujar" le preguntamos al GameWorld//
-		//String currentRoundName = world.getCurrentRoundName();
-		//batch.begin();
 		world.getGameLogicHandler().draw(batch);
 		world.getPlayer().draw(batch);
-		//hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), currentRoundName);
 		hud.draw(batch, font, world.getPlayer(), getGame().getHighScore(), levelName, roundName);
 		
+		if (world.isRoundComplete()) {
+			String texto = world.getNextRoundName();
+			font.draw(batch, texto, Gdx.graphics.getWidth() / 2, 600, 0 ,Align.center, false);
+		}
 		batch.end();
 	}
 }

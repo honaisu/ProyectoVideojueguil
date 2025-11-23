@@ -15,7 +15,7 @@ import interfaces.ITexture;
  */
 public abstract class Creature extends Entity implements IRenderizable {
 	// La vida de la entidad :)
-	private HealthBar healthBar;
+	private HealthBar healthBar; // posee una barra de vida
 	private final int totalHp;
 	private int hp;
 
@@ -37,10 +37,6 @@ public abstract class Creature extends Entity implements IRenderizable {
 		// Para que no se sobrepase nuestro límite
 		if (hp < 0)
 			hp = 0;
-	}
-	
-	public void addHp(int amount) {
-		this.hp += amount;
 	}
 
 	/**

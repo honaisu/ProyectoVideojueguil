@@ -31,12 +31,6 @@ public abstract class Entity implements IRenderizable {
 		//this.sprite = SpriteFactory.create(EEnemyType.WATER);
 	}
 
-	public Entity(Vector2 position, Vector2 velocity, ITexture asset) {
-		this.position = position;
-		this.sprite = SpriteFactory.create(asset);
-		this.velocity.set(velocity);
-	}
-
 	/**
 	 * Método abstracto encargado de poder actualizar la lógica de la entidad.
 	 */
@@ -49,7 +43,7 @@ public abstract class Entity implements IRenderizable {
 			sprite.draw(batch);
 	}
 
-	// METODOS
+	// Para mover el proyectil swing con respecto al jugador
 	public void mover(Vector2 center, float rotation, float radio) {
 		Vector2 offset = new Vector2(radio, 0);
 		offset.setAngleDeg(rotation + 90);
@@ -59,10 +53,6 @@ public abstract class Entity implements IRenderizable {
 
 		sprite.setPosition(newPosition.x - sprite.getWidth() / 2, newPosition.y - sprite.getHeight() / 2);
 		sprite.setRotation(rotation);
-	}
-
-	public void mover(float centerX, float centerY, float rotation, float radio) {
-		this.mover(new Vector2(centerX, centerY), rotation, radio);
 	}
 
 	/**
@@ -140,39 +130,14 @@ public abstract class Entity implements IRenderizable {
 	 * necesario.
 	 * 
 	 * @param entity Entidad que se verifica si está dentro de los bordes o no.
-	 */
+	 *///TODO ver el otro is inBounds
 	public static boolean isInBounds(Entity entity) {
-		float w = entity.getSprite().getWidth(), h = entity.getSprite().getHeight();
-		float maxX = Gdx.graphics.getWidth() - w;
-		float maxY = Gdx.graphics.getHeight() - h;
-
-		Vector2 copy = entity.getPosition().cpy();
-		Vector2 position = entity.getPosition();
-		Vector2 velocity = entity.getVelocity();
-
-		// Clamp básicamenente se encarga de "limitar" la posición a solo esos valores límite
-		position.x = MathUtils.clamp(position.x, 0, maxX);
-		if (position.x != copy.x) {
-			velocity.x = -velocity.x;
-			return false;
-		}
-
-		position.y = MathUtils.clamp(position.y, 0, maxY);
-		if (position.y != copy.y) {
-			velocity.y = -velocity.y;
-			return false;
-		}
-
-		return true;
-	}
-	
-	public static boolean isInPlayableBounds(Entity entity, float hudHeight) {
 	    float w = entity.getSprite().getWidth(), h = entity.getSprite().getHeight();
 	    float maxX = Gdx.graphics.getWidth() - w;
 	    // Nuevo límite Y superior, igual que antes
 	    float maxY = Gdx.graphics.getHeight() - h; 
 	    // Nuevo límite Y inferior (la altura del HUD)
-	    float minY = hudHeight; 
+	    float minY = HUD_HEIGHT; 
 
 	    Vector2 copy = entity.getPosition().cpy();
 	    Vector2 position = entity.getPosition();

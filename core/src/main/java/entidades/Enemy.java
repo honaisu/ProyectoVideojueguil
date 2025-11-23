@@ -26,8 +26,7 @@ public class Enemy extends Creature {
 	    
 	    setPosition(newPos);
 	    
-	    final float HUD_HEIGHT = 100f;
-		Entity.isInPlayableBounds(this, HUD_HEIGHT);
+		Entity.isInBounds(this);
 		
 	    getSprite().setPosition(newPos.x, newPos.y);
 	    
@@ -35,8 +34,7 @@ public class Enemy extends Creature {
 	}
 
 	/**
-	 * Dibuja al enemigo. Player tiene una lógica compleja de animación, pero Enemy
-	 * puede ser simple.
+	 * Dibuja al enemigo
 	 */
 	@Override
 	public void draw(SpriteBatch batch) {

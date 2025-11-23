@@ -1,6 +1,7 @@
 package pantallas.juego;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,8 +14,8 @@ import pantallas.BaseScreen;
 public class LevelTransitionScreen extends BaseScreen {
     private float timer;
     
-    private String completedLevelName; // El nombre del nivel que terminaste (ej: "Nivel 1")
-    private String nextLevelName;      // El nombre del nivel que vas a cargar (ej: "Nivel 2")
+    private String completedLevelName;
+    private String nextLevelName;
  
 
     public LevelTransitionScreen(MainGame game) {
@@ -27,15 +28,14 @@ public class LevelTransitionScreen extends BaseScreen {
 
     @Override
     public void show() {
-        this.timer = 3.0f; // Temporizador de 3 segundos
+        this.timer = 4.0f;
     }
 
     @Override
     protected void update(float delta) {
         timer -= delta;
         if (timer <= 0) {
-            // Cuando el tiempo acaba, cargamos el JUEGO
-            // (GameScreen usará 'getNextLevelToLoad()' para cargar el Nivel 2)
+            //  Se carga el juego
             getGame().getPantallaManager().cambiarPantalla(EScreenType.GAME);
         }
     }
@@ -46,18 +46,22 @@ public class LevelTransitionScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        
-        // ¡CORREGIDO!
+        font.setColor(Color.WHITE);
         font.draw(batch, "¡" + completedLevelName + " Completado!", 
                   Gdx.graphics.getWidth() / 2, 
                   Gdx.graphics.getHeight() / 2 + 50, 
                   0, Align.center, false);
         
-        // ¡CORREGIDO!
         font.draw(batch, "Cargando " + nextLevelName + "...", 
                   Gdx.graphics.getWidth() / 2, 
                   Gdx.graphics.getHeight() / 2 - 50, 
                   0, Align.center, false);
+        
+        font.setColor(Color.LIME);
+        font.draw(batch, "Vida restaurada", 
+                Gdx.graphics.getWidth() / 2, 
+                100, 
+                0, Align.center, false);
                   
         batch.end();
     }

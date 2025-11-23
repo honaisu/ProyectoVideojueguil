@@ -5,17 +5,6 @@ import java.util.Map;
 
 import enumeradores.EScreenType;
 import logica.MainGame;
-/*<<<<<<< HEAD
-import pantallas.*;
-import pantallas.juego.GameOverScreen;
-import pantallas.juego.GameScreen;
-import pantallas.juego.PauseScreen;
-import pantallas.juego.LevelTransitionScreen;
-import pantallas.juego.WinScreen;
-import pantallas.menus.ConfigurationScreen;
-import pantallas.menus.CustomizationScreen;
-import pantallas.menus.MainMenuScreen;
-=======*/
 import pantallas.BaseScreen;
 
 
@@ -71,6 +60,14 @@ public class ScreenManager {
         for (BaseScreen screen : pantallas.values()) {
             if (screen == null) continue;
             screen.dispose();
+        }
+    }
+    
+    public void continuarJuego() {
+        BaseScreen juegoPausado = pantallas.get(EScreenType.GAME);
+
+        if (juegoPausado != null) {
+            game.setScreen(juegoPausado);
         }
     }
 }

@@ -10,16 +10,12 @@ import interfaces.IRenderizable;
 import logica.AnimationHandler;
 
 /**
- * Clase que representa una balla dentro del juego
+ * Clase que representa una bala dentro del juego
  */
 public class Bullet extends Projectile implements IRenderizable {
 	private float lifespan = -1f;
 	private AnimationHandler animation;
 
-	public Bullet(BulletData data, Entity shooter) {
-		this(data, shooter, 0f, 0f);
-	}
-	
 	/**
 	 * Constructor que permite a una entidad poder disparar la bala correspondiente.
 	 */
@@ -40,7 +36,7 @@ public class Bullet extends Projectile implements IRenderizable {
 	}
 
 	/**
-	 * Constructor utilizado para spawnear la bala en un sector específico (vector).
+	 * Constructor utilizado para spawnear la explosion de un proyectil Rocket.
 	 */
 	public Bullet(BulletData data, Vector2 spawn) {
 		super(spawn, data);

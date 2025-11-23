@@ -42,7 +42,4 @@ public class DropManager {
         return drops;
     }
 
-    public void clear() {
-        drops.clear();
-    }
 }

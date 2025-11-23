@@ -5,7 +5,6 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import entidades.Enemy;
-import enumeradores.recursos.texturas.EEnemyType;
 import factories.EnemyFactory;
 import interfaces.IRenderizable;
 
@@ -14,16 +13,12 @@ public class EnemyManager implements IRenderizable {
 	private final List<Enemy> enemies = new ArrayList<>();
 	private static final float MIN_SEPARATION = 72f;
 	private final ObstacleManager obstacleManager;
-	
-	private EEnemyType type;
 
 	// vacio para las rondas creo
 
 	public EnemyManager(ObstacleManager obstacleManager) {
 		this.obstacleManager = obstacleManager;
 	}
-
-	// public EnemyManager() {}
 
 	@Override
 	public void update(float delta) {
@@ -77,8 +72,6 @@ public class EnemyManager implements IRenderizable {
 		return true;
 	}
 
-	// TODO ELIMINAR
-	@Deprecated
 	public List<Enemy> getEnemies() {
 		return enemies;
 	}

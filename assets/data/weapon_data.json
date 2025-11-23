@@ -2,8 +2,8 @@
   "HEAVY_MACHINE_GUN": {
 	"class": "weapon",
     "name": "Heavy Machine Gun",
-	"fireRate": 0.2,
-	"maxAmmo": 300,
+	"fireRate": 0.1,
+	"maxAmmo": 45,
 	"drop": "HEAVY_MACHINE_GUN",
     "soundFire": "SHOOT",
     "projectileData": {
@@ -11,7 +11,7 @@
 		"damage": 25,
 		"piercing": false,
 		"width": 30,
-		"velocity": 10,
+		"velocity": 5,
 		"type": "HOLLOWPOINT",
 	}
   },
@@ -56,7 +56,7 @@
   "ROCKET_LAUNCHER": {
     "name": "Rocket Launcher",
 	"fireRate": 1.5,
-    "maxAmmo": 25,
+    "maxAmmo": 5,
 	"drop": "ROCKET_LAUNCHER",
     "soundFire": "SHOOT",
 	"projectileData": {
@@ -68,10 +68,10 @@
 		"type": "ROCKET",
 		"explosionData": {
             "class": "bullet",
-            "damage": 100,
+            "damage": 125,
             "piercing": true,
             "velocity": 0,
-            "scale": 250,
+            "scale": 300,
 			"lifespan": 0.8,
 			"type": "FLAME",
         }
@@ -80,31 +80,31 @@
 
   "SHOTGUN": {
     "name": "Shotgun",
-	"fireRate": 2.0,
-	"maxAmmo": 8,
+	"fireRate": 1.5,
+	"maxAmmo": 10,
 	"drop": "SHOTGUN",
     "soundFire": "SHOOT",
 	"projectileData": {
 		"class": "bullet",
-		"damage": 10,
+		"damage": 20,
 		"velocity": 7,
 		"width": 20,
 		"piercing": false,
 		"type": "ROUNDNOSE",
 		"pellets": 8,
-		"spread": 15,
+		"spread": 30,
 	}
   },
 
   "FLAMESHOT": {
     "name": "Flameshot",
 	"fireRate": 0.05,
-	"maxAmmo": 120,
+	"maxAmmo": 80,
 	"drop": "FLAMESHOT",
     "soundFire": "SHOOT",
 	"projectileData": {
 		"class": "flame",
-		"damage": 5,
+		"damage": 10,
 		"piercing": true,
 		"scale": 2,
 		"velocity": 15.0,
@@ -117,17 +117,15 @@
   
   "RAYGUN": {
 	"name": "Ray Gun",
-	"fireRate": 0.4,
-	"maxAmmo": 25,
+	"fireRate": 0.2,
+	"maxAmmo": 30,
 	"drop": "RAYGUN",
 	"soundFire": "SHOOT",
 	"projectileData": {
 		"class": "bullet",
 		"damage": 20,
-		"velocity": 5,
+		"velocity": 15,
 		"width": 30,
-		"pellets": 2,
-		"spread": 0.5,
 		"piercing": true,
 		"type": "RAYGUN",
 	}
@@ -135,7 +133,7 @@
   
   "CLAYMORE": {
 	"name": "Claymore",
-	"fireRate": 3,
+	"fireRate": 1.5,
 	"maxAmmo": 5,
 	"drop": "CLAYMORE",
 	"soundFire": "SHOOT",
@@ -151,7 +149,7 @@
             "damage": 100,
             "piercing": true,
             "velocity": 0,
-            "scale": 500,
+            "scale": 350,
 			"lifespan": 1,
 			"type": "FLAME",
         }

@@ -37,6 +37,7 @@ public class TutorialScreen extends BaseScreen {
 	private final float ROTATE_ANGLE = 5.0f;
 	private final float ROTATE_ANGLE_SLOW = 1.0f;
 	private final float ACCELERATION = 100f;
+	private final float ACCELERATION_SLOW = 10f;
 	private final float TUTORIAL_FRICTION = 0.9f;
 
 	private boolean stepInitialized = false;
@@ -106,11 +107,16 @@ public class TutorialScreen extends BaseScreen {
 					player.rotate(-ROTATE_ANGLE);
 			}
 
-			if (Gdx.input.isKeyPressed(Input.Keys.UP))
-				player.accelerate(ACCELERATION);
+			float currentAcceleration = ACCELERATION;
+			if((Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))) {
+				currentAcceleration = ACCELERATION_SLOW;
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.UP)) //normal
+				player.accelerate(currentAcceleration);
 			else if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-				player.accelerate(-ACCELERATION);
+				player.accelerate(-currentAcceleration);
 			else
+				// aplica la friccion del jugador
 				player.applyFriction(this.TUTORIAL_FRICTION);
 
 			if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
@@ -239,7 +245,7 @@ public class TutorialScreen extends BaseScreen {
 			break;
 		case MOVE:
 			texto = "PASO 1: MOVIMIENTO";
-			subtexto = "Usa las FLECHAS (y C para precisión) para moverte.";
+			subtexto = "Usa las FLECHAS para moverte (manten LEFT_SHIFT para acelerar mas lento y c para mayor presicion) ";
 			break;
 		case SHOOT:
 			texto = "PASO 2: DISPARO BÁSICO";

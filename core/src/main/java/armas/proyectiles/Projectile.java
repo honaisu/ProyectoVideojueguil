@@ -12,13 +12,9 @@ import interfaces.IRenderizable;
 
 public abstract class Projectile extends Entity implements IRenderizable {
 	// TODO revisar
-	protected final List<Enemy> enemiesHit = new ArrayList<>(); 
-	protected boolean piercing;
-	protected int damage;
-
-	public Projectile(float x, float y, ProjectileData data) {
-		this(new Vector2(x, y), data);
-	}
+	private final List<Enemy> enemiesHit = new ArrayList<>();
+	private boolean piercing;
+	private int damage;
 
 	public Projectile(Vector2 position, ProjectileData data) {
 		super(position, data.getType());
@@ -33,7 +29,7 @@ public abstract class Projectile extends Entity implements IRenderizable {
 				enemiesHit.add(enemy);
 			}
 			return false;
-		}else {
+		} else {
 			enemy.takeDamage(damage);
 			return true;
 		}
@@ -44,8 +40,8 @@ public abstract class Projectile extends Entity implements IRenderizable {
 	}
 
 	/**
-	 * Método estático encargado de calcular el "muzzle" por el que dependerá el
-	 * proyectil.
+	 * Método estático encargado de calcular la cabecera del jugador por el que
+	 * dependerá el proyectil.
 	 * 
 	 * @param position Posición a la cuál apuntará el proyectil, modificándolo
 	 * @param r        Rectángulo que indica el nuevo vector resultante
@@ -56,7 +52,7 @@ public abstract class Projectile extends Entity implements IRenderizable {
 		float cX = r.getX() + r.getWidth() / 2f;
 		float cY = r.getY() + r.getHeight() / 2f;
 		float length = r.getHeight() / 2f;
-		
+
 		float rad = (float) Math.toRadians(rotation);
 		float mx = cX + (float) Math.cos(rad) * length;
 		float my = cY + (float) Math.sin(rad) * length;
@@ -78,9 +74,7 @@ public abstract class Projectile extends Entity implements IRenderizable {
 	public static Vector2 calcularMuzzle(Vector2 position, Entity entity, boolean onTip) {
 		Rectangle r = entity.getSprite().getBoundingRectangle();
 		float rotation = entity.getRotation() + 90;
-		
-		
-		
+
 		return calcularMuzzle(position, r, rotation, onTip);
 	}
 }

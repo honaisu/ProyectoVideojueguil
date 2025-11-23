@@ -15,15 +15,12 @@ import logica.Round;
 public class Level {
     private final String levelName;
     private final EBackgroundType background;
-    // ¡La lista de rondas de este nivel!
-    private final List<Round> rounds;    
-    // Para saber qué ronda toca
-    private int currentRoundIndex; 
+    private final List<Round> rounds;    // Lista de rondas del nivel
+    private int currentRoundIndex; // index de la ronda
     
-  //para cada nivel abra una friccion (mentira solo cambia la la nieve) y quisas la el agua
     private final float playerFriction;
-    private final int hazardCount; // contador de objeto de daño
-    private final int solidCount;  //contador de objeto solido
+    private final int hazardCount; // contador de obstaculo de daño
+    private final int solidCount;  //contador de obstaculo solido
     
 
     public Level(String levelName, EBackgroundType background, List<Round> rounds, float playerFriction, int hazardCount, int solidCount) {
@@ -41,9 +38,18 @@ public class Level {
      * Esto lo usará el HUD.
      */
     public String getCurrentRoundName() {
-        if (currentRoundIndex < 0) return "Ronda 1"; // Aún no empieza la primera
+        if (currentRoundIndex < 0) return "Ronda 1";
         if (currentRoundIndex < rounds.size()) {
             return rounds.get(currentRoundIndex).getName();
+        }
+        return "¡Nivel Completado!";
+    }
+    
+    public String getNextRoundName() {
+        int nextIndex = currentRoundIndex + 1;
+
+        if (nextIndex < rounds.size()) {
+            return rounds.get(nextIndex).getName();
         }
         return "¡Nivel Completado!";
     }

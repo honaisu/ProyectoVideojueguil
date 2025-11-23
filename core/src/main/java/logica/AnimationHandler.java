@@ -29,9 +29,6 @@ public class AnimationHandler {
 		handle(batch, currentFrame);
 	}
 	
-	/**
-	 * 
-	 */
 	public void handle(SpriteBatch batch, boolean condition, boolean looping) {
 		TextureRegion currentFrame = animation.getKeyFrame(stateTime);
 		if (condition) {

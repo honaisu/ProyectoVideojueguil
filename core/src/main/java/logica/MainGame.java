@@ -20,7 +20,6 @@ public class MainGame extends Game {
 	
     // Volúmenes globales (0.0f a 1.0f)
 	private Volumen volumen;
-	// NO sabia mas donde dejarlo :c
 	private EPlayerSkin playerSkin = EPlayerSkin.ORIGINAL;
     private ScreenManager pantallaManager;
     

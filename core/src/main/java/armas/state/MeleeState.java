@@ -36,11 +36,6 @@ public class MeleeState implements IState {
 	public Integer getCurrentResource() {
 		return null;
 	}
-	
-	@Override
-	public void setCurrentResource(Integer amount) {
-		return;
-	}
 
 	@Override
 	public Integer getMaxResource() {

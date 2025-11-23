@@ -18,7 +18,7 @@ public class HUDLayout {
         Texture pixelTexture = new Texture(Gdx.files.internal("textures/pixel.png")); 
         
         this.backgroundSprite = new Sprite(pixelTexture);
-        this.backgroundSprite.setColor(new Color(0.1f, 0.1f, 0.1f, 0.7f)); // Gris oscuro, 70% opacidad
+        this.backgroundSprite.setColor(new Color(0.1f, 0.1f, 0.1f, 0.7f));
     }
 	
 	
@@ -34,8 +34,6 @@ public class HUDLayout {
             HUD_HEIGHT
         );
         this.backgroundSprite.draw(batch);
-
-        // 2. DIBUJAR LOS ELEMENTOS DEL HUD ENCIMA (Ajustando sus coordenadas Y)
 		
 		//NIVEL
 		font.setColor(Color.SKY);

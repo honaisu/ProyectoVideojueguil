@@ -2,7 +2,6 @@ package factories;
 
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 
 import entidades.obstaculos.DamageHazard;
 import entidades.obstaculos.SolidObstacle;
